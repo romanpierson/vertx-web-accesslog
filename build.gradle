@@ -1,0 +1,25 @@
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'eclipse'
+apply plugin: 'java'
+
+dependencies {
+
+	compile("io.vertx:vertx-core:3.2.1")
+	compile("io.vertx:vertx-web:3.2.1")
+	
+}
+
+
+sourceCompatibility='1.8'
+targetCompatibility='1.8'
+
+
+	
+
+
+
+
+
