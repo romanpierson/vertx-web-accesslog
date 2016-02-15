@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Date;
 
 import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.impl.Utils;
 
@@ -15,12 +17,14 @@ import io.vertx.ext.web.impl.Utils;
  * @author Roman Pierson
  *
  */
+@SuppressWarnings("unused")
 public class AccessLoggerHandlerImpl implements com.mdac.vertx.web.accesslogger.AccessLoggerHandler {
-
-	//private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private final DateFormat dateTimeFormat = Utils.createRFC1123DateTimeFormatter();
 
+	private Logger logger = LoggerFactory.getLogger(AccessLoggerHandlerImpl.class);
+	
+	
 	private long timeoutPeriod = 5000L;
 	
 	public AccessLoggerHandlerImpl(final long timeoutPeriod, final String pattern) {
@@ -79,7 +83,7 @@ public class AccessLoggerHandlerImpl implements com.mdac.vertx.web.accesslogger.
         
         System.out.println(message);
         
-      //  logger.info(message);
+        logger.info(message);
 		
 	}
 	
