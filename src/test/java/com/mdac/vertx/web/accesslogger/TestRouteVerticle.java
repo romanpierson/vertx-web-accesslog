@@ -18,6 +18,9 @@ public class TestRouteVerticle extends AbstractVerticle {
 	
 	public static void main(String[] args) {
 		
+		// Delegating to SLF4J in order to use logback as backend (see example logback.xml)
+		System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory");
+		
 		final Vertx vertx = Vertx.vertx();
 		vertx.deployVerticle(new TestRouteVerticle());
 
