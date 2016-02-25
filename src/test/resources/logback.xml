@@ -1,21 +1,26 @@
 <configuration>
-
+  
   <appender name="ACCESS_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>/Users/piersrom/Documents/workspaces/github_romanpierson/vertx-web-accesslog/logs/vertx-web-access.log</file>
+  	<file>/Users/piersrom/Documents/workspaces/github_romanpierson/vertx-web-accesslog/logs/async/vertx-web-access.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      
-      <!-- daily rollover -->
-      <fileNamePattern>vertx-web-access.%d{yyyy-MM-dd}.log</fileNamePattern>
-
-      <!-- keep 10 days' worth of history -->
-      <maxHistory>10</maxHistory>
+    	<fileNamePattern>vertx-web-access.%d{yyyy-MM-dd}.log</fileNamePattern>
+		<maxHistory>10</maxHistory>
     </rollingPolicy>
-
     <encoder>
      	<pattern>%msg%n</pattern>
     	<immediateFlush>true</immediateFlush>
     </encoder>
   </appender>
+  
+  
+	<appender name="ACCESS_FILE_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+  		<discardingThreshold>0</discardingThreshold>
+  		<queueSize>500</queueSize>
+  		<maxFlushTime>5000</maxFlushTime>
+ 		<appender-ref ref="ACCESS_FILE" />
+ 	</appender>
+  
+  
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender" level="info">
     <encoder>
@@ -24,7 +29,8 @@
   </appender>
   
   <logger name="com.mdac.vertx.web.accesslogger.impl.AccessLoggerHandlerImpl" level="info" additivity="false">
-        <appender-ref ref="ACCESS_FILE" />
+      <appender-ref ref="STDOUT" />
+        
     </logger>
     
   <root level="warn">

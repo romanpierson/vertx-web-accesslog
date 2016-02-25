@@ -1,10 +1,14 @@
 package com.mdac.vertx.web.accesslogger.impl;
 
 import java.text.DateFormat;
-import java.util.Collection;
-import java.util.Date;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.mdac.vertx.web.accesslogger.AccessLoggerHandler;
+import com.mdac.vertx.web.accesslogger.configuration.output.OutputConfiguration;
+import com.mdac.vertx.web.accesslogger.configuration.pattern.RequestElement;
+import com.mdac.vertx.web.accesslogger.configuration.pattern.StatusElement;
 
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.logging.Logger;
@@ -28,8 +32,15 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 	
 	private long timeoutPeriod = 5000L;
 	
+	private OutputConfiguration outputConfiguration;
+	
 	public AccessLoggerHandlerImpl(final long timeoutPeriod, final String pattern) {
+		
 		this.timeoutPeriod = timeoutPeriod;
+		
+		// For now put a hardcoded OutputConfiguration for testing
+		outputConfiguration = new OutputConfiguration("%s \"%s\"", Arrays.asList(new StatusElement(), new RequestElement()), Arrays.asList(logger));
+		
 	}
 	
 	
@@ -64,7 +75,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 	private void log(final RoutingContext context, long timestamp){
 		
 		final HttpServerRequest request = context.request();
-		
+		/*
 		long time = System.currentTimeMillis() - timestamp;
 		
 		String userAgent = request.headers().get("user-agent");
@@ -83,7 +94,12 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
           status,
           userAgent);
         
-        logger.info(message);
+        logger.info(message);*/
+		final Map<String, Object> values = new HashMap<String, Object>();
+		values.put("uri", request.uri());
+		values.put("status", request.response().getStatusCode());
+		
+		outputConfiguration.doLog(values);
 		
 	}
 	

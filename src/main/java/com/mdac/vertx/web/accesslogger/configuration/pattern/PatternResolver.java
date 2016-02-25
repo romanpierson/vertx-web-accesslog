@@ -1,7 +1,12 @@
 package com.mdac.vertx.web.accesslogger.configuration.pattern;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 public class PatternResolver {
 
+	final Collection<AccessLogElement> availableElements = Arrays.asList(new RequestElement());
+	
 	char elementIdentifier = '%';
 	char [] allowedElementIdentifiers = new char[]{'h','l','u','t','r','s','b','i'};
 	
@@ -18,6 +23,12 @@ public class PatternResolver {
 	}
 	
 	public ResolvedPatternResult resolvePattern(final String pattern){
+		
+		return null;
+		
+	}
+	
+	public ResolvedPatternResult resolvePatternOLD(final String pattern){
 		
 		// %h %l %u %t "%r" %s %b "%{Referer}i" "%{User-Agent}i"
 		
