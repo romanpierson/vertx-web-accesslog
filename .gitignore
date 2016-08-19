@@ -1,1 +1,7 @@
 /bin/
+.classpath
+build/tmp/jar/MANIFEST.MF
+build/
+.gradle/
+.project
+.settings/org.eclipse.jdt.core.prefs
