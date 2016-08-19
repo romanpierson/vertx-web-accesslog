@@ -29,8 +29,7 @@
   </appender>
   
   <logger name="com.mdac.vertx.web.accesslogger.impl.AccessLoggerHandlerImpl" level="info" additivity="false">
-      <appender-ref ref="STDOUT" />
-        
+      <appender-ref ref="ACCESS_FILE" />  
     </logger>
     
   <root level="warn">

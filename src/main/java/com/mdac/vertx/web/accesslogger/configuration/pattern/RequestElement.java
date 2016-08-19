@@ -1,28 +1,28 @@
 package com.mdac.vertx.web.accesslogger.configuration.pattern;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 
 public class RequestElement implements AccessLogElement{
 
-	
+	private Collection<String> supportedPatterns = Arrays.asList("cs-uri", "%r");
 	
 	@Override
-	public ExtractedPosition findInRawPattern(final String rawPattern) {
+	public ExtractedPosition findInRawPattern(final String rawPattern, final int start) {
 		
-		String pattern1 = "cs-uri";
-		
-		int index = rawPattern.indexOf(pattern1);
-		
-		if(index >= 0){
-			return new ExtractedPosition(0, pattern1.length());
-		}
-		
-		String pattern2 = "%r";
-		
-		index = rawPattern.indexOf(pattern2);
-		
-		if(index >= 0){
-			return new ExtractedPosition(0, pattern2.length());
+		for(final String pattern : supportedPatterns){
+			
+			int index = rawPattern.indexOf(pattern);
+			
+			if(index >= 0){
+				
+				if(start == -1
+					|| index <= start)
+				{
+					return new ExtractedPosition(index, pattern.length(), new RequestElement());
+				}
+			}
 		}
 		
 		return null;

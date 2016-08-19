@@ -5,6 +5,7 @@ import com.mdac.vertx.web.accesslogger.impl.AccessLoggerHandlerImpl;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
+import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
@@ -55,7 +56,7 @@ public class TestRouteVerticle extends AbstractVerticle {
 
 		router
 			.route()
-				.handler(AccessLoggerHandler.create(100));
+				.handler(AccessLoggerHandler.create(100, "\"cs-uri\" '%r'" ));
 		
 		router
 			.route()

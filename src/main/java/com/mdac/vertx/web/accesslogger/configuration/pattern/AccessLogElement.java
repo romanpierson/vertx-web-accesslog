@@ -4,7 +4,7 @@ import java.util.Map;
 
 public interface AccessLogElement {
 
-	abstract ExtractedPosition findInRawPattern(String rawPattern);
+	ExtractedPosition findInRawPattern(String rawPattern, int start);
 	
 	abstract String getFormattedValue(Map<String, Object> values);
 	

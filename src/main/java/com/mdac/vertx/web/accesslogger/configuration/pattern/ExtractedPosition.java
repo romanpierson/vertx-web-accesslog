@@ -5,11 +5,20 @@ public class ExtractedPosition {
 
 	final int start;
 	final int offset;
+	final AccessLogElement element;
 	
 	public ExtractedPosition(final int start, final int offset) {
 		super();
 		this.start = start;
 		this.offset = offset;
+		this.element = null;
+	}
+	
+	public ExtractedPosition(final int start, final int offset, final AccessLogElement element) {
+		super();
+		this.start = start;
+		this.offset = offset;
+		this.element = element;
 	}
 
 	public int getStart() {
@@ -18,6 +27,10 @@ public class ExtractedPosition {
 
 	public int getOffset() {
 		return offset;
+	}
+
+	public AccessLogElement getElement() {
+		return element;
 	}
 	
 	

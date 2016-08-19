@@ -1,91 +1,83 @@
 package com.mdac.vertx.web.accesslogger.configuration.pattern;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
 public class PatternResolver {
 
-	final Collection<AccessLogElement> availableElements = Arrays.asList(new RequestElement());
+	// A list of all known access element implementations
+	// Idea for the future is that this gets auto discovered somehow
+	final Collection<AccessLogElement> availableElements = Arrays.asList(
+																new RequestElement(),
+																new DurationElement(),
+																new StatusElement()
+															);
 	
-	char elementIdentifier = '%';
-	char [] allowedElementIdentifiers = new char[]{'h','l','u','t','r','s','b','i'};
 	
 	
-	protected boolean isElementIdentifier(final char identifier){
-		
-		for(final char c : allowedElementIdentifiers){
-			if(identifier == c){
-				return true;
-			}
-		}
-		
-		return false;
-	}
 	
-	public ResolvedPatternResult resolvePattern(final String pattern){
+	public ResolvedPatternResult resolvePattern(final String rawPattern){
 		
-		return null;
+		System.out.println("rawPattern:" + rawPattern + "|");
 		
-	}
-	
-	public ResolvedPatternResult resolvePatternOLD(final String pattern){
+		int start = 0;
+		String rawPatternInEvaluation = rawPattern;
+		final StringBuilder sbEvaluatedPattern = new StringBuilder();
+		final Collection<AccessLogElement> logElements = new ArrayList<AccessLogElement>();
 		
-		// %h %l %u %t "%r" %s %b "%{Referer}i" "%{User-Agent}i"
+		while(rawPatternInEvaluation != null && rawPatternInEvaluation.length() > 0){
 		
-		// First split by potential "
-		pattern.split("\"");
-		
-		boolean inElement = false;      // If we are in a element (defined by %
-		boolean inElementSpecificator = false; // If we are in a element specificator identified by {ﬁ
-		StringBuilder sbSpecificator = null;
-		String currentElement = null;
-		
-		for(final byte b : pattern.getBytes()){
+			int bestStart = -1;
+			int bestOffset = 0;
+			AccessLogElement bestElement = null;
 			
-			final char ch = (char) b;
+			for(final AccessLogElement element : availableElements){
 				
-			if(inElement){
+				final ExtractedPosition extractedPosition = element.findInRawPattern(rawPatternInEvaluation, bestStart);
 				
-				if(isElementIdentifier(ch)){
-					currentElement = "" + ch;
-				} else if (ch == '{'){
-					inElementSpecificator = true;
-					sbSpecificator = new StringBuilder();
-				} else {
-					// This should basically mean that the element has finished
-					
+				if(extractedPosition == null || extractedPosition.getStart() == -1){
+					continue;
+				} else if (bestStart == -1 || extractedPosition.getStart() < bestStart){
+					bestStart = extractedPosition.getStart();
+					bestOffset = extractedPosition.getOffset();
+					bestElement = extractedPosition.getElement();
 				}
 				
-				
-			} else if (elementIdentifier == ch) {
-				
-				if(inElement){
-					
-					if(currentElement == null){
-						// We previously were reading an element but we could not get its identifier - invalid
-						throw new RuntimeException("Invalid pattern");
-					} else {
-						
-					}
-					
-					// Previous element needs to be terminated
-					
-					System.out.println(currentElement);
-					
-					
-					currentElement = null;
-					
-				}
-				
-				inElement = true;
 			}
 			
-			System.out.println((char) b);
+			if(bestStart >= 0){
+				
+				if(bestStart > 0){
+					// We need to take over some untranslatable part first
+					sbEvaluatedPattern.append(rawPatternInEvaluation.substring(0, bestStart));
+				}
+				
+				// Shorten the raw pattern till where we found replacement
+				rawPatternInEvaluation = rawPatternInEvaluation.substring(bestStart + bestOffset);
+				
+				// Add the placeholder - for now always type string
+				sbEvaluatedPattern.append("%s");
+				
+				// Add the log element
+				logElements.add(bestElement);
+				
+			} else {
+				// Looks like no more that can be resolved
+				
+				if(rawPatternInEvaluation != null && rawPatternInEvaluation.length() > 0){
+					sbEvaluatedPattern.append(rawPatternInEvaluation);
+				}
+				
+				break;
+			}
+			
 		}
 		
+		System.out.println("sbEvaluatedPattern:" + sbEvaluatedPattern.toString() + "|");
 		
-		return null;
-		
+		return new ResolvedPatternResult(sbEvaluatedPattern.toString(), logElements);
 	}
+	
 
 }

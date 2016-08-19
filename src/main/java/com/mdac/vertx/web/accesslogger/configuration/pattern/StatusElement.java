@@ -7,7 +7,11 @@ public class StatusElement implements AccessLogElement{
 	
 	
 	@Override
-	public ExtractedPosition findInRawPattern(final String rawPattern) {
+	public ExtractedPosition findInRawPattern(final String rawPattern, final int start) {
+		
+		if(true){
+			return null;
+		}
 		
 		String pattern1 = "cs-uri";
 		

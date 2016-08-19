@@ -14,8 +14,8 @@ import io.vertx.ext.web.RoutingContext;
  */
 public interface AccessLoggerHandler extends Handler<RoutingContext> {
 
-	static AccessLoggerHandler create(final long timeoutPeriod) {
-	    return new AccessLoggerHandlerImpl(timeoutPeriod, "");
+	static AccessLoggerHandler create(final long timeoutPeriod, final String pattern) {
+	    return new AccessLoggerHandlerImpl(timeoutPeriod, pattern);
 	}
 	
 }
