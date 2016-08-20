@@ -1,14 +1,9 @@
 package com.mdac.vertx.web.accesslogger;
 
-import com.mdac.vertx.web.accesslogger.impl.AccessLoggerHandlerImpl;
-
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
-import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.http.HttpServerResponse;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
 
 /**
@@ -29,21 +24,8 @@ public class TestRouteVerticle extends AbstractVerticle {
 		final Vertx vertx = Vertx.vertx();
 		vertx.deployVerticle(new TestRouteVerticle());
 
-		//logTest();
-		
-		
-		// Thread.sleep(6000);
 	}
 	
-	private static void logTest(){
-		
-		Logger logger = LoggerFactory.getLogger(AccessLoggerHandlerImpl.class);
-		
-		for(int i=0;i<100000;i++){
-			logger.info("Message" + i);
-		}
-		
-	}
 	
 	@Override
 	public void start() throws Exception {
@@ -56,7 +38,7 @@ public class TestRouteVerticle extends AbstractVerticle {
 
 		router
 			.route()
-				.handler(AccessLoggerHandler.create(100, "\"cs-uri\" '%r'" ));
+				.handler(AccessLoggerHandler.create("\"cs-uri\" cs-method %s %D %T" ));
 		
 		router
 			.route()

@@ -1,14 +1,12 @@
 package com.mdac.vertx.web.accesslogger.configuration.pattern;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Map;
 
 public class DurationElement implements AccessLogElement{
 
 	public enum TimeUnit{
-		MILLISECONDS,
-		NANOSECONDS
+		SECONDS,
+		MILLISECONDS
 	}
 
 	private final static Long INVALID_TS = new Long(-1);
@@ -17,54 +15,50 @@ public class DurationElement implements AccessLogElement{
 	private final String startTSkey;
 	private final String endTSkey;
 	
-	private Collection<String> supportedPatterns = Arrays.asList("cs-uri", "%r");
-	
 	public DurationElement(){
-		
-		this(TimeUnit.MILLISECONDS);
+	
+		this.timeUnit = null;
+		this.startTSkey = null;
+		this.endTSkey = null;	
 		
 	}
 	
 	public DurationElement(final TimeUnit timeUnit){
 		
-		this.timeUnit = timeUnit != null ? timeUnit : TimeUnit.MILLISECONDS;
-		
-		this.startTSkey = TimeUnit.NANOSECONDS.equals(this.timeUnit) ? "startTSnanos" : "startTSmillis";
-		this.endTSkey = TimeUnit.NANOSECONDS.equals(this.timeUnit) ? "endTSnanos" : "endTSmillis";
+		this.timeUnit = timeUnit;
+		this.startTSkey = "startTSmillis";
+		this.endTSkey = "endTSmillis";	
 		
 	}
+	
 	
 	@Override
 	public ExtractedPosition findInRawPattern(final String rawPattern, final int start) {
 		
-		if(true){
-			return null;
-		}
+		String patternMillis = "%D";
 		
-		for(final String pattern : supportedPatterns){
+		int index = rawPattern.indexOf(patternMillis);
+		
+		if(index >= 0){
 			
-			int index = rawPattern.indexOf(pattern);
-			
-			if(index >= 0){
-				return new ExtractedPosition(index, pattern.length(), new DurationElement());
+			if(start == -1
+				|| index <= start)
+			{
+				return new ExtractedPosition(index, patternMillis.length(), new DurationElement(TimeUnit.MILLISECONDS));
 			}
+		}
+		
+		String patternSeconds = "%T";
+		
+		index = rawPattern.indexOf(patternSeconds);
+		
+		if(index >= 0){
 			
-		}
-		
-		String pattern1 = "cs-uri";
-		
-		int index = rawPattern.indexOf(pattern1);
-		
-		if(index >= 0){
-			return new ExtractedPosition(0, pattern1.length());
-		}
-		
-		String pattern2 = "%r";
-		
-		index = rawPattern.indexOf(pattern2);
-		
-		if(index >= 0){
-			return new ExtractedPosition(0, pattern2.length());
+			if(start == -1
+				|| index <= start)
+			{
+				return new ExtractedPosition(index, patternSeconds.length(), new DurationElement(TimeUnit.SECONDS));
+			}
 		}
 		
 		return null;
@@ -80,7 +74,11 @@ public class DurationElement implements AccessLogElement{
 			return "-";
 		}
 		
-		final long duration = endTS.longValue() - startTS.longValue();
+		long duration = endTS.longValue() - startTS.longValue();
+		
+		if(TimeUnit.SECONDS.equals(this.timeUnit)){
+			duration = duration / 1000;
+		}
 		
 		return duration > 0 ? "" + duration : "0";
 		

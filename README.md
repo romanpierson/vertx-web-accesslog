@@ -20,6 +20,30 @@ Generating the access log files is performed in a transparent way by vertx logge
 
 The idea is to support certain kind of conditional log generation, eg to allow to generate different access log patterns for different request patterns, response statuses, etc
 
+## Usage
+
+### Configure route
+
+Just put an instance of AccessLogHandler as first route handler
+
+	Router router = Router.router(vertx);
+
+		router
+			.route()
+				.handler(AccessLoggerHandler.create("\"cs-uri\" cs-method %s %D %T" ));
+
+### Configure Logger
+
+TBD
+
+## Supported log elements
+
+Currently those elements are supported
+
+| Element  | Apache | W3C |
+| ------------- | ------------- |
+| Method  | %m  | cs-method |
+
 
 
 

@@ -34,15 +34,11 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 
 	private Logger logger = LoggerFactory.getLogger(AccessLoggerHandlerImpl.class);
 	
-	private long timeoutPeriod = 5000L;
-	
 	private OutputConfiguration outputConfiguration;
 	
 	private PatternResolver patternResolver = new PatternResolver();
 	
-	public AccessLoggerHandlerImpl(final long timeoutPeriod, final String pattern) {
-		
-		this.timeoutPeriod = timeoutPeriod;
+	public AccessLoggerHandlerImpl(final String pattern) {
 		
 		final ResolvedPatternResult resolvedPattern = patternResolver.resolvePattern(pattern);
 		
@@ -52,16 +48,6 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 					Arrays.asList(logger));
 		}
 		
-		
-		// For now put a hardcoded OutputConfiguration for testing
-		/*outputConfiguration = new OutputConfiguration("%s \"%s\" %s %s", 
-				Arrays.asList(
-							new StatusElement(), 
-							new RequestElement(), 
-							new DurationElement(TimeUnit.MILLISECONDS),
-							new DurationElement(TimeUnit.NANOSECONDS)), 
-				Arrays.asList(logger));*/
-		
 	}
 	
 	
@@ -69,61 +55,23 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 	public void handle(final RoutingContext context) {
 		
 		long startTSmillis = System.currentTimeMillis();
-		long startTSnanos = System.nanoTime();
 		
-		//System.out.println("Starting TIMEOUT timer with period [" + timeoutPeriod + "]");
-		
-		// Request Method
-		//cs-method
-		//%m
-		
-		/*long tid = context.vertx().setTimer(timeoutPeriod, t -> 
-			{
-				System.out.println("TIMEOUT Timer with period [" + timeoutPeriod + "] finished after [" + (System.currentTimeMillis() - timestamp) + "]");
-				context.fail(408);
-			}
-		);*/
-
-		//context.addBodyEndHandler(v -> {System.out.println("Cancel TIMEOUT timer "); context.vertx().cancelTimer(tid);});
-		
-		context.addBodyEndHandler(v -> log(context, startTSmillis, startTSnanos));
-		
-		//System.out.println("After start timer with id [" + tid + "]");
+		context.addBodyEndHandler(v -> log(context, startTSmillis));
 		
 		context.next();
 		
 	}
 	
-	private void log(final RoutingContext context, long startTSmillis, long startTSnanos){
+	private void log(final RoutingContext context, long startTSmillis){
 		
 		final HttpServerRequest request = context.request();
-		/*
-		long time = System.currentTimeMillis() - timestamp;
 		
-		String userAgent = request.headers().get("user-agent");
-        userAgent = userAgent == null ? "-" : userAgent;
-
-        int status = request.response().getStatusCode();
-        
-        Collection<Object> tokens = null;
-        
-        String.format("", tokens);
-        
-        final String message = String.format("%s %s %d %d %s",
-          dateTimeFormat.format(new Date(timestamp)),
-          request.uri(),
-          time,
-          status,
-          userAgent);
-        
-        logger.info(message);*/
 		final Map<String, Object> values = new HashMap<String, Object>();
 		values.put("uri", request.uri());
+		values.put("method", request.method());
 		values.put("status", request.response().getStatusCode());
 		values.put("startTSmillis", startTSmillis);
 		values.put("endTSmillis", System.currentTimeMillis());
-		values.put("startTSnanos", startTSnanos);
-		values.put("endTSnanos", System.nanoTime());
 		
 		outputConfiguration.doLog(values);
 		

@@ -11,7 +11,8 @@ public class PatternResolver {
 	final Collection<AccessLogElement> availableElements = Arrays.asList(
 																new RequestElement(),
 																new DurationElement(),
-																new StatusElement()
+																new StatusElement(),
+																new MethodElement()
 															);
 	
 	
