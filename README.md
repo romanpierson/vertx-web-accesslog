@@ -42,13 +42,14 @@ TBD
 
 Currently those elements are supported
 
-dog | bird | cat
+Element | Apache | W3C
 ----|------|----
-foo | foo  | foo
+Method | %m  | cs-method
+Status | %s  | sc-status
+Duration s | %T  | 
+Duration ms | %D  | 
+Request URI | %r  | cs-uri
 
-| Element  | Apache | W3C |
-| ------------- | ------------- |
-| Method  | %m  | cs-method |
 
 
 
