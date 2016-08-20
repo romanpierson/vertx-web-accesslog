@@ -26,11 +26,13 @@ The idea is to support certain kind of conditional log generation, eg to allow t
 
 Just put an instance of AccessLogHandler as first route handler
 
-	Router router = Router.router(vertx);
+```java
+Router router = Router.router(vertx);
 
-		router
-			.route()
-				.handler(AccessLoggerHandler.create("\"cs-uri\" cs-method %s %D %T" ));
+router
+	.route()
+		.handler(AccessLoggerHandler.create("\"cs-uri\" cs-method %s %D %T" ));
+```
 
 ### Configure Logger
 
