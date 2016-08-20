@@ -42,6 +42,10 @@ TBD
 
 Currently those elements are supported
 
+dog | bird | cat
+----|------|----
+foo | foo  | foo
+
 | Element  | Apache | W3C |
 | ------------- | ------------- |
 | Method  | %m  | cs-method |
