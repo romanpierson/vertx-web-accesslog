@@ -72,6 +72,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 		values.put("status", request.response().getStatusCode());
 		values.put("startTSmillis", startTSmillis);
 		values.put("endTSmillis", System.currentTimeMillis());
+		values.put("version", request.version());
 		
 		outputConfiguration.doLog(values);
 		

@@ -38,7 +38,7 @@ public class TestRouteVerticle extends AbstractVerticle {
 
 		router
 			.route()
-				.handler(AccessLoggerHandler.create("\"cs-uri\" cs-method %s %D %T" ));
+				.handler(AccessLoggerHandler.create("\"cs-uri\" cs-method %s %D %T %H" ));
 		
 		router
 			.route()

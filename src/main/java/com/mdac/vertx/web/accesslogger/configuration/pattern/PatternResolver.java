@@ -12,7 +12,8 @@ public class PatternResolver {
 																new RequestElement(),
 																new DurationElement(),
 																new StatusElement(),
-																new MethodElement()
+																new MethodElement(),
+																new VersionElement()
 															);
 	
 	

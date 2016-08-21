@@ -49,6 +49,7 @@ Status | %s  | sc-status
 Duration s | %T  | 
 Duration ms | %D  | 
 Request URI | %r  | cs-uri
+Version / Protocol | %H |
 
 
 
