@@ -13,7 +13,8 @@ public class PatternResolver {
 																new DurationElement(),
 																new StatusElement(),
 																new MethodElement(),
-																new VersionElement()
+																new VersionElement(),
+																new DateTimeElement()
 															);
 	
 	
@@ -23,7 +24,6 @@ public class PatternResolver {
 		
 		System.out.println("rawPattern:" + rawPattern + "|");
 		
-		int start = 0;
 		String rawPatternInEvaluation = rawPattern;
 		final StringBuilder sbEvaluatedPattern = new StringBuilder();
 		final Collection<AccessLogElement> logElements = new ArrayList<AccessLogElement>();
