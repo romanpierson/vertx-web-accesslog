@@ -46,10 +46,13 @@ Element | Apache | W3C
 ----|------|----
 Method | %m  | cs-method
 Status | %s  | sc-status
-Duration s | %T  | 
-Duration ms | %D  | 
-Request URI | %r  | cs-uri
-Version / Protocol | %H |
+Duration s | %T  | -
+Duration ms | %D  | -
+First line of request | %r  | -
+URI path only | %U | cs-uri-stem
+Query only | %q | cs-uri-query
+URI path incl query | - | cs-uri
+Version / Protocol | %H | -
 
 
 
