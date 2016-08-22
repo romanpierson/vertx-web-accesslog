@@ -7,14 +7,11 @@ import java.util.Map;
 
 import com.mdac.vertx.web.accesslogger.AccessLoggerHandler;
 import com.mdac.vertx.web.accesslogger.configuration.output.OutputConfiguration;
-import com.mdac.vertx.web.accesslogger.configuration.pattern.DurationElement;
-import com.mdac.vertx.web.accesslogger.configuration.pattern.DurationElement.TimeUnit;
 import com.mdac.vertx.web.accesslogger.configuration.pattern.PatternResolver;
-import com.mdac.vertx.web.accesslogger.configuration.pattern.RequestElement;
 import com.mdac.vertx.web.accesslogger.configuration.pattern.ResolvedPatternResult;
-import com.mdac.vertx.web.accesslogger.configuration.pattern.StatusElement;
 
 import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
@@ -65,6 +62,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 	private void log(final RoutingContext context, long startTSmillis){
 		
 		final HttpServerRequest request = context.request();
+		final HttpServerResponse response = context.response();
 		
 		final Map<String, Object> values = new HashMap<String, Object>();
 		values.put("uri", request.path());
@@ -72,18 +70,20 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 			values.put("query", request.query());
 		}
 		values.put("method", request.method());
-		values.put("status", request.response().getStatusCode());
+		values.put("status", response.getStatusCode());
 		values.put("startTSmillis", startTSmillis);
 		values.put("endTSmillis", System.currentTimeMillis());
 		values.put("version", request.version());
-		if(request.response().bytesWritten() > 0){
-			values.put("bytesSent", request.response().bytesWritten());
+		if(response.bytesWritten() > 0){
+			values.put("bytesSent", response.bytesWritten());
 		}
 		
-		values.put("remoteHost", context.request().remoteAddress().host());
-		values.put("localHost", context.request().localAddress().host());
-		values.put("localPort", context.request().localAddress().port());
+		values.put("remoteHost", request.remoteAddress().host());
+		values.put("localHost", request.localAddress().host());
+		values.put("localPort", request.localAddress().port());
 		
+		values.put("requestHeaders", request.headers());
+		values.put("responseHeaders", response.headers());
 		
 		outputConfiguration.doLog(values);
 		

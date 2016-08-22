@@ -70,6 +70,8 @@ Version / Protocol | %H | - | |
 Datetime Apache | %t | - | Logs by default the request timestamp using format 'EEE, dd MMM yyyy HH:mm:ss zzz', Locale English and Timezone GMT  |
 | Datetime Apache Configurable v1 | %{PATTERN}t | - | Specify the format pattern, by default it is used Locale English and Timezone GMT |
 | Datetime Apache Configurable v2 | %{PATTERN\|TIMEZONE\|LOCALE}t | - | Specify format pattern, timezone and locale |
+Incoming Headers | %{IDENTIFIER}i  | - | If not found - will be logged |
+Outgoing Response Headers | %{IDENTIFIER}o  | - | If not found - will be logged |
 
 
 

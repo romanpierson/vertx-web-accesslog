@@ -30,7 +30,7 @@
   
   <logger name="com.mdac.vertx.web.accesslogger.impl.AccessLoggerHandlerImpl" level="info" additivity="false">
       <appender-ref ref="ACCESS_FILE_ASYNC" />
-      <!--  <appender-ref ref="STDOUT" />  -->
+      <appender-ref ref="STDOUT" /> 
     </logger>
     
   <root level="warn">
