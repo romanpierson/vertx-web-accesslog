@@ -16,7 +16,7 @@ The logger supports mixing of both log formats and is also designed to easily ad
 
 Generating the access log files is performed in a transparent way by vertx logger. Therefore there is any restriction regarding the logging framework used behind (however logback is recommended). Defining rollover strategies (size, daily, etc) are dealt with by the logging framework as well.
 
-## Conditional Log generation (Channels)
+## Conditional Log generation (Channels) - Future Improvement
 
 The idea is to support certain kind of conditional log generation, eg to allow to generate different access log patterns for different request patterns, response statuses, etc
 
@@ -36,7 +36,16 @@ router
 
 ### Configure Logger
 
-TBD
+The logger itself in the current solution does not has a built in mechanism to write the the physical access file. Instead this is done by the logging framework used behind. 
+
+To chose to which logging implementation vertx logger should delegate you need to set property `vertx.logger-delegate-factory-class-name`, eg like this
+
+```java
+System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory");
+```
+
+When defining the logger in the implementation used you need to make sure it refers to `com.mdac.vertx.web.accesslogger.impl.AccessLoggerHandlerImpl`
+
 
 ## Supported log elements
 
