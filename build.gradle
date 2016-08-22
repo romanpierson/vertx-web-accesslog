@@ -18,7 +18,7 @@ dependencies {
 sourceCompatibility='1.8'
 targetCompatibility='1.8'
 
-
+jar.archiveName = "vertx-web-accesslog-3.3.2.jar"
 	
 
 
