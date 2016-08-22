@@ -48,6 +48,9 @@ Method | %m  | cs-method | |
 Status | %s  | sc-status | |
 Duration s | %T  | - |  |
 Duration ms | %D  | - | |
+Remote Host | %h  | - |  |
+Local Host | %v  | - |  |
+Local port | %p  | - |  |
 Bytes Written v1 | %B | - | Zero Bytes written as 0 |
 Bytes Written v2 | %b | - | Zero Bytes written as - |
 First line of request | %r  | - | |

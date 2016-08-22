@@ -15,7 +15,8 @@ public class PatternResolver {
 																new MethodElement(),
 																new VersionElement(),
 																new DateTimeElement(),
-																new BytesSentElement()
+																new BytesSentElement(),
+																new HostElement()
 															);
 	
 	

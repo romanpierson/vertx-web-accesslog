@@ -80,6 +80,11 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 			values.put("bytesSent", request.response().bytesWritten());
 		}
 		
+		values.put("remoteHost", context.request().remoteAddress().host());
+		values.put("localHost", context.request().localAddress().host());
+		values.put("localPort", context.request().localAddress().port());
+		
+		
 		outputConfiguration.doLog(values);
 		
 	}

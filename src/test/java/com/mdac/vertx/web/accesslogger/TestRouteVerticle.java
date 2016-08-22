@@ -39,7 +39,7 @@ public class TestRouteVerticle extends AbstractVerticle {
 		router
 			.route()
 				.handler(AccessLoggerHandler.create(
-						"[%{EEE, dd MMM yyyy HH:mm:ss zzz|GMT|es-es}t] %r %s %D %T %b %B"
+						"[%{EEE, dd MMM yyyy HH:mm:ss zzz|GMT|es-es}t] %r %s %D %T %b %B %p %v %h"
 						));
 		
 		
