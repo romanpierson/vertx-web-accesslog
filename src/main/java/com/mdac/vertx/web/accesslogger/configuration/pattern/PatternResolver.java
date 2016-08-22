@@ -14,15 +14,14 @@ public class PatternResolver {
 																new StatusElement(),
 																new MethodElement(),
 																new VersionElement(),
-																new DateTimeElement()
+																new DateTimeElement(),
+																new BytesSentElement()
 															);
 	
 	
 	
 	
 	public ResolvedPatternResult resolvePattern(final String rawPattern){
-		
-		//System.out.println("rawPattern:" + rawPattern + "|");
 		
 		String rawPatternInEvaluation = rawPattern;
 		final StringBuilder sbEvaluatedPattern = new StringBuilder();
@@ -37,8 +36,6 @@ public class PatternResolver {
 			for(final AccessLogElement element : availableElements){
 				
 				final ExtractedPosition extractedPosition = element.findInRawPattern(rawPatternInEvaluation, bestStart);
-				
-				//System.out.println(extractedPosition.getStart() + "/" + extractedPosition.getOffset());
 				
 				if(extractedPosition == null || extractedPosition.getStart() == -1){
 					continue;
@@ -79,8 +76,6 @@ public class PatternResolver {
 			}
 			
 		}
-		
-		//System.out.println("sbEvaluatedPattern:" + sbEvaluatedPattern.toString() + "|");
 		
 		return new ResolvedPatternResult(sbEvaluatedPattern.toString(), logElements);
 	}

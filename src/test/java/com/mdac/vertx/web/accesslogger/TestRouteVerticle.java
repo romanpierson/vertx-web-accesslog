@@ -39,9 +39,20 @@ public class TestRouteVerticle extends AbstractVerticle {
 		router
 			.route()
 				.handler(AccessLoggerHandler.create(
-						//"\"cs-uri\" cs-method %s %D %T %H" %{EEE, dd MMM yyyy zzz|Europe/Zurich|de}t %t
-						"[%{EEE, dd MMM yyyy HH:mm:ss zzz|GMT|es-es}t] [%{EEE, dd MMM yyyy zzz|Europe/Zurich|de}t] [%t] %r %s %D %T"
+						"[%{EEE, dd MMM yyyy HH:mm:ss zzz|GMT|es-es}t] %r %s %D %T %b %B"
 						));
+		
+		
+		router
+			.route("/nocontent")
+				.handler(routingContext -> {
+					
+					// Example handler that generates no content
+					
+					HttpServerResponse response = routingContext.response();
+					response.end();
+					
+				});
 		
 		router
 			.route()

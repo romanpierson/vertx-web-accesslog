@@ -35,7 +35,6 @@ public class DateTimeElement implements AccessLogElement{
 			
 				if(indexEndConfigurationDatetime > index && (indexEndConfigurationDatetime == indexEndConfiguration)){
 					String configurationString = rawPattern.substring(index + 2, indexEndConfigurationDatetime);
-					System.out.println("(" + configurationString + ")");
 					
 					return new ExtractedPosition(index, configurationString.length() + 4, new DateTimeElement(deriveDateFormatFromConfigurationString(configurationString)));
 				}
