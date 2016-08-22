@@ -43,7 +43,7 @@ TBD
 Currently those elements are supported
 
 Element | Apache | W3C | Remarks
-----|------|------------
+----|------|------------| --------
 Method | %m  | cs-method | |
 Status | %s  | sc-status | |
 Duration s | %T  | - |  |
