@@ -44,15 +44,15 @@ Currently those elements are supported
 
 Element | Apache | W3C | Remarks
 ----|------|------------
-Method | %m  | cs-method |
-Status | %s  | sc-status |
-Duration s | %T  | - |
-Duration ms | %D  | - |
-First line of request | %r  | - |
-URI path only | %U | cs-uri-stem |
-Query only | %q | cs-uri-query |
-URI path incl query | - | cs-uri |
-Version / Protocol | %H | - |
+Method | %m  | cs-method | |
+Status | %s  | sc-status | |
+Duration s | %T  | - |  |
+Duration ms | %D  | - | |
+First line of request | %r  | - | |
+URI path only | %U | cs-uri-stem | |
+Query only | %q | cs-uri-query | |
+URI path incl query | - | cs-uri | |
+Version / Protocol | %H | - | |
 Datetime Apache | %t | - | Logs by default the request timestamp using format 'EEE, dd MMM yyyy HH:mm:ss zzz', Locale English and Timezone GMT  |
 | Datetime Apache Configurable v1 | %{PATTERN}t | - | Specify the format pattern, by default it is used Locale English and Timezone GMT |
 | Datetime Apache Configurable v2 | %{PATTERN|TIMEZONE|LOCALE}t | - | Specify format pattern, timezone and locale |
