@@ -94,8 +94,6 @@ public class RequestElement implements AccessLogElement{
 		
 		if(RequestLogMode.APACHE_FIRST_REQUEST_LINE.equals(this.requestLogMode)){
 			
-			sb.append("\"");
-			
 			sb.append(values.get("method")).append(' ');
 			
 		}
@@ -114,7 +112,6 @@ public class RequestElement implements AccessLogElement{
 			
 			sb.append(' ').append(VersionUtility.getFormattedValue(values));
 			
-			sb.append("\"");
 		}
 		
 		return sb.toString();
