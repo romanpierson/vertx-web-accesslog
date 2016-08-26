@@ -4,7 +4,7 @@ An access log implementation to be used in vert web routes.
 
 Inspired and with intention to be compliant with
 
-* Apache HTTP Server mod_log_config module
+* Apache HTTP Server mod_log_config module (http://httpd.apache.org/docs/2.4/en/mod/mod_log_config.html)
 
 * W3C Extended Log File Format (http://www.w3.org/TR/WD-logfile.html)
 
@@ -14,7 +14,8 @@ The logger supports mixing of both log formats and is also designed to easily ad
 
 ## Logging framework
 
-Generating the access log files is performed in a transparent way by vertx logger. Therefore there is any restriction regarding the logging framework used behind (however logback is recommended). Defining rollover strategies (size, daily, etc) are dealt with by the logging framework as well.
+Generating the access log files is performed in a transparent way by vertx logger. Therefore there is any restriction regarding the logging framework used behind (however logback is recommended and test case is implemented using logback / SLF4J). Main reason for this is to not have a dependency on a specific logging framework and also to ensure that implementation details like for example rollover strategies (size, daily, etc) are dealt with by the logging framework.
+
 
 ## Conditional Log generation (Channels) - Future Improvement
 
@@ -45,6 +46,9 @@ System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.lo
 ```
 
 When defining the logger in the implementation used you need to make sure it refers to `com.mdac.vertx.web.accesslogger.impl.AccessLoggerHandlerImpl`
+
+For example see the different logging framework specific configuration files in `test.resources` directory and adapt the `build.gradle` file to use different log frameworks, by default logback version is active. 
+
 
 
 ## Supported log elements

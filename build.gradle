@@ -17,15 +17,13 @@ dependencies {
 	// Log4J
 	//testRuntime("log4j:log4j:1.2.17")
 	
-	// Log4J2
-	//testRuntime("org.apache.logging.log4j:log4j:2.6.2")
 }
 
 
 sourceCompatibility='1.8'
 targetCompatibility='1.8'
 
-jar.archiveName = "vertx-web-accesslog-3.3.2.jar"
+jar.archiveName = "vertx-web-accesslog-3.3.2-RC1.jar"
 	
 
 
