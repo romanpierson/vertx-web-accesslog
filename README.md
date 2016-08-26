@@ -72,6 +72,7 @@ Datetime Apache | %t | - | Logs by default the request timestamp using format 'E
 | Datetime Apache Configurable v2 | %{PATTERN\|TIMEZONE\|LOCALE}t | - | Specify format pattern, timezone and locale |
 Incoming Headers | %{IDENTIFIER}i  | - | If not found - will be logged |
 Outgoing Response Headers | %{IDENTIFIER}o  | - | If not found - will be logged |
+Cookie | %{IDENTIFIER}c  | - | If not found - will be logged |
 
 
 

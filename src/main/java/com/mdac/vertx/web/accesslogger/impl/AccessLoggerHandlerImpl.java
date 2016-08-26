@@ -85,6 +85,10 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 		values.put("requestHeaders", request.headers());
 		values.put("responseHeaders", response.headers());
 		
+		if(context.cookieCount() > 0){
+			values.put("cookies", context.cookies());
+		}
+		
 		outputConfiguration.doLog(values);
 		
 	}
