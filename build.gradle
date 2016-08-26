@@ -11,7 +11,14 @@ dependencies {
 	compile("io.vertx:vertx-core:3.3.2")
 	compile("io.vertx:vertx-web:3.3.2")
 	
+	// Logback (via SLF4J)
 	testRuntime("ch.qos.logback:logback-classic:1.1.7")
+	
+	// Log4J
+	//testRuntime("log4j:log4j:1.2.17")
+	
+	// Log4J2
+	//testRuntime("org.apache.logging.log4j:log4j:2.6.2")
 }
 
 
