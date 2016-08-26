@@ -5,6 +5,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.CookieHandler;
 
 /**
  * 
@@ -38,11 +39,10 @@ public class TestRouteVerticle extends AbstractVerticle {
 
 		router
 			.route()
-				.handler(AccessLoggerHandler.create(
-						//"[%{EEE, dd MMM yyyy HH:mm:ss zzz|GMT|es-es}t] %r %s %D %T %b %B %p %v %h"
-						"%r \"%{referrer}i\" \"%{user-Agent}i\" \"%{Content-Type}o\" %D %T"
-						));
+				.handler(AccessLoggerHandler.create("%r \"%{referrer}i\" \"%{user-Agent}i\" \"%{Content-Type}o\" %D %T"));
 		
+		// Handle cookies
+		router.route().handler(CookieHandler.create());
 		
 		router
 			.route("/nocontent")

@@ -17,7 +17,8 @@ public class PatternResolver {
 																new DateTimeElement(),
 																new BytesSentElement(),
 																new HostElement(),
-																new HeaderElement()
+																new HeaderElement(),
+																new CookieElement()
 															);
 	
 	
