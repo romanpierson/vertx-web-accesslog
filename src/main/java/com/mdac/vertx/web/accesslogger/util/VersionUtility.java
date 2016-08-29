@@ -6,9 +6,15 @@ import io.vertx.core.http.HttpVersion;
 
 public class VersionUtility {
 
+	private final static String EMPTY_VERSION = "-";
+	
 	public static String getFormattedValue(final Map<String, Object> values) {
 		
-		final HttpVersion version = (HttpVersion) values.get("version");
+		final HttpVersion version = values != null ? (HttpVersion) values.get("version") : null;
+		
+		if(!(version instanceof HttpVersion)){
+			return EMPTY_VERSION;
+		}
 		
 		final String versionFormatted;
 		
@@ -23,7 +29,7 @@ public class VersionUtility {
 			versionFormatted = "HTTP/2.0";
 			break;
 		default:
-			versionFormatted = "-";
+			versionFormatted = EMPTY_VERSION;
 			break;
 	    }
 	    
