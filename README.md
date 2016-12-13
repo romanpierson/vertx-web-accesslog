@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/romanpierson/vertx-web-accesslog.svg?branch=master)](https://travis-ci.org/romanpierson/vertx-web-accesslog)
+
 # vertx-web-accesslog
 
 An access log implementation to be used in vert web routes.
