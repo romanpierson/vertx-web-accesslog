@@ -19,14 +19,12 @@ public class CookieElement implements AccessLogElement{
 	}
 
 	@Override
-	public ExtractedPosition findInRawPattern(final String rawPattern, final int start) {
+	public ExtractedPosition findInRawPatternInternal(final String rawPattern) {
 		
 		final int index = rawPattern.indexOf("%{");
 		
 		if(index >= 0){
 				
-			if(start == -1 || index <= start)
-			{
 				int indexEndConfiguration = rawPattern.indexOf("}c");
 			
 				if(indexEndConfiguration > index)
@@ -35,7 +33,7 @@ public class CookieElement implements AccessLogElement{
 					
 					return new ExtractedPosition(index, configurationString.length() + 4, new CookieElement(configurationString));
 				}
-			}
+			
 		}
 		
 		

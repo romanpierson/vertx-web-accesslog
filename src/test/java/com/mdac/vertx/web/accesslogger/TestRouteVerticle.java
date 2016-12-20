@@ -45,7 +45,7 @@ public class TestRouteVerticle extends AbstractVerticle {
 
 		router
 			.route()
-				.handler(AccessLoggerHandler.create("%r \"%{referrer}i\" \"%{user-Agent}i\" \"%{Content-Type}o\" %D %T"));
+				.handler(AccessLoggerHandler.create("%r \"%{referrer}i\" \"%{user-Agent}i\" \"%{Content-Type}o\" %D %T %B"));
 		
 		// Handle cookies
 		router.route().handler(CookieHandler.create());

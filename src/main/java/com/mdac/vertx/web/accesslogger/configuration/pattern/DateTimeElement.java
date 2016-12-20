@@ -21,15 +21,13 @@ public class DateTimeElement implements AccessLogElement{
 	}
 
 	@Override
-	public ExtractedPosition findInRawPattern(final String rawPattern, final int start) {
+	public ExtractedPosition findInRawPatternInternal(final String rawPattern) {
 		
 		// Check if we have a configured datetime element
 		int index = rawPattern.indexOf("%{");
 		
 		if(index >= 0){
 				
-			if(start == -1 || index <= start)
-			{
 				int indexEndConfigurationDatetime = rawPattern.indexOf("}t");
 				int indexEndConfiguration = rawPattern.indexOf("}");
 			
@@ -38,7 +36,7 @@ public class DateTimeElement implements AccessLogElement{
 					
 					return new ExtractedPosition(index, configurationString.length() + 4, new DateTimeElement(deriveDateFormatFromConfigurationString(configurationString)));
 				}
-			}
+			
 		}
 		
 		// Check if we have an unconfigured element
@@ -46,12 +44,9 @@ public class DateTimeElement implements AccessLogElement{
 		index = rawPattern.indexOf(requestPattern);
 			
 		if(index >= 0){
-				
-			if(start == -1 || index <= start)
-			{
-				
+			
 				return new ExtractedPosition(index, requestPattern.length(), new DateTimeElement(Utils.createRFC1123DateTimeFormatter()));
-			}
+			
 		}
 		
 		

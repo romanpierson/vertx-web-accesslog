@@ -3,9 +3,9 @@ package com.mdac.vertx.web.accesslogger.configuration.pattern;
 
 public class ExtractedPosition {
 
-	final int start;
-	final int offset;
-	final AccessLogElement element;
+	final private int start;
+	final private int offset;
+	final private AccessLogElement element;
 	
 	public ExtractedPosition(final int start, final int offset) {
 		super();

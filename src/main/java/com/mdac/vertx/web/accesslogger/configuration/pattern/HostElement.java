@@ -27,7 +27,7 @@ public class HostElement implements AccessLogElement{
 	}
 	
 	@Override
-	public ExtractedPosition findInRawPattern(final String rawPattern, final int start) {
+	public ExtractedPosition findInRawPatternInternal(final String rawPattern) {
 		
 		ExtractedPosition foundPosition = null;
 		
@@ -37,10 +37,8 @@ public class HostElement implements AccessLogElement{
 		
 		if(index >= 0){
 			
-			if(start == -1 || index <= start)
-			{
 				foundPosition = new ExtractedPosition(index, patternRemoteHost.length(), new HostElement(Mode.REMOTE_HOST));
-			}
+			
 		}
 		
 		String patternLocalHost = "%v";
@@ -49,12 +47,11 @@ public class HostElement implements AccessLogElement{
 		
 		if(index >= 0){
 			
-			if(start == -1 || index <= start)
-			{
+			
 				if(foundPosition == null || index < foundPosition.getStart()){
 					foundPosition = new ExtractedPosition(index, patternLocalHost.length(), new HostElement(Mode.LOCAL_HOST));
 				}
-			}
+			
 		}
 		
 		String patternLocalPort = "%p";
@@ -63,12 +60,11 @@ public class HostElement implements AccessLogElement{
 		
 		if(index >= 0){
 			
-			if(start == -1 || index <= start)
-			{
+			
 				if(foundPosition == null || index < foundPosition.getStart()){
 					foundPosition = new ExtractedPosition(index, patternLocalPort.length(), new HostElement(Mode.LOCAL_PORT));
 				}
-			}
+			
 		}
 		
 		return foundPosition;

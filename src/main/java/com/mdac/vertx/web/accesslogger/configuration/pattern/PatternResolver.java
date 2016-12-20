@@ -38,7 +38,7 @@ public class PatternResolver {
 			
 			for(final AccessLogElement element : availableElements){
 				
-				final ExtractedPosition extractedPosition = element.findInRawPattern(rawPatternInEvaluation, bestStart);
+				final ExtractedPosition extractedPosition = element.findInRawPattern(rawPatternInEvaluation);
 				
 				if(extractedPosition == null || extractedPosition.getStart() == -1){
 					continue;

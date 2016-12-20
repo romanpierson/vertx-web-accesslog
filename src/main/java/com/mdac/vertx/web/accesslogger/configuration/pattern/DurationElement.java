@@ -33,7 +33,7 @@ public class DurationElement implements AccessLogElement{
 	
 	
 	@Override
-	public ExtractedPosition findInRawPattern(final String rawPattern, final int start) {
+	public ExtractedPosition findInRawPatternInternal(final String rawPattern) {
 		
 		String patternMillis = "%D";
 		
@@ -41,11 +41,8 @@ public class DurationElement implements AccessLogElement{
 		
 		if(index >= 0){
 			
-			if(start == -1
-				|| index <= start)
-			{
 				return new ExtractedPosition(index, patternMillis.length(), new DurationElement(TimeUnit.MILLISECONDS));
-			}
+			
 		}
 		
 		String patternSeconds = "%T";
@@ -54,11 +51,8 @@ public class DurationElement implements AccessLogElement{
 		
 		if(index >= 0){
 			
-			if(start == -1
-				|| index <= start)
-			{
 				return new ExtractedPosition(index, patternSeconds.length(), new DurationElement(TimeUnit.SECONDS));
-			}
+			
 		}
 		
 		return null;

@@ -19,7 +19,7 @@ public class RequestElement implements AccessLogElement{
 		
 	}
 	
-	public RequestElement() {
+	protected RequestElement() {
 		this.requestLogMode = null;
 	}
 	
@@ -28,7 +28,7 @@ public class RequestElement implements AccessLogElement{
 	}
 
 	@Override
-	public ExtractedPosition findInRawPattern(final String rawPattern, final int start) {
+	public ExtractedPosition findInRawPatternInternal(final String rawPattern) {
 		
 		// Apache request format
 		final String requestPattern = "%r";
@@ -36,10 +36,8 @@ public class RequestElement implements AccessLogElement{
 			
 		if(index >= 0){
 				
-			if(start == -1 || index <= start)
-			{
-				return new ExtractedPosition(index, requestPattern.length(), new RequestElement(RequestLogMode.APACHE_FIRST_REQUEST_LINE));
-			}
+			return new ExtractedPosition(index, requestPattern.length(), new RequestElement(RequestLogMode.APACHE_FIRST_REQUEST_LINE));
+			
 		}
 		
 		// URI mode only
@@ -50,10 +48,8 @@ public class RequestElement implements AccessLogElement{
 			
 			if(index >= 0){
 					
-				if(start == -1 || index <= start)
-				{
-					return new ExtractedPosition(index, urlPattern.length(), new RequestElement(RequestLogMode.URI));
-				}
+				return new ExtractedPosition(index, urlPattern.length(), new RequestElement(RequestLogMode.URI));
+				
 			}
 		}
 		
@@ -65,10 +61,8 @@ public class RequestElement implements AccessLogElement{
 					
 			if(index >= 0){
 							
-				if(start == -1 || index <= start)
-				{
-					return new ExtractedPosition(index, queryOnlyPattern.length(), new RequestElement(RequestLogMode.QUERY_STRING));
-				}
+				return new ExtractedPosition(index, queryOnlyPattern.length(), new RequestElement(RequestLogMode.QUERY_STRING));
+				
 			}
 		}
 		
@@ -78,10 +72,9 @@ public class RequestElement implements AccessLogElement{
 			
 		if(index >= 0){
 				
-			if(start == -1 || index <= start)
-			{
+			
 				return new ExtractedPosition(index, uriQueryPattern.length(), new RequestElement(RequestLogMode.URI_QUERY));
-			}
+			
 		}
 		
 		return null;
@@ -103,7 +96,7 @@ public class RequestElement implements AccessLogElement{
 		}
 		
 		if(!RequestLogMode.URI.equals(this.requestLogMode)
-			&& values.containsKey("query")){
+			&& values.getOrDefault("query", null) != null){
 			sb.append('?').append(values.get("query"));
 		}
 		

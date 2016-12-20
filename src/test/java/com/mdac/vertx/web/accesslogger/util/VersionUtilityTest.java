@@ -3,8 +3,6 @@ package com.mdac.vertx.web.accesslogger.util;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.Test;
 
@@ -20,7 +18,7 @@ import io.vertx.core.http.HttpVersion;
 public class VersionUtilityTest {
 
 	@Test
-	public void extractsCorrectVersion() {
+	public void testExtractsCorrectVersion() {
 		
 		final String versionNone = "-";
 		final String version10 = "HTTP/1.0";
