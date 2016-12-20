@@ -1,3 +1,7 @@
+plugins {
+  id "net.saliman.cobertura" version "2.3.2"
+}
+
 repositories {
     mavenCentral()
     jcenter()
@@ -5,6 +9,7 @@ repositories {
 
 apply plugin: 'eclipse'
 apply plugin: 'java'
+apply plugin: 'cobertura'
 apply plugin: 'jacoco'
 
 dependencies {
@@ -41,4 +46,11 @@ task packageSources(type: Jar) {
     classifier = 'sources'
 }
 
+cobertura {
+    coverageFormats = ['html', 'xml']				
+    coverageIgnoreTrivial = true					
+    coverageIgnores = ['org.slf4j.Logger.*']			
+    coverageReportDir = new File("$buildDir/reports/cobertura")	
+}
 
+test.finalizedBy(project.tasks.cobertura)	
