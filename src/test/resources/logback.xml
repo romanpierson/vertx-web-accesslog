@@ -1,9 +1,9 @@
 <configuration>
   
   <appender name="ACCESS_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-  	<file>/Users/piersrom/Documents/workspaces/github_romanpierson/vertx-web-accesslog/logs/async/vertx-web-access.log</file>
+  	<file>${access.location}/access.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-    	<fileNamePattern>vertx-web-access.%d{yyyy-MM-dd}.log</fileNamePattern>
+    	<fileNamePattern>access.%d{yyyy-MM-dd}.log</fileNamePattern>
 		<maxHistory>10</maxHistory>
     </rollingPolicy>
     <encoder>
@@ -30,7 +30,7 @@
   
   <logger name="com.mdac.vertx.web.accesslogger.impl.AccessLoggerHandlerImpl" level="info" additivity="false">
       <appender-ref ref="ACCESS_FILE_ASYNC" />
-      <appender-ref ref="STDOUT" /> 
+      <!-- <appender-ref ref="STDOUT" /> -->
     </logger>
     
   <root level="warn">

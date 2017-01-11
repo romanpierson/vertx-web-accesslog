@@ -39,13 +39,25 @@ router
 
 ### Configure Logger
 
-The logger itself in the current solution does not has a built in mechanism to write the the physical access file. Instead this is done by the logging framework used behind. 
+The logger itself in the current solution does not has a built in mechanism to write to the physical access file. Instead this is done by the logging framework used behind. 
 
 To chose to which logging implementation vertx logger should delegate you need to set property `vertx.logger-delegate-factory-class-name`, eg like this
+
+#### In the code before defining the access log handler
 
 ```java
 System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory");
 ```
+
+#### Using a fatjar like this (Be aware that the properties have to go before the jar in order to get picked up):
+
+```java
+java \
+-Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.SLF4JLogDelegateFactory \
+-Daccess.location=/Users/x/y/logs \
+-jar myFatJar.jar 
+```
+
 
 When defining the logger in the implementation used you need to make sure it refers to `com.mdac.vertx.web.accesslogger.impl.AccessLoggerHandlerImpl`
 
