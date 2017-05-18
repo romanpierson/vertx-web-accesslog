@@ -9,8 +9,8 @@ apply plugin: 'java'
 
 dependencies {
 
-	compile 'io.vertx:vertx-core:3.3.3'
-	compile 'io.vertx:vertx-web:3.3.3'
+	compile 'io.vertx:vertx-core:3.4.1'
+	compile 'io.vertx:vertx-web:3.4.1'
 	
 	// Logback (via SLF4J)
 	testRuntime 'ch.qos.logback:logback-classic:1.1.7'
@@ -26,5 +26,5 @@ dependencies {
 sourceCompatibility='1.8'
 targetCompatibility='1.8'
 
-jar.archiveName = "vertx-web-accesslog-3.3.3.jar"
+jar.archiveName = "vertx-web-accesslog-3.4.1.jar"
 
