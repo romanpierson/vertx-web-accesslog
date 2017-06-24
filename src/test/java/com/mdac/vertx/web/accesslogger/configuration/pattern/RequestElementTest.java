@@ -22,8 +22,6 @@ import org.junit.Test;
 
 import com.mdac.vertx.web.accesslogger.util.VersionUtility;
 
-import io.vertx.core.http.HttpVersion;
-
 /**
  * 
  * Tests {@link RequestElement}
@@ -33,7 +31,7 @@ import io.vertx.core.http.HttpVersion;
  */
 public class RequestElementTest {
 	
-	final HttpVersion httpVersion = HttpVersion.HTTP_1_1;
+	final String httpVersion = "HTTP_1_1";
 	final Map<String, Object> valuesWithQuery = getAllValues("uri-value", "method-value", "query-value", httpVersion); 
 	final Map<String, Object> valuesWithoutQuery = getAllValues("uri-value", "method-value", null, httpVersion); 
 
@@ -90,7 +88,7 @@ public class RequestElementTest {
 		
 	}
 	
-	private Map<String, Object> getAllValues(final String uriValue, final String methodValue, final String queryValue, final HttpVersion versionValue){
+	private Map<String, Object> getAllValues(final String uriValue, final String methodValue, final String queryValue, final String versionValue){
 		
 		Map<String, Object> values = new HashMap<>();
 		

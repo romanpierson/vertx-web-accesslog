@@ -37,9 +37,11 @@ public class VersionUtilityTest {
 		final String version11 = "HTTP/1.1";
 		final String version20 = "HTTP/2.0";
 		
-		assertEquals(version10, VersionUtility.getFormattedValue(Collections.singletonMap("version", HttpVersion.HTTP_1_0)));
-		assertEquals(version11, VersionUtility.getFormattedValue(Collections.singletonMap("version", HttpVersion.HTTP_1_1)));
-		assertEquals(version20, VersionUtility.getFormattedValue(Collections.singletonMap("version", HttpVersion.HTTP_2)));
+		assertEquals(version10, VersionUtility.getFormattedValue(Collections.singletonMap("version", "HTTP_1_0")));
+		assertEquals(version11, VersionUtility.getFormattedValue(Collections.singletonMap("version", "HTTP_1_1")));
+		assertEquals(version20, VersionUtility.getFormattedValue(Collections.singletonMap("version", "HTTP_2")));
+		assertEquals(versionNone, VersionUtility.getFormattedValue(Collections.singletonMap("version", "foo")));
+		assertEquals(versionNone, VersionUtility.getFormattedValue(Collections.singletonMap("version", "")));
 		assertEquals(versionNone, VersionUtility.getFormattedValue(Collections.singletonMap("version", null)));
 		assertEquals(versionNone, VersionUtility.getFormattedValue( null));
 		

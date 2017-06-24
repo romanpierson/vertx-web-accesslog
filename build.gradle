@@ -1,3 +1,6 @@
+plugins {
+    id "com.jfrog.bintray" version "1.7.3"
+}
 
 repositories {
     mavenCentral()
@@ -6,11 +9,14 @@ repositories {
 
 apply plugin: 'eclipse'
 apply plugin: 'java'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+version='1.0.0'
 
 dependencies {
 
-	compile 'io.vertx:vertx-core:3.4.1'
-	compile 'io.vertx:vertx-web:3.4.1'
+	compile 'io.vertx:vertx-web:3.4.2'
 	
 	// Logback (via SLF4J)
 	testRuntime 'ch.qos.logback:logback-classic:1.1.7'
@@ -18,7 +24,7 @@ dependencies {
 	// Log4J
 	//testRuntime 'log4j:log4j:1.2.17'
 	
-	testCompile 'junit:junit:4.12'
+	testCompile 'junit:junit:4.11'
 	
 }
 
@@ -26,5 +32,53 @@ dependencies {
 sourceCompatibility='1.8'
 targetCompatibility='1.8'
 
-jar.archiveName = "vertx-web-accesslog-3.4.1.jar"
+jar.archiveName = "vertx-web-accesslog-1.0.0.jar"
+bintrayUpload.packageName = "vertx-web-accesslog-1.0.0.jar"
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            
+            groupId 'com.mdac'
+            artifactId 'vertx-web-accesslog'
+            version '1.0.0'
+            
+            from components.java
+
+            artifact sourceJar {
+                classifier "sources"
+            }
+        }
+    }
+}
+
+bintray {
+	user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+	key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+    
+    publications = ['mavenJava']
+    dryRun = false
+    publish = true
+    pkg {
+        repo = 'maven'
+        name = 'com.mdac.vertx-web-accesslog'
+        licenses = ['Apache-2.0']
+        labels = ['vertx', 'log', 'accesslog']
+        publicDownloadNumbers = true
+        //Optional version descriptor
+        override = false
+        vcsUrl = 'https://github.com/romanpierson/vertx-web-accesslog.git'
+        version {
+        	name = '1.0.0'
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '4.0'
+}
 

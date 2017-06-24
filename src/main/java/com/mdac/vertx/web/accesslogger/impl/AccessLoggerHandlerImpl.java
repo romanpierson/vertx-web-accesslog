@@ -85,7 +85,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 		values.put("status", response.getStatusCode());
 		values.put("startTSmillis", startTSmillis);
 		values.put("endTSmillis", System.currentTimeMillis());
-		values.put("version", request.version());
+		values.put("version", request.version() != null ? request.version().name() : null);
 		if(response.bytesWritten() > 0){
 			values.put("bytesSent", response.bytesWritten());
 		}

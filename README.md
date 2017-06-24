@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/romanpierson/vertx-web-accesslog.svg?branch=master)](https://travis-ci.org/romanpierson/vertx-web-accesslog)
+[![Build Status](https://travis-ci.org/romanpierson/vertx-web-accesslog.svg?branch=master)](https://travis-ci.org/romanpierson/vertx-web-accesslog) [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)]
 
 # vertx-web-accesslog
 
@@ -9,6 +9,30 @@ Inspired and with intention to be compliant with
 * Apache HTTP Server mod_log_config module (http://httpd.apache.org/docs/2.4/en/mod/mod_log_config.html)
 
 * W3C Extended Log File Format (http://www.w3.org/TR/WD-logfile.html)
+
+## Technical Usage
+
+The artefact is published on bintray / jcenter (https://bintray.com/romanpierson/maven/com.mdac.vertx-web-accesslog)
+
+Just add it as a dependency to your project (maven example)
+
+```java
+<dependency>
+  <groupId>com.mdac</groupId>
+  <artifactId>vertx-web-accesslog</artifactId>
+  <version>1.0.0</version>
+  <type>pom</type>
+</dependency>
+```
+
+### Compatibility with Vertx core
+
+Accesslog version | Vertx version
+----|------
+1.0.0 | 3.2.0 - 3.4.2
+
+Previous versions of Vertx 3 could be supported with small adaptations, most caused by changes in the vertx-web API.
+
 
 ## Access Log Pattern Configuration
 
