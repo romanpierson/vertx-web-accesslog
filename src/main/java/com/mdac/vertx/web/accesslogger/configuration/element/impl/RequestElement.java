@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Roman Pierson
+ * Copyright (c) 2016-2018 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -10,13 +10,16 @@
  *
  * You may elect to redistribute this code under either of these licenses.
  */
-package com.mdac.vertx.web.accesslogger.configuration.pattern;
+package com.mdac.vertx.web.accesslogger.configuration.element.impl;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Map;
 
+import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
+import com.mdac.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
 import com.mdac.vertx.web.accesslogger.util.VersionUtility;
+
+import io.vertx.core.json.JsonObject;
 
 public class RequestElement implements AccessLogElement{
 
@@ -31,7 +34,7 @@ public class RequestElement implements AccessLogElement{
 		
 	}
 	
-	protected RequestElement() {
+	public RequestElement() {
 		this.requestLogMode = null;
 	}
 	
@@ -92,24 +95,25 @@ public class RequestElement implements AccessLogElement{
 		return null;
 	}
 
+
 	@Override
-	public String getFormattedValue(final Map<String, Object> values) {
+	public String getFormattedValue(JsonObject values) {
 		
 		final StringBuilder sb = new StringBuilder();
 		
 		if(RequestLogMode.APACHE_FIRST_REQUEST_LINE.equals(this.requestLogMode)){
 			
-			sb.append(values.get("method")).append(' ');
+			sb.append(values.getString("method")).append(' ');
 			
 		}
 		
 		if(!RequestLogMode.QUERY_STRING.equals(this.requestLogMode)){
-			sb.append(values.get("uri"));
+			sb.append(values.getString("uri"));
 		}
 		
 		if(!RequestLogMode.URI.equals(this.requestLogMode)
-			&& values.getOrDefault("query", null) != null){
-			sb.append('?').append(values.get("query"));
+			&& values.getString("query", null) != null){
+			sb.append('?').append(values.getString("query", null));
 		}
 		
 		
@@ -120,7 +124,8 @@ public class RequestElement implements AccessLogElement{
 		}
 		
 		return sb.toString();
-		
 	}
+	
+	
 
 }

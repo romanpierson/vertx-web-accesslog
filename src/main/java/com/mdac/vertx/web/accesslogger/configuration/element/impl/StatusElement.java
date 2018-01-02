@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Roman Pierson
+ * Copyright (c) 2016-2018 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -10,14 +10,14 @@
  *
  * You may elect to redistribute this code under either of these licenses.
  */
-package com.mdac.vertx.web.accesslogger.configuration.pattern;
+package com.mdac.vertx.web.accesslogger.configuration.element.impl;
 
 import java.util.Arrays;
 
-public class MethodElement extends GenericAccessLogElement{
+public class StatusElement extends GenericAccessLogElement{
 
-	public MethodElement(){
-		super(Arrays.asList("cs-method", "%m"), "method");
+	public StatusElement(){
+		super(Arrays.asList("sc-status", "%s"), "status");
 	}
 	
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Roman Pierson
+ * Copyright (c) 2016-2018 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -31,14 +31,14 @@ import com.mdac.vertx.web.accesslogger.util.VersionUtility;
  */
 public class RequestElementTest {
 	
-	final String httpVersion = "HTTP_1_1";
+	/*final String httpVersion = "HTTP_1_1";
 	final Map<String, Object> valuesWithQuery = getAllValues("uri-value", "method-value", "query-value", httpVersion); 
 	final Map<String, Object> valuesWithoutQuery = getAllValues("uri-value", "method-value", null, httpVersion); 
 
 	@Test(expected=IllegalArgumentException.class)
 	public void testFindInRawPatternInvalidInputNull(){
 	
-		new RequestElement().findInRawPattern(null);
+		new RequestElement(null).findInRawPattern(null);
 		
 	}
 	
@@ -98,5 +98,5 @@ public class RequestElementTest {
 		values.put("method", methodValue);
 		
 		return values;
-	}
+	}*/
 }

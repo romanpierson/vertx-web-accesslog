@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Roman Pierson
+ * Copyright (c) 2016-2018 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -12,6 +12,7 @@
  */
 package com.mdac.vertx.web.accesslogger.configuration.pattern;
 
+import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
 
 public class ExtractedPosition {
 

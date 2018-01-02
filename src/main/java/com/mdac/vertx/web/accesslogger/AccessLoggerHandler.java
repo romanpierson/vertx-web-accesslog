@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Roman Pierson
+ * Copyright (c) 2016-2018 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -12,7 +12,14 @@
  */
 package com.mdac.vertx.web.accesslogger;
 
+import java.util.Collection;
+import java.util.Collections;
+
+import com.mdac.vertx.web.accesslogger.appender.AppenderOptions;
+import com.mdac.vertx.web.accesslogger.appender.logging.impl.LoggingAppender;
+import com.mdac.vertx.web.accesslogger.appender.logging.impl.LoggingAppenderOptions;
 import com.mdac.vertx.web.accesslogger.impl.AccessLoggerHandlerImpl;
+import com.mdac.vertx.web.accesslogger.impl.AccessLoggerOptions;
 
 import io.vertx.core.Handler;
 import io.vertx.ext.web.RoutingContext;
@@ -26,8 +33,34 @@ import io.vertx.ext.web.RoutingContext;
  */
 public interface AccessLoggerHandler extends Handler<RoutingContext> {
 
+	/**
+	 * 
+	 * Creates an access log handler by passing a logging pattern. Internally an instance of {@link LoggingAppender} is used.
+	 * 
+	 * This is just kept for backward compatibility and will be removed in the next release.
+	 * 
+	 * @param pattern	The requested logging pattern
+	 * @return			The logging handler
+	 */
+	@Deprecated
 	static AccessLoggerHandler create(final String pattern) {
-	    return new AccessLoggerHandlerImpl(pattern);
+		
+	    return create(new AccessLoggerOptions().setPattern(pattern), Collections.singletonList(new LoggingAppenderOptions()));
+	    
+	}
+	
+	/**
+	 * 
+	 * Creates a logging handler by passing an {@link AccessLoggerOptions} configuration and a list of {@link AppenderOptions}
+	 * 
+	 * @param accessLoggerOptions	The access logger configuration
+	 * @param appenderOptions		One or several appender configuration(s)
+	 * @return						The logging handler
+	 */
+	static AccessLoggerHandler create(final AccessLoggerOptions accessLoggerOptions, final Collection<AppenderOptions> appenderOptions){
+		
+		return new AccessLoggerHandlerImpl(accessLoggerOptions, appenderOptions);
+		
 	}
 	
 }

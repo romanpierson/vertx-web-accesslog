@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Roman Pierson
+ * Copyright (c) 2016-2018 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -10,9 +10,12 @@
  *
  * You may elect to redistribute this code under either of these licenses.
  */
-package com.mdac.vertx.web.accesslogger.configuration.pattern;
+package com.mdac.vertx.web.accesslogger.configuration.element.impl;
 
-import java.util.Map;
+import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
+import com.mdac.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
+
+import io.vertx.core.json.JsonObject;
 
 public class HostElement implements AccessLogElement{
 
@@ -32,7 +35,11 @@ public class HostElement implements AccessLogElement{
 		
 	}
 	
-	private HostElement(final Mode mode){
+	public HostElement(final Mode mode){
+		
+		if(mode == null){
+			throw new IllegalArgumentException("mode must not be  null");
+		}
 		
 		this.mode = mode;
 		
@@ -83,16 +90,16 @@ public class HostElement implements AccessLogElement{
 	}
 	
 	@Override
-	public String getFormattedValue(final Map<String, Object> values) {
+	public String getFormattedValue(final JsonObject values) {
 	
 		switch (this.mode){
 		
 			case LOCAL_HOST:
-				return "" + values.get("localHost");
+				return "" + values.getString("localHost");
 			case LOCAL_PORT:
-				return "" + values.get("localPort");
+				return "" + values.getInteger("localPort");
 			case REMOTE_HOST:
-				return "" + values.get("remoteHost");
+				return "" + values.getString("remoteHost");
 			default:
 				break;
 			

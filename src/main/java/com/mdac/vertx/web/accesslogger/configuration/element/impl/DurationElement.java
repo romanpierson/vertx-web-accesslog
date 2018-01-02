@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Roman Pierson
+ * Copyright (c) 2016-2018 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -10,9 +10,12 @@
  *
  * You may elect to redistribute this code under either of these licenses.
  */
-package com.mdac.vertx.web.accesslogger.configuration.pattern;
+package com.mdac.vertx.web.accesslogger.configuration.element.impl;
 
-import java.util.Map;
+import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
+import com.mdac.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
+
+import io.vertx.core.json.JsonObject;
 
 public class DurationElement implements AccessLogElement{
 
@@ -70,11 +73,12 @@ public class DurationElement implements AccessLogElement{
 		return null;
 	}
 
+	
 	@Override
-	public String getFormattedValue(final Map<String, Object> values) {
+	public String getFormattedValue(final JsonObject values) {
 		
-		final Long startTS = (Long) values.getOrDefault(startTSkey, INVALID_TS);
-		final Long endTS = (Long) values.getOrDefault(endTSkey, INVALID_TS);
+		final Long startTS = values.getLong(startTSkey, INVALID_TS);
+		final Long endTS = values.getLong(endTSkey, INVALID_TS);
 		
 		if(startTS == null || endTS == null){
 			return "-";
@@ -87,7 +91,6 @@ public class DurationElement implements AccessLogElement{
 		}
 		
 		return duration > 0 ? "" + duration : "0";
-		
 	}
 
 }

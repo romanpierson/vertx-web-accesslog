@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Roman Pierson
+ * Copyright (c) 2016-2018 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -12,22 +12,25 @@
  */
 package com.mdac.vertx.web.accesslogger.impl;
 
-import java.text.DateFormat;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import com.mdac.vertx.web.accesslogger.AccessLoggerHandler;
-import com.mdac.vertx.web.accesslogger.configuration.output.OutputConfiguration;
+import com.mdac.vertx.web.accesslogger.appender.Appender;
+import com.mdac.vertx.web.accesslogger.appender.AppenderOptions;
+import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
 import com.mdac.vertx.web.accesslogger.configuration.pattern.PatternResolver;
 import com.mdac.vertx.web.accesslogger.configuration.pattern.ResolvedPatternResult;
 
+import io.vertx.core.DeploymentOptions;
+import io.vertx.core.MultiMap;
+import io.vertx.core.Vertx;
+import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
-import io.vertx.ext.web.impl.Utils;
 
 /**
  * 
@@ -36,27 +39,90 @@ import io.vertx.ext.web.impl.Utils;
  * @author Roman Pierson
  *
  */
-@SuppressWarnings("unused")
 public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 
-	private final DateFormat dateTimeFormat = Utils.createRFC1123DateTimeFormatter();
-
-	private Logger logger = LoggerFactory.getLogger(AccessLoggerHandlerImpl.class);
+	private final EventBus eventBus;
 	
-	private OutputConfiguration outputConfiguration;
-	
-	private PatternResolver patternResolver = new PatternResolver();
-	
-	public AccessLoggerHandlerImpl(final String pattern) {
+	public AccessLoggerHandlerImpl(final AccessLoggerOptions accessLoggerOptions, final Collection<AppenderOptions> appenderOptions) {
 		
-		final ResolvedPatternResult resolvedPattern = patternResolver.resolvePattern(pattern);
-		
-		if(resolvedPattern != null){
-			outputConfiguration = new OutputConfiguration(resolvedPattern.getResolvedPattern(), 
-					resolvedPattern.getLogElements(), 
-					Arrays.asList(logger));
+		if(accessLoggerOptions == null || appenderOptions == null || appenderOptions.size() == 0){
+			throw new IllegalArgumentException("must specify at least one accessLoggerOptions and one appenderOptions");
 		}
 		
+		if(accessLoggerOptions.getPattern() != null && accessLoggerOptions.getLogElements().size() > 1){
+			throw new IllegalArgumentException("must not specify a pattern and logElements");
+		}
+		
+		String resolvedPattern = null;
+		Collection<AccessLogElement> logElements;
+		
+		if(accessLoggerOptions.getPattern() != null){
+			// A pattern was defined
+			final ResolvedPatternResult resolvedPatternResult = new PatternResolver().resolvePattern(accessLoggerOptions.getPattern());
+			
+			resolvedPattern = resolvedPatternResult.getResolvedPattern();
+			logElements = resolvedPatternResult.getLogElements();
+			
+		} else {
+			// Log elements were defined
+			throw new UnsupportedOperationException();
+		}
+		
+		// Create the appenders
+		Collection<Appender> appenders = new ArrayList<>(appenderOptions.size());
+		
+		for(final AppenderOptions appenderOption : appenderOptions){
+			
+			final String appenderImplementationClassName = appenderOption.getAppenderImplementationClassName();
+			
+			if(appenderImplementationClassName == null || appenderImplementationClassName.trim().isEmpty()){
+				throw new IllegalArgumentException("must not specify an appender with empty appenderImplementationClass");
+			}
+			
+			Class appenderClass = null;
+			
+			try{
+				appenderClass = Class.forName(appenderImplementationClassName);
+			}catch(Exception ex){
+				throw new IllegalArgumentException("appenderImplementationClass [" + appenderImplementationClassName + "] was not found", ex);
+			}
+			
+			Constructor constructor = null;
+			
+			try{
+				
+				Constructor[] constructors = appenderClass.getConstructors();
+				
+				if(constructors.length != 1){
+					throw new IllegalArgumentException("appenderImplementationClass [" + appenderImplementationClassName + "] must specify exactly one constructor");
+				}
+				
+				constructor = constructors[0];
+				
+			}catch(Exception ex){
+				throw new IllegalArgumentException("could not look up constructor", ex);
+			}
+			
+			
+			Appender appender = null;
+			
+			try{
+				appender = (Appender) constructor.newInstance(appenderOption, logElements);
+			}catch(Exception ex){
+				throw new IllegalArgumentException("Failed to instantiate appenderImplementationClass of type [" + appenderImplementationClassName + "]", ex);
+			}
+			
+			if(appender.requiresResolvedPattern()){
+				appender.setResolvedPattern(resolvedPattern);
+			}
+			
+			appenders.add(appender);
+			
+		}
+		
+		Vertx.currentContext().owner().deployVerticle(new AccessLoggerProducerVerticle(accessLoggerOptions, appenders), new DeploymentOptions().setWorker(true));
+		
+		eventBus = Vertx.currentContext().owner().eventBus();
 	}
 	
 	
@@ -76,33 +142,41 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 		final HttpServerRequest request = context.request();
 		final HttpServerResponse response = context.response();
 		
-		final Map<String, Object> values = new HashMap<String, Object>();
-		values.put("uri", request.path());
-		if(request.query() != null){
-			values.put("query", request.query());
+		JsonObject jsonValues = new JsonObject()
+										.put("startTSmillis", startTSmillis)
+										.put("endTSmillis", System.currentTimeMillis())
+										.put("status", response.getStatusCode())
+										.put("method", request.method().name())
+										.put("uri", request.path())
+										.put("version", request.version())
+										.put("remoteHost", request.remoteAddress().host())
+										.put("localHost", request.localAddress().host())
+										.put("localPort", request.localAddress().port());
+		
+		
+		if(request.query() != null && !request.query().trim().isEmpty()){
+			jsonValues.put("query", request.query());
 		}
-		values.put("method", request.method());
-		values.put("status", response.getStatusCode());
-		values.put("startTSmillis", startTSmillis);
-		values.put("endTSmillis", System.currentTimeMillis());
-		values.put("version", request.version() != null ? request.version().name() : null);
+		
 		if(response.bytesWritten() > 0){
-			values.put("bytesSent", response.bytesWritten());
+			jsonValues.put("bytesSent", response.bytesWritten());
 		}
 		
-		values.put("remoteHost", request.remoteAddress().host());
-		values.put("localHost", request.localAddress().host());
-		values.put("localPort", request.localAddress().port());
+		jsonValues.put("requestHeaders", extractHeaders(request.headers()));
+		jsonValues.put("responseHeaders", extractHeaders(response.headers()));
 		
-		values.put("requestHeaders", request.headers());
-		values.put("responseHeaders", response.headers());
-		
-		if(context.cookieCount() > 0){
-			values.put("cookies", context.cookies());
-		}
-		
-		outputConfiguration.doLog(values);
+		eventBus.send("accesslogevent", jsonValues);
 		
 	}
 	
+	private JsonObject extractHeaders(final MultiMap headersMap){
+		
+		JsonObject headers = new JsonObject();
+		headersMap.forEach(entry -> {
+			headers.put(entry.getKey(), entry.getValue());
+		});
+		
+		return headers;
+		
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Roman Pierson
+ * Copyright (c) 2016-2018 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -10,14 +10,17 @@
  *
  * You may elect to redistribute this code under either of these licenses.
  */
-package com.mdac.vertx.web.accesslogger.configuration.pattern;
+package com.mdac.vertx.web.accesslogger.configuration.element.impl;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-import java.util.Map;
 import java.util.TimeZone;
 
+import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
+import com.mdac.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
+
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.impl.Utils;
 
 public class DateTimeElement implements AccessLogElement{
@@ -95,11 +98,11 @@ public class DateTimeElement implements AccessLogElement{
 	}
 
 	@Override
-	public String getFormattedValue(final Map<String, Object> values) {
+	public String getFormattedValue(final JsonObject values) {
 		
 		final StringBuilder sb = new StringBuilder();
 		
-		sb.append(this.dateFormat.format(values.get("startTSmillis")));
+		sb.append(this.dateFormat.format(values.getLong("startTSmillis")));
 		
 		return sb.toString();
 	}

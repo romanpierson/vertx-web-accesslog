@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Roman Pierson
+ * Copyright (c) 2016-2018 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -15,6 +15,17 @@ package com.mdac.vertx.web.accesslogger.configuration.pattern;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+
+import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
+import com.mdac.vertx.web.accesslogger.configuration.element.impl.BytesSentElement;
+import com.mdac.vertx.web.accesslogger.configuration.element.impl.DateTimeElement;
+import com.mdac.vertx.web.accesslogger.configuration.element.impl.DurationElement;
+import com.mdac.vertx.web.accesslogger.configuration.element.impl.HeaderElement;
+import com.mdac.vertx.web.accesslogger.configuration.element.impl.HostElement;
+import com.mdac.vertx.web.accesslogger.configuration.element.impl.MethodElement;
+import com.mdac.vertx.web.accesslogger.configuration.element.impl.RequestElement;
+import com.mdac.vertx.web.accesslogger.configuration.element.impl.StatusElement;
+import com.mdac.vertx.web.accesslogger.configuration.element.impl.VersionElement;
 
 public class PatternResolver {
 
@@ -71,8 +82,6 @@ public class PatternResolver {
 				
 				// Shorten the raw pattern till where we found replacement
 				rawPatternInEvaluation = rawPatternInEvaluation.substring(bestStart + bestOffset);
-				
-				//System.out.println("|" + rawPatternInEvaluation + "|");
 				
 				// Add the placeholder - for now always type string
 				sbEvaluatedPattern.append("%s");

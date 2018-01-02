@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Roman Pierson
+ * Copyright (c) 2016-2018 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -13,12 +13,11 @@
 package com.mdac.vertx.web.accesslogger.util;
 
 import static org.junit.Assert.assertEquals;
-
-import java.util.Collections;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
-import io.vertx.core.http.HttpVersion;
+import io.vertx.core.json.JsonObject;
 
 /**
  * 
@@ -32,18 +31,17 @@ public class VersionUtilityTest {
 	@Test
 	public void testExtractsCorrectVersion() {
 		
-		final String versionNone = "-";
 		final String version10 = "HTTP/1.0";
 		final String version11 = "HTTP/1.1";
 		final String version20 = "HTTP/2.0";
 		
-		assertEquals(version10, VersionUtility.getFormattedValue(Collections.singletonMap("version", "HTTP_1_0")));
-		assertEquals(version11, VersionUtility.getFormattedValue(Collections.singletonMap("version", "HTTP_1_1")));
-		assertEquals(version20, VersionUtility.getFormattedValue(Collections.singletonMap("version", "HTTP_2")));
-		assertEquals(versionNone, VersionUtility.getFormattedValue(Collections.singletonMap("version", "foo")));
-		assertEquals(versionNone, VersionUtility.getFormattedValue(Collections.singletonMap("version", "")));
-		assertEquals(versionNone, VersionUtility.getFormattedValue(Collections.singletonMap("version", null)));
-		assertEquals(versionNone, VersionUtility.getFormattedValue( null));
+		
+		assertEquals(version10, VersionUtility.getFormattedValue(new JsonObject().put("version", "HTTP_1_0")));
+		assertEquals(version11, VersionUtility.getFormattedValue(new JsonObject().put("version", "HTTP_1_1")));
+		assertEquals(version20, VersionUtility.getFormattedValue(new JsonObject().put("version", "HTTP_2")));
+		assertEquals("foo", VersionUtility.getFormattedValue(new JsonObject().put("version",  "foo")));
+		assertNull(VersionUtility.getFormattedValue(new JsonObject().put("version", "")));
+		assertNull(VersionUtility.getFormattedValue(new JsonObject().putNull("version")));
 		
 	}
 }

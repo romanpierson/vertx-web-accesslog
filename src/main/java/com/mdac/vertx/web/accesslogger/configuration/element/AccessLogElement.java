@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Roman Pierson
+ * Copyright (c) 2016-2018 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -10,13 +10,21 @@
  *
  * You may elect to redistribute this code under either of these licenses.
  */
-package com.mdac.vertx.web.accesslogger.configuration.pattern;
+package com.mdac.vertx.web.accesslogger.configuration.element;
 
-import java.util.Map;
+import com.mdac.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
+
+import io.vertx.core.json.JsonObject;
 
 public interface AccessLogElement {
 
-	abstract ExtractedPosition findInRawPatternInternal(String rawPattern);
+	
+	default ExtractedPosition findInRawPatternInternal(String rawPattern){
+		
+		// Not enforcing anymore element implementations to explicitly define this lookup functionality 
+		return null;
+		
+	}
 	
 	/**
 	 * 
@@ -35,6 +43,6 @@ public interface AccessLogElement {
 		
 	}
 	
-	abstract String getFormattedValue(Map<String, Object> values);
+	abstract String getFormattedValue(JsonObject values);
 	
 }

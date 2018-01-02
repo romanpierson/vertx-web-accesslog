@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Roman Pierson
+ * Copyright (c) 2016-2018 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -11,6 +11,11 @@
  * You may elect to redistribute this code under either of these licenses.
  */
 package com.mdac.vertx.web.accesslogger;
+
+import java.util.Arrays;
+
+import com.mdac.vertx.web.accesslogger.appender.printstream.impl.PrintStreamAppenderOptions;
+import com.mdac.vertx.web.accesslogger.impl.AccessLoggerOptions;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
@@ -33,6 +38,7 @@ public class TestRouteVerticle extends AbstractVerticle {
 		
 		// Delegating to SLF4J in order to use logback as backend (see example logback.xml)
 		System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory");
+		System.setProperty("access.location", "/tmp/accesslog ");
 		
 		// Log4J Native
 		// System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.Log4jLogDelegateFactory");
@@ -54,10 +60,21 @@ public class TestRouteVerticle extends AbstractVerticle {
 		HttpServer server = this.vertx.createHttpServer();
 		
 		Router router = Router.router(vertx);
-
+		
 		router
 			.route()
-				.handler(AccessLoggerHandler.create("%r \"%{referrer}i\" \"%{user-Agent}i\" \"%{Content-Type}o\" %D %T %B"));
+			
+				// Example how to define the default way of logging - just for backward compatibility
+				//.handler(AccessLoggerHandler.create("%t %s %r %D %B \"%{Accept-Encoding}i\""));
+				
+				// Example how to specify a pattern and an explicit appender
+				.handler(AccessLoggerHandler.create(new AccessLoggerOptions().setPattern("%t %m %D %T"), 
+					                        Arrays.asList(
+					                        		new PrintStreamAppenderOptions().setPrintStream(System.out)
+					                        		)
+					                        )
+				);
+		
 		
 		// Handle cookies
 		router.route().handler(CookieHandler.create());

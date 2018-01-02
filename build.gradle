@@ -16,7 +16,7 @@ version='1.0.0'
 
 dependencies {
 
-	compile 'io.vertx:vertx-web:3.4.2'
+	compile 'io.vertx:vertx-web:3.5.0'
 	
 	// Logback (via SLF4J)
 	testRuntime 'ch.qos.logback:logback-classic:1.1.7'

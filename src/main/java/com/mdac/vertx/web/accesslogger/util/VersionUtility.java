@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Roman Pierson
+ * Copyright (c) 2016-2018 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -12,18 +12,22 @@
  */
 package com.mdac.vertx.web.accesslogger.util;
 
-import java.util.Map;
+import io.vertx.core.json.JsonObject;
 
 public class VersionUtility {
 
-	private final static String EMPTY_VERSION = "-";
+	public static String getFormattedValue(final JsonObject values) {
+		
+		final String version = values.getString("version", null);
+		
+		return transform(version);
+		
+	}
 	
-	public static String getFormattedValue(final Map<String, Object> values) {
+	private static String transform(final String version){
 		
-		final String version = values != null ? (String) values.get("version") : null;
-		
-		if(version == null){
-			return EMPTY_VERSION;
+		if(version == null || version.trim().isEmpty()){
+			return null;
 		}
 		
 		final String versionFormatted;
@@ -39,11 +43,12 @@ public class VersionUtility {
 			versionFormatted = "HTTP/2.0";
 			break;
 		default:
-			versionFormatted = EMPTY_VERSION;
+			versionFormatted = version;
 			break;
 	    }
 	    
 	    return versionFormatted;
 		
 	}
+	
 }

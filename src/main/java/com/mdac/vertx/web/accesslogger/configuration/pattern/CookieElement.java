@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Roman Pierson
+ * Copyright (c) 2016-2018 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -12,11 +12,14 @@
  */
 package com.mdac.vertx.web.accesslogger.configuration.pattern;
 
-import io.vertx.ext.web.Cookie;
-
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+
+import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
+
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.Cookie;
 
 public class CookieElement implements AccessLogElement{
 
@@ -52,7 +55,7 @@ public class CookieElement implements AccessLogElement{
 		return null;
 	}
 	
-	@Override
+	/*@Override
 	public String getFormattedValue(final Map<String, Object> values) {
 		
 		if(!values.containsKey("cookies")){
@@ -65,6 +68,12 @@ public class CookieElement implements AccessLogElement{
 		
 		return cookie.isPresent() ? cookie.get().getValue() : "-";
 		
+	}*/
+
+	@Override
+	public String getFormattedValue(JsonObject values) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
