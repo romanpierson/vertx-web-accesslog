@@ -7,3 +7,5 @@ build/
 .settings/org.eclipse.jdt.core.prefs
 gradle.properties
 .vertx
+.metadata
+.settings

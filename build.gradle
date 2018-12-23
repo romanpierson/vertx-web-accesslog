@@ -16,15 +16,15 @@ version='1.0.0'
 
 dependencies {
 
-	compile 'io.vertx:vertx-web:3.5.0'
+	compile 'io.vertx:vertx-web:3.6.2'
 	
 	// Logback (via SLF4J)
-	testRuntime 'ch.qos.logback:logback-classic:1.1.7'
+	testRuntime 'ch.qos.logback:logback-classic:1.2.3'
 	
 	// Log4J
 	//testRuntime 'log4j:log4j:1.2.17'
 	
-	testCompile 'junit:junit:4.11'
+	testCompile 'junit:junit:4.12'
 	
 }
 
@@ -78,7 +78,7 @@ bintray {
     }
 }
 
-task wrapper(type: Wrapper) {
-  gradleVersion = '4.0'
+wrapper() {
+  gradleVersion = '5.0'
 }
 
