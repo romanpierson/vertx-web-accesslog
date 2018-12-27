@@ -117,6 +117,10 @@ Outgoing Response Headers | %{IDENTIFIER}o  | - | If not found - will be logged 
 Cookie | %{IDENTIFIER}c  | - | If not found - will be logged |
 
 
+## Changelog
 
+### 1.1.0
+
+* Introduced Appender API and removed all except PrintStreamAppender to separate projects
 
 
