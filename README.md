@@ -14,22 +14,21 @@ Inspired and with intention to be compliant with
 
 The artefact is published on bintray / jcenter (https://bintray.com/romanpierson/maven/com.mdac.vertx-web-accesslog)
 
-Just add it as a dependency to your project (maven example)
+Just add it as a dependency to your project (gradle example)
 
 ```xml
-<dependency>
-  <groupId>com.mdac</groupId>
-  <artifactId>vertx-web-accesslog</artifactId>
-  <version>1.0.0</version>
-  <type>pom</type>
-</dependency>
+dependencies {
+
+	compile 'com.mdac:vertx-web-accesslog:1.1.0'
+	
+}
 ```
 
 ### Compatibility with Vertx core
 
 Accesslog version | Vertx version
 ----|------
-1.0.0 | 3.2.0 - 3.4.2
+1.1.0 | 3.2.0 - 3.6.2
 
 Previous versions of Vertx 3 could be supported with small adaptations, most caused by changes in the vertx-web API.
 
@@ -38,56 +37,37 @@ Previous versions of Vertx 3 could be supported with small adaptations, most cau
 
 The logger supports mixing of both log formats and is also designed to easily add custom log elements
 
-## Logging framework
+## Appenders
 
-Generating the access log files is performed in a transparent way by vertx logger. Therefore there is any restriction regarding the logging framework used behind (however logback is recommended and test case is implemented using logback / SLF4J). Main reason for this is to not have a dependency on a specific logging framework and also to ensure that implementation details like for example rollover strategies (size, daily, etc) are dealt with by the logging framework.
+The library comes with an embedded `PrintStreamAppender` and its main purpose is for testing.
 
+You can implement your own `Appender` implementation or use one of those
 
-## Conditional Log generation (Channels) - Future Improvement
+Appender | Description
+----|------
+[Logging Appender](https://github.com/romanpierson/vertx-web-accesslog-logging-appender) | Using common logging functionality (logback, slf4j, etc)
+ElasticSearch Appender | Coming soon.....
 
-The idea is to support certain kind of conditional log generation, eg to allow to generate different access log patterns for different request patterns, response statuses, etc
 
 ## Usage
 
 ### Configure route
 
-Just put an instance of AccessLogHandler as first route handler
+Just put an instance of AccessLogHandler as first route handler (Using Logging Appender as example)
 
 ```java
 Router router = Router.router(vertx);
 
 router
 	.route()
-		.handler(AccessLoggerHandler.create("\"cs-uri\" cs-method %s %D %T" ));
+		.handler(AccessLoggerHandler.create(new AccessLoggerOptions().setPattern("%t %m %D %T"), 
+			Arrays.asList(
+				new LoggingAppenderOptions()
+					.setLoggerName("com.mdac.vertx.web.accesslogger.impl.AccessLoggerHandlerImpl")
+			)
+		)
+);
 ```
-
-### Configure Logger
-
-The logger itself in the current solution does not has a built in mechanism to write to the physical access file. Instead this is done by the logging framework used behind. 
-
-To chose to which logging implementation vertx logger should delegate you need to set property `vertx.logger-delegate-factory-class-name`, eg like this
-
-#### In the code before defining the access log handler
-
-```java
-System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory");
-```
-
-#### Using a fatjar like this (Be aware that the properties have to go before the jar in order to get picked up):
-
-```java
-java \
--Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.SLF4JLogDelegateFactory \
--Daccess.location=/Users/x/y/logs \
--jar myFatJar.jar 
-```
-
-
-When defining the logger in the implementation used you need to make sure it refers to `com.mdac.vertx.web.accesslogger.impl.AccessLoggerHandlerImpl`
-
-For example see the different logging framework specific configuration files in `test.resources` directory and adapt the `build.gradle` file to use different log frameworks, by default logback version is active. 
-
-
 
 ## Supported log elements
 
