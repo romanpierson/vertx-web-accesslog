@@ -10,16 +10,13 @@
  *
  * You may elect to redistribute this code under either of these licenses.
  */
-package com.mdac.vertx.web.accesslogger.configuration.pattern;
-
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+package com.mdac.vertx.web.accesslogger.configuration.element.impl;
 
 import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
+import com.mdac.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
 
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.web.Cookie;
 
 public class CookieElement implements AccessLogElement{
 
@@ -54,26 +51,25 @@ public class CookieElement implements AccessLogElement{
 		
 		return null;
 	}
-	
-	/*@Override
-	public String getFormattedValue(final Map<String, Object> values) {
-		
-		if(!values.containsKey("cookies")){
-			return "-";
-		}
-		
-		final Set<Cookie> cookies = (Set<Cookie>) values.get("cookies");
-		
-		final Optional<Cookie> cookie = cookies.stream().filter(c -> this.identifier.equals(c.getName())).findFirst();
-		
-		return cookie.isPresent() ? cookie.get().getValue() : "-";
-		
-	}*/
 
 	@Override
-	public String getFormattedValue(JsonObject values) {
-		// TODO Auto-generated method stub
+	public String getFormattedValue(final JsonObject values) {
+		
+		if(!values.containsKey("cookies")){
+			return null;
+		}
+		
+		final JsonArray cookies = values.getJsonArray("cookies");
+		
+		for(int i = 0; i < cookies.size(); i++ ) {
+			JsonObject cookie = cookies.getJsonObject(i);
+			if(this.identifier.equals(cookie.getString("name"))){
+				return cookie.getString("value");
+			}
+		}
+		
 		return null;
+		
 	}
 
 }

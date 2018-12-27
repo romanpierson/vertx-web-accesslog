@@ -16,16 +16,28 @@ import java.util.Collection;
 
 import io.vertx.core.json.JsonObject;
 
+/**
+ * 
+ * An IF defining an appender that can handle Access Events
+ * 
+ * @author Roman Pierson
+ *
+ */
 public interface Appender {
 
 	/**
 	 * 
 	 * Push the access events to the appender.
 	 * 
-	 * @param accessEvents
+	 * Its the appenders responsibility to implement local storage 
+	 * 
+	 * @param accessEvents	List of access events the appender should handle - those are no copies
 	 */
 	void push(Collection<JsonObject> accessEvents);
 	
+	/**
+	 * @return	Does the appender requires a resolved pattern
+	 */
 	default boolean requiresResolvedPattern(){
 		
 		// Not forcing the implementations to implement if not required
@@ -34,6 +46,9 @@ public interface Appender {
 		
 	}
 	
+	/**
+	 * @param resolvedPattern	The resolved pattern
+	 */
 	default void setResolvedPattern(String resolvedPattern){
 		
 		// Not forcing the implementations to implement if not required

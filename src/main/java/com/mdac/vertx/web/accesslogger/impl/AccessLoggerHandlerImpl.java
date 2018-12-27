@@ -15,6 +15,7 @@ package com.mdac.vertx.web.accesslogger.impl;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 import com.mdac.vertx.web.accesslogger.AccessLoggerHandler;
 import com.mdac.vertx.web.accesslogger.appender.Appender;
@@ -29,7 +30,9 @@ import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.Cookie;
 import io.vertx.ext.web.RoutingContext;
 
 /**
@@ -43,6 +46,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 
 	private final EventBus eventBus;
 	
+	@SuppressWarnings("rawtypes")
 	public AccessLoggerHandlerImpl(final AccessLoggerOptions accessLoggerOptions, final Collection<AppenderOptions> appenderOptions) {
 		
 		if(accessLoggerOptions == null || appenderOptions == null || appenderOptions.size() == 0){
@@ -165,6 +169,8 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 		jsonValues.put("requestHeaders", extractHeaders(request.headers()));
 		jsonValues.put("responseHeaders", extractHeaders(response.headers()));
 		
+		jsonValues.put("cookies", extractCookies(context.cookies()));
+		
 		eventBus.send("accesslogevent", jsonValues);
 		
 	}
@@ -177,6 +183,18 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 		});
 		
 		return headers;
+		
+	}
+	
+	private JsonArray extractCookies(final Set<Cookie> cookies) {
+		
+		JsonArray jsonArCookies = new JsonArray();
+		
+		for(final Cookie cookie : cookies) {
+			jsonArCookies.add(new JsonObject().put("name", cookie.getName()).put("value", cookie.getValue()));
+		}
+		
+		return jsonArCookies;
 		
 	}
 }

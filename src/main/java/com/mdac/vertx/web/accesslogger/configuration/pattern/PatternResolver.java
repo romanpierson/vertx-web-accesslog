@@ -13,39 +13,24 @@
 package com.mdac.vertx.web.accesslogger.configuration.pattern;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.ServiceLoader;
 
 import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
-import com.mdac.vertx.web.accesslogger.configuration.element.impl.BytesSentElement;
-import com.mdac.vertx.web.accesslogger.configuration.element.impl.DateTimeElement;
-import com.mdac.vertx.web.accesslogger.configuration.element.impl.DurationElement;
-import com.mdac.vertx.web.accesslogger.configuration.element.impl.HeaderElement;
-import com.mdac.vertx.web.accesslogger.configuration.element.impl.HostElement;
-import com.mdac.vertx.web.accesslogger.configuration.element.impl.MethodElement;
-import com.mdac.vertx.web.accesslogger.configuration.element.impl.RequestElement;
-import com.mdac.vertx.web.accesslogger.configuration.element.impl.StatusElement;
-import com.mdac.vertx.web.accesslogger.configuration.element.impl.VersionElement;
 
 public class PatternResolver {
 
-	// A list of all known access element implementations
-	// Idea for the future is that this gets auto discovered somehow
-	final Collection<AccessLogElement> availableElements = Arrays.asList(
-																new RequestElement(),
-																new DurationElement(),
-																new StatusElement(),
-																new MethodElement(),
-																new VersionElement(),
-																new DateTimeElement(),
-																new BytesSentElement(),
-																new HostElement(),
-																new HeaderElement(),
-																new CookieElement()
-															);
+	final Collection<AccessLogElement> availableElements = new ArrayList<>(); 
 	
-	
-	
+	public PatternResolver() {
+
+		ServiceLoader<AccessLogElement> loader = ServiceLoader.load(AccessLogElement.class);
+
+		loader.forEach(ale -> {
+			availableElements.add(ale);
+		});
+
+	}
 	
 	public ResolvedPatternResult resolvePattern(final String rawPattern){
 		

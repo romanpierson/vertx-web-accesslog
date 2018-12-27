@@ -20,7 +20,10 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import com.mdac.vertx.web.accesslogger.configuration.element.impl.RequestElement;
 import com.mdac.vertx.web.accesslogger.util.VersionUtility;
+
+import io.vertx.core.json.JsonObject;
 
 /**
  * 
@@ -31,14 +34,14 @@ import com.mdac.vertx.web.accesslogger.util.VersionUtility;
  */
 public class RequestElementTest {
 	
-	/*final String httpVersion = "HTTP_1_1";
+	final String httpVersion = "HTTP_1_1";
 	final Map<String, Object> valuesWithQuery = getAllValues("uri-value", "method-value", "query-value", httpVersion); 
 	final Map<String, Object> valuesWithoutQuery = getAllValues("uri-value", "method-value", null, httpVersion); 
 
 	@Test(expected=IllegalArgumentException.class)
 	public void testFindInRawPatternInvalidInputNull(){
 	
-		new RequestElement(null).findInRawPattern(null);
+		new RequestElement().findInRawPattern(null);
 		
 	}
 	
@@ -52,8 +55,8 @@ public class RequestElementTest {
 	@Test
 	public void testFindInRawPatternApacheFirstRequestLine(){
 		
-		final String expectedOutputWithQuery = "method-value uri-value?query-value " + VersionUtility.getFormattedValue(valuesWithQuery);
-		final String expectedOutputWithoutQuery = "method-value uri-value " + VersionUtility.getFormattedValue(valuesWithQuery);
+		final String expectedOutputWithQuery = "method-value uri-value?query-value " + VersionUtility.getFormattedValue(new JsonObject(valuesWithQuery));
+		final String expectedOutputWithoutQuery = "method-value uri-value " + VersionUtility.getFormattedValue(new JsonObject(valuesWithQuery));
 		
 		ExtractedPosition ep = new RequestElement().findInRawPattern("%r");
 		assertNotNull(ep);
@@ -61,8 +64,8 @@ public class RequestElementTest {
 		assertEquals("%r".length(), ep.getOffset());
 		
 		// Test if the output of the looked up element is correct
-		assertEquals(expectedOutputWithQuery, ep.getElement().getFormattedValue(valuesWithQuery));
-		assertEquals(expectedOutputWithoutQuery, ep.getElement().getFormattedValue(valuesWithoutQuery));
+		assertEquals(expectedOutputWithQuery, ep.getElement().getFormattedValue(new JsonObject(valuesWithQuery)));
+		assertEquals(expectedOutputWithoutQuery, ep.getElement().getFormattedValue(new JsonObject(valuesWithoutQuery)));
 	}
 	
 	@Test
@@ -76,7 +79,7 @@ public class RequestElementTest {
 		assertEquals("%U".length(), ep1.getOffset());
 		
 		// Test if the output of the looked up element is correct
-		assertEquals(expectedOutput, ep1.getElement().getFormattedValue(valuesWithQuery));
+		assertEquals(expectedOutput, ep1.getElement().getFormattedValue(new JsonObject(valuesWithQuery)));
 		
 		ExtractedPosition ep2 = new RequestElement().findInRawPattern("cs-uri-stem");
 		assertNotNull(ep2);
@@ -84,7 +87,7 @@ public class RequestElementTest {
 		assertEquals("cs-uri-stem".length(), ep2.getOffset());
 		
 		// Test if the output of the looked up element is correct
-		assertEquals(expectedOutput, ep2.getElement().getFormattedValue(valuesWithQuery));
+		assertEquals(expectedOutput, ep2.getElement().getFormattedValue(new JsonObject(valuesWithQuery)));
 		
 	}
 	
@@ -98,5 +101,5 @@ public class RequestElementTest {
 		values.put("method", methodValue);
 		
 		return values;
-	}*/
+	}
 }

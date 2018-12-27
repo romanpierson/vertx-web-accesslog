@@ -12,17 +12,11 @@ apply plugin: 'java'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
-version='1.0.0'
+version='1.1.0'
 
 dependencies {
 
 	compile 'io.vertx:vertx-web:3.6.2'
-	
-	// Logback (via SLF4J)
-	testRuntime 'ch.qos.logback:logback-classic:1.2.3'
-	
-	// Log4J
-	//testRuntime 'log4j:log4j:1.2.17'
 	
 	testCompile 'junit:junit:4.12'
 	
@@ -32,8 +26,8 @@ dependencies {
 sourceCompatibility='1.8'
 targetCompatibility='1.8'
 
-jar.archiveName = "vertx-web-accesslog-1.0.0.jar"
-bintrayUpload.packageName = "vertx-web-accesslog-1.0.0.jar"
+jar.archiveName = "vertx-web-accesslog-1.1.0.jar"
+bintrayUpload.packageName = "vertx-web-accesslog-1.1.0.jar"
 
 task sourceJar(type: Jar) {
     from sourceSets.main.allJava
@@ -45,7 +39,7 @@ publishing {
             
             groupId 'com.mdac'
             artifactId 'vertx-web-accesslog'
-            version '1.0.0'
+            version '1.1.0'
             
             from components.java
 
@@ -73,7 +67,7 @@ bintray {
         override = false
         vcsUrl = 'https://github.com/romanpierson/vertx-web-accesslog.git'
         version {
-        	name = '1.0.0'
+        	name = '1.1.0'
         }
     }
 }

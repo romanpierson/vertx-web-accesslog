@@ -23,6 +23,7 @@ import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.CookieHandler;
+import io.vertx.ext.web.Cookie;
 
 /**
  * 
@@ -35,16 +36,6 @@ public class TestRouteVerticle extends AbstractVerticle {
 
 	
 	public static void main(String[] args) throws InterruptedException {
-		
-		// Delegating to SLF4J in order to use logback as backend (see example logback.xml)
-		System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory");
-		System.setProperty("access.location", "/tmp/accesslog ");
-		
-		// Log4J Native
-		// System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.Log4jLogDelegateFactory");
-		
-		// Log4J2 Native
-		//System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.Log4j2LogDelegateFactory");
 		
 		final Vertx vertx = Vertx.vertx();
 		vertx.deployVerticle(new TestRouteVerticle());
@@ -64,11 +55,8 @@ public class TestRouteVerticle extends AbstractVerticle {
 		router
 			.route()
 			
-				// Example how to define the default way of logging - just for backward compatibility
-				//.handler(AccessLoggerHandler.create("%t %s %r %D %B \"%{Accept-Encoding}i\""));
-				
 				// Example how to specify a pattern and an explicit appender
-				.handler(AccessLoggerHandler.create(new AccessLoggerOptions().setPattern("%t %m %D %T"), 
+				.handler(AccessLoggerHandler.create(new AccessLoggerOptions().setPattern("%t %m %D %T \"%{foo}c\""), 
 					                        Arrays.asList(
 					                        		new PrintStreamAppenderOptions().setPrintStream(System.out)
 					                        		)
@@ -78,6 +66,18 @@ public class TestRouteVerticle extends AbstractVerticle {
 		
 		// Handle cookies
 		router.route().handler(CookieHandler.create());
+		
+		router
+			.route()
+				.handler(routingContext -> {
+					
+					// Add a cookie to response for testing
+					
+					routingContext.addCookie(Cookie.cookie("foo", "bar"));
+					
+					routingContext.next();
+					
+				});
 		
 		router
 			.route("/nocontent")
@@ -102,7 +102,7 @@ public class TestRouteVerticle extends AbstractVerticle {
 					  response.end("Hello World from Vert.x-Web!");
 		});
 
-		server.requestHandler(router::accept).listen(8080);
+		server.requestHandler(router).listen(8080);
 		
 	}
 

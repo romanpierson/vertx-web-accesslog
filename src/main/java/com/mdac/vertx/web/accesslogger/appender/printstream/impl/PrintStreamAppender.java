@@ -50,7 +50,7 @@ public class PrintStreamAppender implements Appender {
 		
 		for(JsonObject value : accessEvents){
 			
-			String [] parameterValues = getParameterValues(value);
+			Object [] parameterValues = getParameterValues(value);
 			
 			final String formattedString = String.format(this.resolvedPattern, parameterValues);
 			
@@ -60,13 +60,14 @@ public class PrintStreamAppender implements Appender {
 		
 	}
 	
-	private String[] getParameterValues(final JsonObject values){
+	private Object[] getParameterValues(final JsonObject values){
 		
 		final String[] parameterValues = new String[accessLogElements.size()];
 
 		int i = 0;
 		for(final AccessLogElement alElement : accessLogElements){
-			parameterValues[i] = alElement.getFormattedValue(values);
+			final String formattedValue = alElement.getFormattedValue(values);
+			parameterValues[i] = formattedValue != null ? formattedValue : "";
 			i++;
 		}
 		
