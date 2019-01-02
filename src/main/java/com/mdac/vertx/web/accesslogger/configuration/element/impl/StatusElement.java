@@ -14,10 +14,12 @@ package com.mdac.vertx.web.accesslogger.configuration.element.impl;
 
 import java.util.Arrays;
 
+import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.Request.Data;
+
 public class StatusElement extends GenericAccessLogElement{
 
 	public StatusElement(){
-		super(Arrays.asList("sc-status", "%s"), "status");
+		super(Arrays.asList("sc-status", "%s"), Data.Type.STATUS.getFieldName());
 	}
 	
 }

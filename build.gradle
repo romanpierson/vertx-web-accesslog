@@ -20,6 +20,9 @@ dependencies {
 	
 	testCompile 'junit:junit:4.12'
 	
+	// Logback (via SLF4J)
+	testRuntime 'ch.qos.logback:logback-classic:1.2.3'
+	
 }
 
 

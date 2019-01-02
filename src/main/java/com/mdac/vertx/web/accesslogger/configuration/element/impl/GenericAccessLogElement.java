@@ -57,7 +57,7 @@ public class GenericAccessLogElement implements AccessLogElement {
 	@Override
 	public String getFormattedValue(final JsonObject values) {
 		
-		return "" + values.getValue(this.valueIdentifier);
+		return values.getValue(this.valueIdentifier) != null ?  ("" + values.getValue(this.valueIdentifier)) : null;
 	}
 
 	protected AccessLogElement createElementInstance(){

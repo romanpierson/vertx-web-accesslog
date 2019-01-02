@@ -15,6 +15,7 @@ package com.mdac.vertx.web.accesslogger.configuration.element.impl;
 import java.util.Arrays;
 import java.util.Collection;
 
+import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.Request.Data;
 import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
 import com.mdac.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
 import com.mdac.vertx.web.accesslogger.util.VersionUtility;
@@ -103,17 +104,17 @@ public class RequestElement implements AccessLogElement{
 		
 		if(RequestLogMode.APACHE_FIRST_REQUEST_LINE.equals(this.requestLogMode)){
 			
-			sb.append(values.getString("method")).append(' ');
+			sb.append(values.getString(Data.Type.METHOD.getFieldName())).append(' ');
 			
 		}
 		
 		if(!RequestLogMode.QUERY_STRING.equals(this.requestLogMode)){
-			sb.append(values.getString("uri"));
+			sb.append(values.getString(Data.Type.URI.getFieldName()));
 		}
 		
 		if(!RequestLogMode.URI.equals(this.requestLogMode)
-			&& values.getString("query", null) != null){
-			sb.append('?').append(values.getString("query", null));
+			&& values.getString(Data.Type.QUERY.getFieldName(), null) != null){
+			sb.append('?').append(values.getString(Data.Type.QUERY.getFieldName(), null));
 		}
 		
 		

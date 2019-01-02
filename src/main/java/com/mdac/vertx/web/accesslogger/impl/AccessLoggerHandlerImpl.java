@@ -15,8 +15,11 @@ package com.mdac.vertx.web.accesslogger.impl;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
+import com.mdac.vertx.web.accesslogger.AccessLoggerConstants;
+import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.Request.Data;
 import com.mdac.vertx.web.accesslogger.AccessLoggerHandler;
 import com.mdac.vertx.web.accesslogger.appender.Appender;
 import com.mdac.vertx.web.accesslogger.appender.AppenderOptions;
@@ -32,6 +35,8 @@ import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Cookie;
 import io.vertx.ext.web.RoutingContext;
 
@@ -44,7 +49,13 @@ import io.vertx.ext.web.RoutingContext;
  */
 public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 
+	private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
+	
 	private final EventBus eventBus;
+	
+	private final boolean requiresIncomingHeaders;
+	private final boolean requiresOutgoingHeaders;
+	private final boolean requiresCookies;
 	
 	@SuppressWarnings("rawtypes")
 	public AccessLoggerHandlerImpl(final AccessLoggerOptions accessLoggerOptions, final Collection<AppenderOptions> appenderOptions) {
@@ -70,6 +81,18 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 		} else {
 			// Log elements were defined
 			throw new UnsupportedOperationException();
+		}
+		
+		final Set<Data.Type> requiredTypes = determinateRequiredElementData(logElements);
+		
+		this.requiresIncomingHeaders = requiredTypes.contains(Data.Type.REQUEST_HEADERS);
+		this.requiresOutgoingHeaders = requiredTypes.contains(Data.Type.RESPONSE_HEADERS);
+		this.requiresCookies = requiredTypes.contains(Data.Type.COOKIES);
+		
+		if(requiredTypes.isEmpty()) {
+			LOG.info("No specific element data was claimed by access elements");
+		} else {
+			LOG.info("Specific element data for [{}] was claimed by access elements", requiredTypes);
 		}
 		
 		// Create the appenders
@@ -127,8 +150,22 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 		Vertx.currentContext().owner().deployVerticle(new AccessLoggerProducerVerticle(accessLoggerOptions, appenders), new DeploymentOptions().setWorker(true));
 		
 		eventBus = Vertx.currentContext().owner().eventBus();
+		
+		
 	}
 	
+	
+	Set<Data.Type> determinateRequiredElementData(final Collection<AccessLogElement> logElements){
+	
+		final Set<Data.Type> requiredTypes = new HashSet<>();
+		
+		for(final AccessLogElement element : logElements) {
+			requiredTypes.addAll(element.claimDataParts());
+		}
+		
+		return requiredTypes;
+		
+	}
 	
 	@Override
 	public void handle(final RoutingContext context) {
@@ -147,31 +184,38 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 		final HttpServerResponse response = context.response();
 		
 		JsonObject jsonValues = new JsonObject()
-										.put("startTSmillis", startTSmillis)
-										.put("endTSmillis", System.currentTimeMillis())
-										.put("status", response.getStatusCode())
-										.put("method", request.method().name())
-										.put("uri", request.path())
-										.put("version", request.version())
-										.put("remoteHost", request.remoteAddress().host())
-										.put("localHost", request.localAddress().host())
-										.put("localPort", request.localAddress().port());
+										.put(Data.Type.START_TS_MILLIS.getFieldName(), startTSmillis)
+										.put(Data.Type.END_TS_MILLIS.getFieldName(), System.currentTimeMillis())
+										.put(Data.Type.STATUS.getFieldName(), response.getStatusCode())
+										.put(Data.Type.METHOD.getFieldName(), request.method().name())
+										.put(Data.Type.URI.getFieldName(), request.path())
+										.put(Data.Type.VERSION.getFieldName(), request.version())
+										.put(Data.Type.REMOTE_HOST.getFieldName(), request.remoteAddress().host())
+										.put(Data.Type.LOCAL_HOST.getFieldName(), request.localAddress().host())
+										.put(Data.Type.LOCAL_PORT.getFieldName(), request.localAddress().port());
 		
 		
 		if(request.query() != null && !request.query().trim().isEmpty()){
-			jsonValues.put("query", request.query());
+			jsonValues.put(Data.Type.QUERY.getFieldName(), request.query());
 		}
 		
 		if(response.bytesWritten() > 0){
-			jsonValues.put("bytesSent", response.bytesWritten());
+			jsonValues.put(Data.Type.BYTES_SENT.getFieldName(), response.bytesWritten());
 		}
 		
-		jsonValues.put("requestHeaders", extractHeaders(request.headers()));
-		jsonValues.put("responseHeaders", extractHeaders(response.headers()));
+		if(requiresIncomingHeaders) {
+			jsonValues.put(Data.Type.REQUEST_HEADERS.getFieldName(), extractHeaders(request.headers()));
+		}
 		
-		jsonValues.put("cookies", extractCookies(context.cookies()));
+		if(requiresOutgoingHeaders) {
+			jsonValues.put(Data.Type.RESPONSE_HEADERS.getFieldName(), extractHeaders(response.headers()));
+		}
 		
-		eventBus.send("accesslogevent", jsonValues);
+		if(requiresCookies) {
+			jsonValues.put(Data.Type.COOKIES.getFieldName(), extractCookies(context.cookies()));
+		}
+		
+		eventBus.send(AccessLoggerConstants.EVENTBUS_EVENT_NAME, jsonValues);
 		
 	}
 	
@@ -191,7 +235,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 		JsonArray jsonArCookies = new JsonArray();
 		
 		for(final Cookie cookie : cookies) {
-			jsonArCookies.add(new JsonObject().put("name", cookie.getName()).put("value", cookie.getValue()));
+			jsonArCookies.add(new JsonObject().put(Data.Fields.COOKIE_NAME, cookie.getName()).put(Data.Fields.COOKIE_VALUE, cookie.getValue()));
 		}
 		
 		return jsonArCookies;

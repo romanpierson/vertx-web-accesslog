@@ -12,6 +12,10 @@
  */
 package com.mdac.vertx.web.accesslogger.configuration.element.impl;
 
+import java.util.Collection;
+import java.util.Collections;
+
+import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.Request.Data;
 import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
 import com.mdac.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
 
@@ -66,9 +70,16 @@ public class HeaderElement implements AccessLogElement{
 	@Override
 	public String getFormattedValue(final JsonObject values) {
 		
-		final JsonObject headers =  Mode.INCOMING.equals(this.mode) ? values.getJsonObject("requestHeaders") : values.getJsonObject("responseHeaders");
+		final JsonObject headers =  Mode.INCOMING.equals(this.mode) ? values.getJsonObject(Data.Type.REQUEST_HEADERS.getFieldName()) : values.getJsonObject(Data.Type.RESPONSE_HEADERS.getFieldName());
 		
 		return headers.getString(this.identifier, null);
+		
+	}
+	
+	@Override
+	public Collection<Data.Type> claimDataParts() {
+		
+		return Mode.INCOMING.equals(this.mode) ? Collections.singleton(Data.Type.REQUEST_HEADERS) : Collections.singleton(Data.Type.RESPONSE_HEADERS);
 		
 	}
 

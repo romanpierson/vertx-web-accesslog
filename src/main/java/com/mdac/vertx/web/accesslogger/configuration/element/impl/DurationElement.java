@@ -12,6 +12,7 @@
  */
 package com.mdac.vertx.web.accesslogger.configuration.element.impl;
 
+import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.Request.Data;
 import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
 import com.mdac.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
 
@@ -27,22 +28,16 @@ public class DurationElement implements AccessLogElement{
 	private final static Long INVALID_TS = new Long(-1);
 	
 	private final TimeUnit timeUnit;
-	private final String startTSkey;
-	private final String endTSkey;
 	
 	public DurationElement(){
 	
 		this.timeUnit = null;
-		this.startTSkey = null;
-		this.endTSkey = null;	
 		
 	}
 	
 	public DurationElement(final TimeUnit timeUnit){
 		
 		this.timeUnit = timeUnit;
-		this.startTSkey = "startTSmillis";
-		this.endTSkey = "endTSmillis";	
 		
 	}
 	
@@ -77,8 +72,8 @@ public class DurationElement implements AccessLogElement{
 	@Override
 	public String getFormattedValue(final JsonObject values) {
 		
-		final Long startTS = values.getLong(startTSkey, INVALID_TS);
-		final Long endTS = values.getLong(endTSkey, INVALID_TS);
+		final Long startTS = values.getLong(Data.Type.START_TS_MILLIS.getFieldName(), INVALID_TS);
+		final Long endTS = values.getLong(Data.Type.END_TS_MILLIS.getFieldName(), INVALID_TS);
 		
 		if(startTS == null || endTS == null){
 			return "-";

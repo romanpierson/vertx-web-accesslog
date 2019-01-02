@@ -12,6 +12,7 @@
  */
 package com.mdac.vertx.web.accesslogger.configuration.element.impl;
 
+import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.Request.Data;
 import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
 import com.mdac.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
 
@@ -69,9 +70,9 @@ public class BytesSentElement implements AccessLogElement{
 	@Override
 	public String getFormattedValue(final JsonObject values) {
 	
-		if(values.containsKey("bytesSent")){
+		if(values.containsKey(Data.Type.BYTES_SENT.getFieldName())){
 			
-			return "" + values.getLong("bytesSent");
+			return "" + values.getLong(Data.Type.BYTES_SENT.getFieldName());
 			
 		} else {
 			

@@ -12,6 +12,7 @@
  */
 package com.mdac.vertx.web.accesslogger.configuration.element.impl;
 
+import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.Request.Data;
 import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
 import com.mdac.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
 
@@ -95,17 +96,17 @@ public class HostElement implements AccessLogElement{
 		switch (this.mode){
 		
 			case LOCAL_HOST:
-				return "" + values.getString("localHost");
+				return values.containsKey(Data.Type.LOCAL_HOST.getFieldName()) ? values.getString(Data.Type.LOCAL_HOST.getFieldName()) : null;
 			case LOCAL_PORT:
-				return "" + values.getInteger("localPort");
+				return values.containsKey(Data.Type.LOCAL_PORT.getFieldName()) ? ("" + values.getInteger(Data.Type.LOCAL_PORT.getFieldName())) : null;
 			case REMOTE_HOST:
-				return "" + values.getString("remoteHost");
+				return values.containsKey(Data.Type.REMOTE_HOST.getFieldName()) ? values.getString(Data.Type.REMOTE_HOST.getFieldName()) : null;
 			default:
 				break;
 			
 		}
 		
-		return "-";
+		return null;
 	}
 	
 }

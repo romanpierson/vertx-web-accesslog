@@ -18,9 +18,7 @@ Just add it as a dependency to your project (gradle example)
 
 ```xml
 dependencies {
-
 	compile 'com.mdac:vertx-web-accesslog:1.1.0'
-	
 }
 ```
 
@@ -37,6 +35,17 @@ Previous versions of Vertx 3 could be supported with small adaptations, most cau
 
 The logger supports mixing of both log formats and is also designed to easily add custom log elements
 
+### Define your custom AccessLogElement
+
+You can easily create your custom implementation of `AccessLogElement` by creating your own element class implementing `AccessLogElement` interface. The available `AccessLogElement` types are discovered by ServiceLoeader, so just add to your resources a file like this and inside list your `AccessLogElement` classes
+
+```xml
+META-INF
+ services
+  com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement
+}
+```
+
 ## Appenders
 
 The library comes with an embedded `PrintStreamAppender` and its main purpose is for testing.
@@ -46,7 +55,7 @@ You can implement your own `Appender` implementation or use one of those
 Appender | Description
 ----|------
 [Logging Appender](https://github.com/romanpierson/vertx-web-accesslog-logging-appender) | Using common logging functionality (logback, slf4j, etc)
-ElasticSearch Appender | Coming soon.....
+ElasticSearch Appender (Kibana) | Coming soon .....
 
 
 ## Usage
@@ -92,15 +101,20 @@ Version / Protocol | %H | - | |
 Datetime Apache | %t | - | Logs by default the request timestamp using format 'EEE, dd MMM yyyy HH:mm:ss zzz', Locale English and Timezone GMT  |
 | Datetime Apache Configurable v1 | %{PATTERN}t | - | Specify the format pattern, by default it is used Locale English and Timezone GMT |
 | Datetime Apache Configurable v2 | %{PATTERN\|TIMEZONE\|LOCALE}t | - | Specify format pattern, timezone and locale |
-Incoming Headers | %{IDENTIFIER}i  | - | If not found - will be logged |
-Outgoing Response Headers | %{IDENTIFIER}o  | - | If not found - will be logged |
-Cookie | %{IDENTIFIER}c  | - | If not found - will be logged |
+Incoming Headers | %{IDENTIFIER}i  | - |  |
+Outgoing Response Headers | %{IDENTIFIER}o  | - |  |
+Cookie | %{IDENTIFIER}c  | - |  |
 
+### Empty behaviour
+
+The default way for elements where no actual value can be evaluated is to return a `NULL` value and the appender is translating this into an empty string. 
 
 ## Changelog
 
 ### 1.1.0
 
-* Introduced Appender API and removed all except PrintStreamAppender to separate projects
+* Introduced Appender API and removed all except `PrintStreamAppender` to separate projects
+* `AccessLogElerment` is able to claim what data it requires
+* General refactoring into Constants
 
 

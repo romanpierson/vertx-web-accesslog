@@ -37,6 +37,8 @@ public class TestRouteVerticle extends AbstractVerticle {
 	
 	public static void main(String[] args) throws InterruptedException {
 		
+		System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory");
+		
 		final Vertx vertx = Vertx.vertx();
 		vertx.deployVerticle(new TestRouteVerticle());
 
@@ -56,7 +58,7 @@ public class TestRouteVerticle extends AbstractVerticle {
 			.route()
 			
 				// Example how to specify a pattern and an explicit appender
-				.handler(AccessLoggerHandler.create(new AccessLoggerOptions().setPattern("%t %m %D %T \"%{foo}c\""), 
+				.handler(AccessLoggerHandler.create(new AccessLoggerOptions().setPattern("%t %m %D %T \"%{foo}C\" \"%{User-Agent}i\""), 
 					                        Arrays.asList(
 					                        		new PrintStreamAppenderOptions().setPrintStream(System.out)
 					                        		)

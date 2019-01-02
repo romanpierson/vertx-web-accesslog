@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import com.mdac.vertx.web.accesslogger.AccessLoggerConstants;
 import com.mdac.vertx.web.accesslogger.appender.Appender;
 
 import io.vertx.core.AbstractVerticle;
@@ -51,7 +52,7 @@ public class AccessLoggerProducerVerticle extends AbstractVerticle {
 
 		super.start();
 
-		vertx.eventBus().<JsonObject> consumer("accesslogevent", event -> {
+		vertx.eventBus().<JsonObject> consumer(AccessLoggerConstants.EVENTBUS_EVENT_NAME, event -> {
 			queue.offer(event.body());
 		});
 

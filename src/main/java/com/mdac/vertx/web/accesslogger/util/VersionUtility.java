@@ -12,13 +12,15 @@
  */
 package com.mdac.vertx.web.accesslogger.util;
 
+import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.Request.Data;
+
 import io.vertx.core.json.JsonObject;
 
 public class VersionUtility {
 
 	public static String getFormattedValue(final JsonObject values) {
 		
-		final String version = values.getString("version", null);
+		final String version = values.getString(Data.Type.VERSION.getFieldName(), null);
 		
 		return transform(version);
 		

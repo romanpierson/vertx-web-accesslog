@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.Request.Data;
 import com.mdac.vertx.web.accesslogger.configuration.element.impl.RequestElement;
 import com.mdac.vertx.web.accesslogger.util.VersionUtility;
 
@@ -95,10 +96,10 @@ public class RequestElementTest {
 		
 		Map<String, Object> values = new HashMap<>();
 		
-		values.put("uri", uriValue);
-		values.put("version", versionValue);
-		values.put("query", queryValue);
-		values.put("method", methodValue);
+		values.put(Data.Type.URI.getFieldName(), uriValue);
+		values.put(Data.Type.VERSION.getFieldName(), versionValue);
+		values.put(Data.Type.QUERY.getFieldName(), queryValue);
+		values.put(Data.Type.METHOD.getFieldName(), methodValue);
 		
 		return values;
 	}

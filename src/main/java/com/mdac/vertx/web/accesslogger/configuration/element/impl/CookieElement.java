@@ -12,6 +12,10 @@
  */
 package com.mdac.vertx.web.accesslogger.configuration.element.impl;
 
+import java.util.Collection;
+import java.util.Collections;
+
+import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.Request.Data;
 import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
 import com.mdac.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
 
@@ -37,7 +41,7 @@ public class CookieElement implements AccessLogElement{
 		
 		if(index >= 0){
 				
-				int indexEndConfiguration = rawPattern.indexOf("}c");
+				int indexEndConfiguration = rawPattern.indexOf("}C");
 			
 				if(indexEndConfiguration > index)
 				{
@@ -55,20 +59,27 @@ public class CookieElement implements AccessLogElement{
 	@Override
 	public String getFormattedValue(final JsonObject values) {
 		
-		if(!values.containsKey("cookies")){
+		if(!values.containsKey(Data.Type.COOKIES.getFieldName())){
 			return null;
 		}
 		
-		final JsonArray cookies = values.getJsonArray("cookies");
+		final JsonArray cookies = values.getJsonArray(Data.Type.COOKIES.getFieldName());
 		
 		for(int i = 0; i < cookies.size(); i++ ) {
 			JsonObject cookie = cookies.getJsonObject(i);
-			if(this.identifier.equals(cookie.getString("name"))){
-				return cookie.getString("value");
+			if(this.identifier.equals(cookie.getString(Data.Fields.COOKIE_NAME))){
+				return cookie.getString(Data.Fields.COOKIE_VALUE);
 			}
 		}
 		
 		return null;
+		
+	}
+
+	@Override
+	public Collection<Data.Type> claimDataParts() {
+		
+		return Collections.singleton(Data.Type.COOKIES);
 		
 	}
 
