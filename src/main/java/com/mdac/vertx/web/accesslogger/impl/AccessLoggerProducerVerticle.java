@@ -19,9 +19,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import com.mdac.vertx.web.accesslogger.AccessLoggerConstants;
 import com.mdac.vertx.web.accesslogger.appender.Appender;
+import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
 
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 
 /**
  * 
@@ -35,13 +39,17 @@ import io.vertx.core.json.JsonObject;
  */
 public class AccessLoggerProducerVerticle extends AbstractVerticle {
 
+	private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
+	
 	private BlockingQueue<JsonObject> queue = new LinkedBlockingQueue<>();
 
+	final private Collection<AccessLogElement> logElements;
 	final private Collection<Appender> appenders;
 	final private long appenderScheduleInterval;
 
-	public AccessLoggerProducerVerticle(final AccessLoggerOptions accessLoggerOptions, final Collection<Appender> appenders) {
+	public AccessLoggerProducerVerticle(final AccessLoggerOptions accessLoggerOptions, final Collection<AccessLogElement> logElements, final Collection<Appender> appenders) {
 		
+		this.logElements = logElements;
 		this.appenders = appenders;
 		this.appenderScheduleInterval = accessLoggerOptions.getAppenderScheduleInterval();
 		
@@ -58,28 +66,61 @@ public class AccessLoggerProducerVerticle extends AbstractVerticle {
 
 		vertx.setPeriodic(this.appenderScheduleInterval, handler -> {
 
-			final int currentSize = this.queue.size();
+			if (!this.queue.isEmpty()) {
 
-			if (currentSize > 0) {
-
-				final Collection<JsonObject> drainedValues = new ArrayList<>(currentSize);
-
-				this.queue.drainTo(drainedValues, currentSize);
-
-				for (final Appender appender : appenders) {
-
-					appender.push(drainedValues);
-					
-				}
+				pushDataToAppenders();
 
 			}
 		});
 	}
 
+	private void pushDataToAppenders() {
+		
+		final int currentSize = this.queue.size();
+		
+		final Collection<JsonObject> drainedRawValues = new ArrayList<>(currentSize);
+
+		this.queue.drainTo(drainedRawValues, currentSize);
+
+		final Collection<JsonArray> values = new ArrayList<>(drainedRawValues.size());
+		
+		for(JsonObject drainedRawValue : drainedRawValues) {
+			
+			JsonArray value = new JsonArray();
+			
+			for(final AccessLogElement alElement : this.logElements){
+				final String formattedValue = alElement.getFormattedValue(drainedRawValue);
+				value.add(formattedValue != null ? formattedValue : "");
+			}
+			
+			values.add(value);
+		}
+		
+		for (final Appender appender : appenders) {
+
+			appender.push(values);
+			
+		}
+	}
+
 	@Override
 	public void stop() throws Exception {
 
-		// TODO what happens to pending elements in the queue
+		LOG.info("Stopping producer verticle");
+		
+		// Assuming the timer got already cancelled by vertx when stopping the verticle
+		
+		if(queue.isEmpty()) {
+			
+			LOG.info("No pending events left in queue - no action needed");
+			
+		} else {
+			
+			pushDataToAppenders();
+			
+			LOG.info("Notifying appenders about shutdown");
+			appenders.forEach(appender -> appender.notifyShutdown());
+		}
 		
 		super.stop();
 

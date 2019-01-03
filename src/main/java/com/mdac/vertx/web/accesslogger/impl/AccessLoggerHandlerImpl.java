@@ -134,7 +134,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 			Appender appender = null;
 			
 			try{
-				appender = (Appender) constructor.newInstance(appenderOption, logElements);
+				appender = (Appender) constructor.newInstance(appenderOption);
 			}catch(Exception ex){
 				throw new IllegalArgumentException("Failed to instantiate appenderImplementationClass of type [" + appenderImplementationClassName + "]", ex);
 			}
@@ -147,7 +147,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 			
 		}
 		
-		Vertx.currentContext().owner().deployVerticle(new AccessLoggerProducerVerticle(accessLoggerOptions, appenders), new DeploymentOptions().setWorker(true));
+		Vertx.currentContext().owner().deployVerticle(new AccessLoggerProducerVerticle(accessLoggerOptions, logElements, appenders), new DeploymentOptions().setWorker(true));
 		
 		eventBus = Vertx.currentContext().owner().eventBus();
 		

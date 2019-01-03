@@ -117,4 +117,7 @@ The default way for elements where no actual value can be evaluated is to return
 * `AccessLogElerment` is able to claim what data it requires
 * General refactoring into Constants
 
+### 1.2.0
 
+* Raw values are translated into formatted values and only those get passed to appenders
+* Appenders do not get passed anymore `AccessLogElement` instances

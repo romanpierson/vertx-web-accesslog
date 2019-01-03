@@ -58,7 +58,9 @@ public class TestRouteVerticle extends AbstractVerticle {
 			.route()
 			
 				// Example how to specify a pattern and an explicit appender
-				.handler(AccessLoggerHandler.create(new AccessLoggerOptions().setPattern("%t %m %D %T \"%{foo}C\" \"%{User-Agent}i\""), 
+				.handler(AccessLoggerHandler.create(new AccessLoggerOptions()
+															.setPattern("%t %m %D %T \"%{foo}C\" \"%{User-Agent}i\"")
+															.setAppenderScheduleInterval(5000), 
 					                        Arrays.asList(
 					                        		new PrintStreamAppenderOptions().setPrintStream(System.out)
 					                        		)
