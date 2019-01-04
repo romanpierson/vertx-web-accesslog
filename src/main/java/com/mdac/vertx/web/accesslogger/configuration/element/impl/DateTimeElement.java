@@ -91,6 +91,7 @@ public class DateTimeElement implements AccessLogElement{
 				DateFormat dtf = new SimpleDateFormat(configurationTokens[0], Locale.ENGLISH);
 				dtf.setTimeZone(TimeZone.getTimeZone("GMT"));
 				
+				return dtf;
 			}
 		}
 		

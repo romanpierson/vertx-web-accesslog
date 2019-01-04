@@ -121,3 +121,4 @@ The default way for elements where no actual value can be evaluated is to return
 
 * Raw values are translated into formatted values and only those get passed to appenders
 * Appenders do not get passed anymore `AccessLogElement` instances
+* Fixed a bug in `DateTimeElement` that caused pattern definition not to work
