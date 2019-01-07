@@ -26,31 +26,9 @@ import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
  */
 public class AccessLoggerOptions {
 
-	public static final long DEFAULT_APPENDER_SCHEDULE_INTERVAL = 1000;
-
-	private long appenderScheduleInterval = DEFAULT_APPENDER_SCHEDULE_INTERVAL;
-
 	private String pattern = null;
 	private Collection<AccessLogElement> logElements;
 	
-	/**
-	 * Set the interval in ms that should be applied to feed the appender(s)
-	 *
-	 * @param appenderScheduleInterval
-	 *            interval in ms
-	 * @return a reference to this, so the API can be used fluently
-	 */
-	public AccessLoggerOptions setAppenderScheduleInterval(long appenderScheduleInterval) {
-		
-		if (appenderScheduleInterval < 1) {
-			throw new IllegalArgumentException("appenderScheduleInterval must be > 0");
-		}
-		
-		this.appenderScheduleInterval = appenderScheduleInterval;
-		
-		return this;
-		
-	}
 	
 	/**
 	 * Set the access log pattern
@@ -94,10 +72,6 @@ public class AccessLoggerOptions {
 		
 		return this;
 		
-	}
-
-	public long getAppenderScheduleInterval() {
-		return appenderScheduleInterval;
 	}
 
 	public String getPattern() {

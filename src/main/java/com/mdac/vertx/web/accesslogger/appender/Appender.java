@@ -33,28 +33,8 @@ public interface Appender {
 	 * 
 	 * @param accessEvents	List of access events the appender should handle - those are no copies
 	 */
-	void push(Collection<JsonArray> accessEvents);
+	void push(JsonArray accessEvent);
 	
-	/**
-	 * @return	Does the appender requires a resolved pattern
-	 */
-	default boolean requiresResolvedPattern(){
-		
-		// Not forcing the implementations to implement if not required
-		
-		return false;
-		
-	}
-	
-	/**
-	 * @param resolvedPattern	The resolved pattern
-	 */
-	default void setResolvedPattern(String resolvedPattern){
-		
-		// Not forcing the implementations to implement if not required
-		
-		return;
-	}
 	
 	/**
 	 * Is called by the AccessLogger when the application is shutdown and gives the appender the chance to perform additional actions eg in case data is buffered etc
@@ -65,5 +45,6 @@ public interface Appender {
 		
 		return;
 	}
+	
 	
 }

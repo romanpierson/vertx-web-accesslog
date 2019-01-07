@@ -13,7 +13,6 @@
 package com.mdac.vertx.web.accesslogger.appender.printstream.impl;
 
 import java.io.PrintStream;
-import java.util.Collection;
 
 import com.mdac.vertx.web.accesslogger.appender.Appender;
 
@@ -35,21 +34,19 @@ public class PrintStreamAppender implements Appender {
 		}
 		
 		this.printStream = appenderOptions.getPrintStream();
+		this.resolvedPattern = appenderOptions.getResolvedPattern();
 		
 	}
 	
 	@Override
-	public void push(Collection<JsonArray> accessEvents) {
+	public void push(JsonArray accessEvent) {
 		
-		for(JsonArray value : accessEvents){
-			
-			Object [] parameterValues = getParameterValues(value);
+		Object [] parameterValues = getParameterValues(accessEvent);
 			
 			final String formattedString = String.format(this.resolvedPattern, parameterValues);
 			
 			this.printStream.println(formattedString);
 			
-		}
 		
 	}
 	
@@ -67,26 +64,8 @@ public class PrintStreamAppender implements Appender {
 		
 	}
 
-	@Override
-	public boolean requiresResolvedPattern() {
-		
-		return true;
-		
-	}
+	
+	
 
-	@Override
-	public void setResolvedPattern(final String resolvedPattern) {
-		
-		if(resolvedPattern == null || resolvedPattern.trim().length() < 1){
-			throw new IllegalArgumentException("resolvedPattern must not be empty");
-		}
-		
-		if(this.resolvedPattern != null){
-			throw new IllegalStateException("resolvedPattern is already set");
-		}
-		
-		this.resolvedPattern = resolvedPattern;
-		
-	}
 	
 }
