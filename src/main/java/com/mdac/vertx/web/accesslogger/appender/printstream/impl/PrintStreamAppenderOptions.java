@@ -25,7 +25,7 @@ public class PrintStreamAppenderOptions extends AppenderOptions {
 	}
 	
 	/**
-	 * Creates an {@link PrintStreamAppenderOptions} instanceS
+	 * Creates an {@link PrintStreamAppenderOptions} instance
 	 *
 	 * @param printStream
 	 * 
@@ -48,5 +48,14 @@ public class PrintStreamAppenderOptions extends AppenderOptions {
 		return printStream;
 		
 	}
+
+	@Override
+	public boolean requiresResolvedPattern() {
+		
+		return true;
+		
+	}
+	
+	
 
 }

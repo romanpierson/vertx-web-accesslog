@@ -12,7 +12,7 @@ apply plugin: 'java'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
-version='1.2.0_RC2'
+version='1.2.0_RC3'
 
 dependencies {
 
@@ -29,8 +29,8 @@ dependencies {
 sourceCompatibility='1.8'
 targetCompatibility='1.8'
 
-jar.archiveName = "vertx-web-accesslog-1.2.0_RC2.jar"
-bintrayUpload.packageName = "vertx-web-accesslog-1.2.0_RC2.jar"
+jar.archiveName = "vertx-web-accesslog-1.2.0_RC3.jar"
+bintrayUpload.packageName = "vertx-web-accesslog-1.2.0_RC3.jar"
 
 task sourceJar(type: Jar) {
     from sourceSets.main.allJava
@@ -70,7 +70,7 @@ bintray {
         override = false
         vcsUrl = 'https://github.com/romanpierson/vertx-web-accesslog.git'
         version {
-        	name = '1.2.0_RC2'
+        	name = '1.2.0_RC3'
         }
     }
 }

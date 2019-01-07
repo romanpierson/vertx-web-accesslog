@@ -2,7 +2,8 @@ package com.mdac.vertx.web.accesslogger;
 
 public interface AccessLoggerConstants {
 
-	static final String EVENTBUS_EVENT_NAME = "accesslogevent";
+	static final String EVENTBUS_RAW_EVENT_NAME = "accesslog.raw.event";
+	static final String EVENTBUS_APPENDER_EVENT_NAME = "accesslog.appender.event";
 	
 	interface Request{
 	

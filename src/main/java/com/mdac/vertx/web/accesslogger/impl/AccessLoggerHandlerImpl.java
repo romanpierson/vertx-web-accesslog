@@ -27,6 +27,7 @@ import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
 import com.mdac.vertx.web.accesslogger.configuration.pattern.PatternResolver;
 import com.mdac.vertx.web.accesslogger.configuration.pattern.ResolvedPatternResult;
 
+import io.vertx.core.AbstractVerticle;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
@@ -96,7 +97,8 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 		}
 		
 		// Create the appenders
-		Collection<Appender> appenders = new ArrayList<>(appenderOptions.size());
+		Collection<Appender> rawAppenders = new ArrayList<>(appenderOptions.size());
+		Collection<AbstractVerticle> verticleAppenders = new ArrayList<>(appenderOptions.size());
 		
 		for(final AppenderOptions appenderOption : appenderOptions){
 			
@@ -131,23 +133,29 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 			}
 			
 			
-			Appender appender = null;
+			if(appenderOption.requiresResolvedPattern()) {
+				appenderOption.setResolvedPattern(resolvedPattern);
+			}
+			
+			Object appender = null;
 			
 			try{
-				appender = (Appender) constructor.newInstance(appenderOption);
+				appender = constructor.newInstance(appenderOption);
 			}catch(Exception ex){
 				throw new IllegalArgumentException("Failed to instantiate appenderImplementationClass of type [" + appenderImplementationClassName + "]", ex);
 			}
 			
-			if(appender.requiresResolvedPattern()){
-				appender.setResolvedPattern(resolvedPattern);
+			if(appender instanceof Appender) {
+				rawAppenders.add((Appender) appender);
+			} else if (appender instanceof AbstractVerticle) {
+				verticleAppenders.add((AbstractVerticle) appender);
+			} else {
+				throw new IllegalArgumentException("appenderImplementationClass of type [" + appenderImplementationClassName + "] is invalid - must extend either AbstractVerticle or implement Appender");
 			}
-			
-			appenders.add(appender);
 			
 		}
 		
-		Vertx.currentContext().owner().deployVerticle(new AccessLoggerProducerVerticle(accessLoggerOptions, logElements, appenders), new DeploymentOptions().setWorker(true));
+		Vertx.currentContext().owner().deployVerticle(new AccessLoggerProducerVerticle(accessLoggerOptions, logElements, rawAppenders, verticleAppenders), new DeploymentOptions().setWorker(true));
 		
 		eventBus = Vertx.currentContext().owner().eventBus();
 		
@@ -215,7 +223,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 			jsonValues.put(Data.Type.COOKIES.getFieldName(), extractCookies(context.cookies()));
 		}
 		
-		eventBus.send(AccessLoggerConstants.EVENTBUS_EVENT_NAME, jsonValues);
+		eventBus.send(AccessLoggerConstants.EVENTBUS_RAW_EVENT_NAME, jsonValues);
 		
 	}
 	
