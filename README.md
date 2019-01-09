@@ -122,3 +122,4 @@ The default way for elements where no actual value can be evaluated is to return
 * Raw values are translated into formatted values and only those get passed to appenders
 * Appenders do not get passed anymore `AccessLogElement` instances
 * Fixed a bug in `DateTimeElement` that caused pattern definition not to work
+* Fixed a bug in `findInRawPatternInternal` method of several `AccessLogElement` implementations that handle several element patterns and in the case of having a pattern with those following each other this might have led to the situation of bypassing the earlier one

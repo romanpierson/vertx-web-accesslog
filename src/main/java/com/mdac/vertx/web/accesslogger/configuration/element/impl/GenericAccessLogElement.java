@@ -36,6 +36,8 @@ public class GenericAccessLogElement implements AccessLogElement {
 	@Override
 	public ExtractedPosition findInRawPatternInternal(final String rawPattern) {
 		
+		ExtractedPosition foundPosition = null;
+		
 		for(final String supportedPattern : this.supportedPatterns){
 			
 			int index = rawPattern.indexOf(supportedPattern);
@@ -45,13 +47,15 @@ public class GenericAccessLogElement implements AccessLogElement {
 					final AccessLogElement logElement = createElementInstance();
 					
 					if(logElement != null){
-						return new ExtractedPosition(index, supportedPattern.length(), logElement);
+						if(foundPosition == null || index < foundPosition.getStart()){
+							foundPosition = new ExtractedPosition(index, supportedPattern.length(), logElement);
+						}
 					} 
 				
 			}
 		}
 		
-		return null;
+		return foundPosition;
 	}
 
 	@Override
