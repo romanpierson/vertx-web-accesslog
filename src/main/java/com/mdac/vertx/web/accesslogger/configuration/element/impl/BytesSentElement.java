@@ -44,13 +44,15 @@ public class BytesSentElement implements AccessLogElement{
 	@Override
 	public ExtractedPosition findInRawPatternInternal(final String rawPattern) {
 		
+		ExtractedPosition foundPosition = null;
+		
 		String patternDash = "%b";
 		
 		int index = rawPattern.indexOf(patternDash);
 		
 		if(index >= 0){
 			
-				return new ExtractedPosition(index, patternDash.length(), new BytesSentElement(Mode.NO_BYTES_DASH));
+			foundPosition = new ExtractedPosition(index, patternDash.length(), new BytesSentElement(Mode.NO_BYTES_DASH));
 			
 		}
 		
@@ -59,12 +61,12 @@ public class BytesSentElement implements AccessLogElement{
 		index = rawPattern.indexOf(patternNull);
 		
 		if(index >= 0){
-			
-				return new ExtractedPosition(index, patternNull.length(), new BytesSentElement(Mode.NO_BYTES_NULL));
-			
+			if(foundPosition == null || index < foundPosition.getStart()){
+				foundPosition = new ExtractedPosition(index, patternNull.length(), new BytesSentElement(Mode.NO_BYTES_NULL));
+			}
 		}
 		
-		return null;
+		return foundPosition;
 	}
 	
 	@Override

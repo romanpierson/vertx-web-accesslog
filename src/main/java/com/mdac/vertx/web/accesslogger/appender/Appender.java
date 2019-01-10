@@ -12,9 +12,7 @@
  */
 package com.mdac.vertx.web.accesslogger.appender;
 
-import java.util.Collection;
-
-import io.vertx.core.json.JsonObject;
+import io.vertx.core.json.JsonArray;
 
 /**
  * 
@@ -33,27 +31,18 @@ public interface Appender {
 	 * 
 	 * @param accessEvents	List of access events the appender should handle - those are no copies
 	 */
-	void push(Collection<JsonObject> accessEvents);
+	void push(JsonArray accessEvent);
+	
 	
 	/**
-	 * @return	Does the appender requires a resolved pattern
+	 * Is called by the AccessLogger when the application is shutdown and gives the appender the chance to perform additional actions eg in case data is buffered etc
 	 */
-	default boolean requiresResolvedPattern(){
-		
-		// Not forcing the implementations to implement if not required
-		
-		return false;
-		
-	}
-	
-	/**
-	 * @param resolvedPattern	The resolved pattern
-	 */
-	default void setResolvedPattern(String resolvedPattern){
+	default void notifyShutdown() {
 		
 		// Not forcing the implementations to implement if not required
 		
 		return;
 	}
+	
 	
 }

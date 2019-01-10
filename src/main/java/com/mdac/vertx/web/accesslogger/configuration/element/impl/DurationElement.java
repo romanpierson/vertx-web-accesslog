@@ -45,13 +45,15 @@ public class DurationElement implements AccessLogElement{
 	@Override
 	public ExtractedPosition findInRawPatternInternal(final String rawPattern) {
 		
+		ExtractedPosition foundPosition = null;
+		
 		String patternMillis = "%D";
 		
 		int index = rawPattern.indexOf(patternMillis);
 		
 		if(index >= 0){
 			
-				return new ExtractedPosition(index, patternMillis.length(), new DurationElement(TimeUnit.MILLISECONDS));
+			foundPosition = new ExtractedPosition(index, patternMillis.length(), new DurationElement(TimeUnit.MILLISECONDS));
 			
 		}
 		
@@ -61,11 +63,12 @@ public class DurationElement implements AccessLogElement{
 		
 		if(index >= 0){
 			
-				return new ExtractedPosition(index, patternSeconds.length(), new DurationElement(TimeUnit.SECONDS));
-			
+			if(foundPosition == null || index < foundPosition.getStart()){
+				foundPosition = new ExtractedPosition(index, patternSeconds.length(), new DurationElement(TimeUnit.SECONDS));
+			}
 		}
 		
-		return null;
+		return foundPosition;
 	}
 
 	
