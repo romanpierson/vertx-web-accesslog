@@ -22,6 +22,7 @@ package com.mdac.vertx.web.accesslogger.appender;
 public class AppenderOptions {
 
 	private String appenderImplementationClassName;
+	private String resolvedPattern;
 	
 	/**
 	 * Creates an {@link AppenderOptions} instance 
@@ -40,6 +41,21 @@ public class AppenderOptions {
 		
 		return this;
 	}
+	
+	public AppenderOptions setResolvedPattern(final String resolvedPattern) {
+		
+		if(!this.requiresResolvedPattern()) {
+			throw new IllegalArgumentException("appender defined by [" + this.getClass().getName() + "] does not support resolvedPattern");
+		}
+		
+		if (resolvedPattern == null || resolvedPattern.trim().isEmpty() ) {
+			throw new IllegalArgumentException("resolvedPattern must not be null or empty");
+		}
+		
+		this.resolvedPattern = resolvedPattern;
+		
+		return this;
+	}
 
 	public String getAppenderImplementationClassName() {
 		
@@ -47,7 +63,19 @@ public class AppenderOptions {
 		
 	}
 	
-	
+	public boolean requiresResolvedPattern() {
+		
+		return false;
+		
+	}
+
+	public String getResolvedPattern() {
+		
+		return resolvedPattern;
+		
+	}
+
 	
 	
 }
+	

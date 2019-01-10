@@ -46,13 +46,15 @@ public class RequestElement implements AccessLogElement{
 	@Override
 	public ExtractedPosition findInRawPatternInternal(final String rawPattern) {
 		
+		ExtractedPosition foundPosition = null;
+		
 		// Apache request format
 		final String requestPattern = "%r";
 		int index = rawPattern.indexOf(requestPattern);
 			
 		if(index >= 0){
 				
-			return new ExtractedPosition(index, requestPattern.length(), new RequestElement(RequestLogMode.APACHE_FIRST_REQUEST_LINE));
+			foundPosition = new ExtractedPosition(index, requestPattern.length(), new RequestElement(RequestLogMode.APACHE_FIRST_REQUEST_LINE));
 			
 		}
 		
@@ -63,9 +65,9 @@ public class RequestElement implements AccessLogElement{
 			index = rawPattern.indexOf(urlPattern);
 			
 			if(index >= 0){
-					
-				return new ExtractedPosition(index, urlPattern.length(), new RequestElement(RequestLogMode.URI));
-				
+				if(foundPosition == null || index < foundPosition.getStart()){	
+					foundPosition = new ExtractedPosition(index, urlPattern.length(), new RequestElement(RequestLogMode.URI));
+				}
 			}
 		}
 		
@@ -76,9 +78,9 @@ public class RequestElement implements AccessLogElement{
 			index = rawPattern.indexOf(queryOnlyPattern);
 					
 			if(index >= 0){
-							
-				return new ExtractedPosition(index, queryOnlyPattern.length(), new RequestElement(RequestLogMode.QUERY_STRING));
-				
+				if(foundPosition == null || index < foundPosition.getStart()){			
+					foundPosition = new ExtractedPosition(index, queryOnlyPattern.length(), new RequestElement(RequestLogMode.QUERY_STRING));
+				}
 			}
 		}
 		
@@ -88,12 +90,12 @@ public class RequestElement implements AccessLogElement{
 			
 		if(index >= 0){
 				
-			
-				return new ExtractedPosition(index, uriQueryPattern.length(), new RequestElement(RequestLogMode.URI_QUERY));
-			
+			if(foundPosition == null || index < foundPosition.getStart()){
+				foundPosition = new ExtractedPosition(index, uriQueryPattern.length(), new RequestElement(RequestLogMode.URI_QUERY));
+			}
 		}
 		
-		return null;
+		return foundPosition;
 	}
 
 
