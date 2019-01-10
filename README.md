@@ -18,7 +18,7 @@ Just add it as a dependency to your project (gradle example)
 
 ```xml
 dependencies {
-	compile 'com.mdac:vertx-web-accesslog:1.1.0'
+	compile 'com.mdac:vertx-web-accesslog:1.2.0'
 }
 ```
 
@@ -26,7 +26,7 @@ dependencies {
 
 Accesslog version | Vertx version
 ----|------
-1.1.0 | 3.2.0 - 3.6.2
+1.2.0 | 3.3.0 - 3.6.2
 
 Previous versions of Vertx 3 could be supported with small adaptations, most caused by changes in the vertx-web API.
 
@@ -50,12 +50,25 @@ META-INF
 
 The library comes with an embedded `PrintStreamAppender` and its main purpose is for testing.
 
-You can implement your own `Appender` implementation or use one of those
+### Available Appenders
 
 Appender | Description
 ----|------
 [Logging Appender](https://github.com/romanpierson/vertx-web-accesslog-logging-appender) | Using common logging functionality (logback, slf4j, etc)
-ElasticSearch Appender (Kibana) | Coming soon .....
+[ElasticSearch Appender](https://github.com/romanpierson/vertx-web-accesslog-elasticsearch-appender) | Experimental appender that writes data to ES
+
+### Custom Appenders
+
+You can easily write your own appender doing 
+
+* Write your own CustomAppender class that has a public constructor that takes an `AppenderOption` instance and  either
+** implements `Appender` Interface. Use this if your appender logic is not blocking
+** extends from `AbstractVerticle` and registers to EventBus address `AccessLoggerConstants.EVENTBUS_APPENDER_EVENT_NAME`. Use this if your appender logic requires more control like eg scheduling
+* Write your CustomAppenderOptions extending `AppenderOption` and defining `appenderImplementationClassName` and if your appender requires a resolved pattern
+
+## AccessLoggerProducerVerticle
+
+There is one worker instance of AccessLoggerProducerVerticle started. This instance is responsible for receiving the raw data, formatting it based on the AccessLogElements configured and forwards the resulting data to the registered Appenders (either by Event Bus or calling Appender.push. 
 
 
 ## Usage
@@ -71,8 +84,7 @@ router
 	.route()
 		.handler(AccessLoggerHandler.create(new AccessLoggerOptions().setPattern("%t %m %D %T"), 
 			Arrays.asList(
-				new LoggingAppenderOptions()
-					.setLoggerName("com.mdac.vertx.web.accesslogger.impl.AccessLoggerHandlerImpl")
+				new PrintStreamAppenderOptions().setPrintStream(System.out)
 			)
 		)
 );
@@ -111,14 +123,13 @@ The default way for elements where no actual value can be evaluated is to return
 
 ## Changelog
 
-### 1.1.0
+### 1.2.0
+
+(2019-01-10)
 
 * Introduced Appender API and removed all except `PrintStreamAppender` to separate projects
 * `AccessLogElerment` is able to claim what data it requires
 * General refactoring into Constants
-
-### 1.2.0
-
 * Raw values are translated into formatted values and only those get passed to appenders
 * Appenders do not get passed anymore `AccessLogElement` instances
 * Fixed a bug in `DateTimeElement` that caused pattern definition not to work

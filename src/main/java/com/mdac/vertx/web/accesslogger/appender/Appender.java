@@ -12,8 +12,6 @@
  */
 package com.mdac.vertx.web.accesslogger.appender;
 
-import java.util.Collection;
-
 import io.vertx.core.json.JsonArray;
 
 /**
