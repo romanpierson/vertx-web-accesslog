@@ -128,6 +128,7 @@ Datetime Apache Timeunit | %t{msec} | - | Currently only milliseconds is support
 Incoming Headers | %{IDENTIFIER}i  | - |  |
 Outgoing Response Headers | %{IDENTIFIER}o  | - |  |
 Cookie | %{IDENTIFIER}C  | - |  |
+Static value | %{IDENTIFIER}static  | - |  |
 
 ### Empty behaviour
 
@@ -150,10 +151,11 @@ The default way for elements where no actual value can be evaluated is to return
 
 ### 1.3.0
 
-(2019-)
+(2019-02-13)
 
 * Changed configuration from custom Option classes to plain JsonObject
 * Added plain timestamp as log element
 * Replaced `PrintStreamAppender` with `ConsoleAppender`
 * Added `EventBusAppender`
 * Fixed a bug with picking up the best log element if multiple ones potentially fit
+* Added `StaticValueElement`

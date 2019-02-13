@@ -10,7 +10,7 @@ verticles:
         isAutoDeployProducerVerticle: false
         configurations:
           - identifier: accesslog-formatted
-            logPattern: "%{Accept-Encoding}i %t %D cs-uri %{foo}C"
+            logPattern: "server1 %{server1}static %{Accept-Encoding}i %t %D cs-uri %{foo}C"
             appenders:
               - appenderClassName : com.mdac.vertx.web.accesslogger.appender.console.impl.ConsoleAppender
           #- identifier: accesslog-plain

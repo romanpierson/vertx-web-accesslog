@@ -8,3 +8,4 @@ com.mdac.vertx.web.accesslogger.configuration.element.impl.MethodElement
 com.mdac.vertx.web.accesslogger.configuration.element.impl.RequestElement
 com.mdac.vertx.web.accesslogger.configuration.element.impl.StatusElement
 com.mdac.vertx.web.accesslogger.configuration.element.impl.VersionElement
+com.mdac.vertx.web.accesslogger.configuration.element.impl.StaticValueElement
