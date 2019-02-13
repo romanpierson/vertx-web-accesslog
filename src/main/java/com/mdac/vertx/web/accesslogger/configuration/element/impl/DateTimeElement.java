@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import com.mdac.vertx.web.accesslogger.AccessLoggerConstants;
 import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.Request.Data;
 import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
 import com.mdac.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
@@ -50,9 +51,18 @@ public class DateTimeElement implements AccessLogElement{
 				int indexEndConfiguration = rawPattern.indexOf("}");
 			
 				if(indexEndConfigurationDatetime > index && (indexEndConfigurationDatetime == indexEndConfiguration)){
+					
 					String configurationString = rawPattern.substring(index + 2, indexEndConfigurationDatetime);
 					
-					foundPosition = new ExtractedPosition(index, configurationString.length() + 4, new DateTimeElement(deriveDateFormatFromConfigurationString(configurationString)));
+					DateTimeElement element;
+					
+					if("msec".equalsIgnoreCase(configurationString)) {
+						element = new DateTimeElement();
+					} else {
+						element = new DateTimeElement(deriveDateFormatFromConfigurationString(configurationString));
+					}
+					
+					foundPosition = new ExtractedPosition(index, configurationString.length() + 4, element);
 				}
 			
 		}
@@ -91,7 +101,7 @@ public class DateTimeElement implements AccessLogElement{
 				
 				// Assume this is just a format configuration
 				DateFormat dtf = new SimpleDateFormat(configurationTokens[0], Locale.ENGLISH);
-				dtf.setTimeZone(TimeZone.getTimeZone("GMT"));
+				dtf.setTimeZone(TimeZone.getTimeZone(AccessLoggerConstants.ZONE_UTC));
 				
 				return dtf;
 			}
@@ -104,11 +114,11 @@ public class DateTimeElement implements AccessLogElement{
 	@Override
 	public String getFormattedValue(final JsonObject values) {
 		
-		final StringBuilder sb = new StringBuilder();
-		
-		sb.append(this.dateFormat.format(values.getLong(Data.Type.START_TS_MILLIS.getFieldName())));
-		
-		return sb.toString();
+		if(this.dateFormat == null) {
+			return values.getLong(Data.Type.START_TS_MILLIS.getFieldName()).toString();
+		} else {
+			return this.dateFormat.format(values.getLong(Data.Type.START_TS_MILLIS.getFieldName()));
+		}
 	}
 
 }

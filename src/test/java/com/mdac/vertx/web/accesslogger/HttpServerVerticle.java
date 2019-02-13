@@ -12,18 +12,15 @@
  */
 package com.mdac.vertx.web.accesslogger;
 
-import java.util.Arrays;
-
-import com.mdac.vertx.web.accesslogger.appender.printstream.impl.PrintStreamAppenderOptions;
-import com.mdac.vertx.web.accesslogger.impl.AccessLoggerOptions;
-
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
+import io.vertx.ext.web.Cookie;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.CookieHandler;
-import io.vertx.ext.web.Cookie;
 
 /**
  * 
@@ -32,18 +29,9 @@ import io.vertx.ext.web.Cookie;
  * @author Roman Pierson
  *
  */
-public class TestRouteVerticle extends AbstractVerticle {
+public class HttpServerVerticle extends AbstractVerticle {
 
-	
-	public static void main(String[] args) throws InterruptedException {
-		
-		System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory");
-		
-		final Vertx vertx = Vertx.vertx();
-		vertx.deployVerticle(new TestRouteVerticle());
-
-	}
-	
+	private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
 	
 	@Override
 	public void start() throws Exception {
@@ -54,18 +42,13 @@ public class TestRouteVerticle extends AbstractVerticle {
 		
 		Router router = Router.router(vertx);
 		
-		router
-			.route()
-			
-				// Example how to specify a pattern and an explicit appender
-				.handler(AccessLoggerHandler.create(new AccessLoggerOptions()
-															.setPattern("%t %m %D %T \"%{foo}C\" \"%{User-Agent}i\""), 
-					                        Arrays.asList(
-					                        		new PrintStreamAppenderOptions().setPrintStream(System.out)
-					                        		)
-					                        )
-				);
+		final JsonObject accessLogHandlerConfig = this.config().getJsonObject("accesslogHandler", null);
 		
+		//System.out.println(accessLogHandlerConfig.encodePrettily());
+		
+		if(accessLogHandlerConfig != null) {
+			router.route().handler(AccessLoggerHandler.create(accessLogHandlerConfig));
+		}
 		
 		// Handle cookies
 		router.route().handler(CookieHandler.create());
@@ -101,11 +84,23 @@ public class TestRouteVerticle extends AbstractVerticle {
 					  HttpServerResponse response = routingContext.response();
 					  response.putHeader("content-type", "text/plain");
 			
+					  LOG.info("Got request for [{}]", routingContext.request().uri());
+					  
 					  // Write to the response and end it
 					  response.end("Hello World from Vert.x-Web!");
 		});
 
-		server.requestHandler(router).listen(8080);
+		long startTS = System.currentTimeMillis();
+		
+		int port = this.config().getInteger("port");
+		
+		server.requestHandler(router).listen(port, ar -> {
+			if(ar.succeeded()) {
+				LOG.info("Successfully started http server on port [{}] in [{}] ms", port, System.currentTimeMillis() - startTS);
+			} else {
+				LOG.error("Failed to start http server", ar.cause());
+			}
+		});
 		
 	}
 

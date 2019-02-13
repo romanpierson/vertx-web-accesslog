@@ -50,7 +50,7 @@ public class PatternResolver {
 				
 				if(extractedPosition == null || extractedPosition.getStart() == -1){
 					continue;
-				} else if (bestStart == -1 || extractedPosition.getStart() < bestStart){
+				} else if (bestStart == -1 || (extractedPosition.getStart() <= bestStart && extractedPosition.getOffset() < bestOffset)){
 					bestStart = extractedPosition.getStart();
 					bestOffset = extractedPosition.getOffset();
 					bestElement = extractedPosition.getElement();

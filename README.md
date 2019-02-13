@@ -18,7 +18,7 @@ Just add it as a dependency to your project (gradle example)
 
 ```xml
 dependencies {
-	compile 'com.mdac:vertx-web-accesslog:1.2.0'
+	compile 'com.mdac:vertx-web-accesslog:1.3.0'
 }
 ```
 
@@ -26,7 +26,8 @@ dependencies {
 
 Accesslog version | Vertx version
 ----|------
-1.2.0 | 3.3.0 - 3.6.2
+1.3.0 | 3.3.0 - 3.6.3
+1.2.0 | 3.3.0 - 3.6.3
 
 Previous versions of Vertx 3 could be supported with small adaptations, most caused by changes in the vertx-web API.
 
@@ -37,7 +38,7 @@ The logger supports mixing of both log formats and is also designed to easily ad
 
 ### Define your custom AccessLogElement
 
-You can easily create your custom implementation of `AccessLogElement` by creating your own element class implementing `AccessLogElement` interface. The available `AccessLogElement` types are discovered by ServiceLoeader, so just add to your resources a file like this and inside list your `AccessLogElement` classes
+You can easily create your custom implementation of `AccessLogElement` by creating your own element class implementing `AccessLogElement` interface. The available `AccessLogElement` types are discovered by ServiceLoader, so just add to your resources a file like this and inside list your `AccessLogElement` classes
 
 ```xml
 META-INF
@@ -48,12 +49,12 @@ META-INF
 
 ## Appenders
 
-The library comes with an embedded `PrintStreamAppender` and its main purpose is for testing.
-
 ### Available Appenders
 
 Appender | Description
 ----|------
+Console Appender | Embedded - main purpose for testing
+EventBus Appender | Embedded - simple way to forward access events to a configurable address on the event bus
 [Logging Appender](https://github.com/romanpierson/vertx-web-accesslog-logging-appender) | Using common logging functionality (logback, slf4j, etc)
 [ElasticSearch Appender](https://github.com/romanpierson/vertx-web-accesslog-elasticsearch-appender) | Experimental appender that writes data to ES
 
@@ -61,33 +62,43 @@ Appender | Description
 
 You can easily write your own appender doing 
 
-* Write your own CustomAppender class that has a public constructor that takes an `AppenderOption` instance and  either
-** implements `Appender` Interface. Use this if your appender logic is not blocking
-** extends from `AbstractVerticle` and registers to EventBus address `AccessLoggerConstants.EVENTBUS_APPENDER_EVENT_NAME`. Use this if your appender logic requires more control like eg scheduling
-* Write your CustomAppenderOptions extending `AppenderOption` and defining `appenderImplementationClassName` and if your appender requires a resolved pattern
+* Write your own CustomAppender class that must
+** implement `Appender` Interface
+** have a public constructor taking a `JsonObject` instance holding the configuration
 
 ## AccessLoggerProducerVerticle
 
-There is one worker instance of AccessLoggerProducerVerticle started. This instance is responsible for receiving the raw data, formatting it based on the AccessLogElements configured and forwards the resulting data to the registered Appenders (either by Event Bus or calling Appender.push. 
+This verticle is responsible for receiving the raw data, formatting it based on the AccessLogElements configured and forwards the resulting data to the registered Appenders (by calling `Appender.push`). 
 
+There is one worker instance of `AccessLoggerProducerVerticle` per vertx context started if you put configuration value `isAutoDeployProducerVerticle` to `true` (by default it is). If you prefer to manage the deployment of that verticle byself set the property to `false`.
 
 ## Usage
 
 ### Configure route
 
-Just put an instance of AccessLogHandler as first route handler (Using Logging Appender as example)
+Just put an instance of AccessLogHandler as first route handler.
 
 ```java
 Router router = Router.router(vertx);
 
-router
-	.route()
-		.handler(AccessLoggerHandler.create(new AccessLoggerOptions().setPattern("%t %m %D %T"), 
-			Arrays.asList(
-				new PrintStreamAppenderOptions().setPrintStream(System.out)
-			)
-		)
-);
+JsonObject config = .... load or create your configuration json
+
+router.route().handler(AccessLoggerHandler.create(config));
+
+```
+
+As configuration is now done by plain JsonObject its very simple to use and inject configuration eg by yaml, see as an example `ServerSetupStarter`
+
+```yaml
+configurations:
+  - identifier: accesslog-formatted
+    logPattern: '%{}t %D "cs-uri"'
+    appenders:
+      - appenderClassName : com.mdac.vertx.web.accesslogger.appender.console.impl.ConsoleAppender
+  - identifier: accesslog-plain
+    logPattern: "%{msec}t %D cs-uri"
+    appenders:
+      - appenderClassName : com.mdac.vertx.web.accesslogger.appender.console.impl.ConsoleAppender
 ```
 
 ## Supported log elements
@@ -111,6 +122,7 @@ Query only | %q | cs-uri-query | |
 URI path incl query | - | cs-uri | |
 Version / Protocol | %H | - | |
 Datetime Apache | %t | - | Logs by default the request timestamp using format 'EEE, dd MMM yyyy HH:mm:ss zzz', Locale English and Timezone GMT  |
+Datetime Apache Timeunit | %t{msec} | - | Currently only milliseconds is supported  |
 | Datetime Apache Configurable v1 | %{PATTERN}t | - | Specify the format pattern, by default it is used Locale English and Timezone GMT |
 | Datetime Apache Configurable v2 | %{PATTERN\|TIMEZONE\|LOCALE}t | - | Specify format pattern, timezone and locale |
 Incoming Headers | %{IDENTIFIER}i  | - |  |
@@ -119,7 +131,7 @@ Cookie | %{IDENTIFIER}C  | - |  |
 
 ### Empty behaviour
 
-The default way for elements where no actual value can be evaluated is to return a `NULL` value and the appender is translating this into an empty string. 
+The default way for elements where no actual value can be evaluated is to return a `NULL` value. This way the appender is able to translate this into an empty string or eg skip the value if we index towards a solution like ElasticSearch.
 
 ## Changelog
 
@@ -135,3 +147,13 @@ The default way for elements where no actual value can be evaluated is to return
 * Fixed a bug in `DateTimeElement` that caused pattern definition not to work
 * Fixed a bug in `findInRawPatternInternal` method of several `AccessLogElement` implementations that handle several element patterns and in the case of having a pattern with those following each other this might have led to the situation of bypassing the earlier one
 * Extracting correct hostname for local host (%v)
+
+### 1.3.0
+
+(2019-)
+
+* Changed configuration from custom Option classes to plain JsonObject
+* Added plain timestamp as log element
+* Replaced `PrintStreamAppender` with `ConsoleAppender`
+* Added `EventBusAppender`
+* Fixed a bug with picking up the best log element if multiple ones potentially fit

@@ -12,22 +12,18 @@
  */
 package com.mdac.vertx.web.accesslogger.impl;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 import com.mdac.vertx.web.accesslogger.AccessLoggerConstants;
+import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.HandlerConfiguration;
+import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.Messages.RawEvent;
+import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.Messages.Registration;
 import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.Request.Data;
 import com.mdac.vertx.web.accesslogger.AccessLoggerHandler;
-import com.mdac.vertx.web.accesslogger.appender.Appender;
-import com.mdac.vertx.web.accesslogger.appender.AppenderOptions;
-import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
-import com.mdac.vertx.web.accesslogger.configuration.pattern.PatternResolver;
-import com.mdac.vertx.web.accesslogger.configuration.pattern.ResolvedPatternResult;
+import com.mdac.vertx.web.accesslogger.verticle.AccessLoggerProducerVerticle;
 
-import io.vertx.core.AbstractVerticle;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
@@ -54,129 +50,93 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 	
 	private final EventBus eventBus;
 	
-	private final boolean requiresIncomingHeaders;
-	private final boolean requiresOutgoingHeaders;
-	private final boolean requiresCookies;
+	private Collection<String> registeredIdentifiers = new ArrayList<>();
+	private boolean allConfigurationsSuccessfullyRegistered = false;
+	private final int requiredConfigurationsCounter;
 	
-	@SuppressWarnings("rawtypes")
-	public AccessLoggerHandlerImpl(final AccessLoggerOptions accessLoggerOptions, final Collection<AppenderOptions> appenderOptions) {
+	private boolean requiresIncomingHeaders;
+	private boolean requiresOutgoingHeaders;
+	private boolean requiresCookies;
+	
+	private static final Object lock = new Object();
+	private static boolean isProducerVerticleCreated = false;
+	
+	public AccessLoggerHandlerImpl(final JsonObject handlerConfiguration) {
 		
-		if(accessLoggerOptions == null || appenderOptions == null || appenderOptions.size() == 0){
-			throw new IllegalArgumentException("must specify at least one accessLoggerOptions and one appenderOptions");
+		if(handlerConfiguration == null || handlerConfiguration.getJsonArray(HandlerConfiguration.CONFIG_KEY_CONFIGURATIONS, new JsonArray()).size() <= 0){
+			throw new IllegalArgumentException("must specify at least one valid configuration");
 		}
 		
-		if(accessLoggerOptions.getPattern() != null && accessLoggerOptions.getLogElements().size() > 1){
-			throw new IllegalArgumentException("must not specify a pattern and logElements");
-		}
-		
-		String resolvedPattern = null;
-		Collection<AccessLogElement> logElements;
-		
-		if(accessLoggerOptions.getPattern() != null){
-			// A pattern was defined
-			final ResolvedPatternResult resolvedPatternResult = new PatternResolver().resolvePattern(accessLoggerOptions.getPattern());
-			
-			resolvedPattern = resolvedPatternResult.getResolvedPattern();
-			logElements = resolvedPatternResult.getLogElements();
-			
-		} else {
-			// Log elements were defined
-			throw new UnsupportedOperationException();
-		}
-		
-		final Set<Data.Type> requiredTypes = determinateRequiredElementData(logElements);
-		
-		this.requiresIncomingHeaders = requiredTypes.contains(Data.Type.REQUEST_HEADERS);
-		this.requiresOutgoingHeaders = requiredTypes.contains(Data.Type.RESPONSE_HEADERS);
-		this.requiresCookies = requiredTypes.contains(Data.Type.COOKIES);
-		
-		if(requiredTypes.isEmpty()) {
-			LOG.info("No specific element data was claimed by access elements");
-		} else {
-			LOG.info("Specific element data for [{}] was claimed by access elements", requiredTypes);
-		}
-		
-		// Create the appenders
-		Collection<Appender> rawAppenders = new ArrayList<>(appenderOptions.size());
-		Collection<AbstractVerticle> verticleAppenders = new ArrayList<>(appenderOptions.size());
-		
-		for(final AppenderOptions appenderOption : appenderOptions){
-			
-			final String appenderImplementationClassName = appenderOption.getAppenderImplementationClassName();
-			
-			if(appenderImplementationClassName == null || appenderImplementationClassName.trim().isEmpty()){
-				throw new IllegalArgumentException("must not specify an appender with empty appenderImplementationClass");
-			}
-			
-			Class appenderClass = null;
-			
-			try{
-				appenderClass = Class.forName(appenderImplementationClassName);
-			}catch(Exception ex){
-				throw new IllegalArgumentException("appenderImplementationClass [" + appenderImplementationClassName + "] was not found", ex);
-			}
-			
-			Constructor constructor = null;
-			
-			try{
-				
-				Constructor[] constructors = appenderClass.getConstructors();
-				
-				if(constructors.length != 1){
-					throw new IllegalArgumentException("appenderImplementationClass [" + appenderImplementationClassName + "] must specify exactly one constructor");
-				}
-				
-				constructor = constructors[0];
-				
-			}catch(Exception ex){
-				throw new IllegalArgumentException("could not look up constructor", ex);
-			}
-			
-			
-			if(appenderOption.requiresResolvedPattern()) {
-				appenderOption.setResolvedPattern(resolvedPattern);
-			}
-			
-			Object appender = null;
-			
-			try{
-				appender = constructor.newInstance(appenderOption);
-			}catch(Exception ex){
-				throw new IllegalArgumentException("Failed to instantiate appenderImplementationClass of type [" + appenderImplementationClassName + "]", ex);
-			}
-			
-			if(appender instanceof Appender) {
-				rawAppenders.add((Appender) appender);
-			} else if (appender instanceof AbstractVerticle) {
-				verticleAppenders.add((AbstractVerticle) appender);
-			} else {
-				throw new IllegalArgumentException("appenderImplementationClass of type [" + appenderImplementationClassName + "] is invalid - must extend either AbstractVerticle or implement Appender");
-			}
-			
-		}
-		
-		Vertx.currentContext().owner().deployVerticle(new AccessLoggerProducerVerticle(accessLoggerOptions, logElements, rawAppenders, verticleAppenders), new DeploymentOptions().setWorker(true));
+		this.requiredConfigurationsCounter = handlerConfiguration.getJsonArray(HandlerConfiguration.CONFIG_KEY_CONFIGURATIONS).size();
 		
 		eventBus = Vertx.currentContext().owner().eventBus();
 		
+		if(handlerConfiguration.getBoolean(HandlerConfiguration.CONFIG_KEY_IS_AUTO_DEPLOY_PRODUCER_VERTICLE, true)) {
+			
+			synchronized(lock) {
+				if(!isProducerVerticleCreated) {
+					
+					LOG.info("Start creating singleton verticle");
+					
+					Vertx.currentContext().owner().deployVerticle(AccessLoggerProducerVerticle.class.getName(), new DeploymentOptions().setWorker(true));
+					
+					isProducerVerticleCreated = true;
+						
+				}
+			}
+		} 
 		
-	}
-	
-	
-	Set<Data.Type> determinateRequiredElementData(final Collection<AccessLogElement> logElements){
-	
-		final Set<Data.Type> requiredTypes = new HashSet<>();
-		
-		for(final AccessLogElement element : logElements) {
-			requiredTypes.addAll(element.claimDataParts());
-		}
-		
-		return requiredTypes;
+		handlerConfiguration.getJsonArray(HandlerConfiguration.CONFIG_KEY_CONFIGURATIONS).forEach(xConfiguration -> {
+			
+			if(!(xConfiguration instanceof JsonObject)) {
+				throw new IllegalArgumentException("must specify a valid configuration");
+			}
+			
+			final JsonObject configuration = (JsonObject) xConfiguration;
+			
+			eventBus.<JsonObject>send(AccessLoggerConstants.EVENTBUS_REGISTER_EVENT_NAME, configuration, ar -> {
+				
+				final String configurationIdentifier = configuration.getString(Registration.Request.IDENTIFIER);
+				
+				if(ar.succeeded()) {
+					JsonObject response = ar.result().body();
+					if(Registration.Response.RESULT_OK.equals(response.getString(Registration.Response.RESULT, null))){
+						
+						this.requiresCookies = response.getBoolean(Registration.Response.REQUIRES_COOKIES, false) ? true : this.requiresCookies;
+						this.requiresIncomingHeaders = response.getBoolean(Registration.Response.REQUIRES_INCOMING_HEADERS, false) ? true : this.requiresIncomingHeaders;
+						this.requiresOutgoingHeaders = response.getBoolean(Registration.Response.REQUIRES_OUTGOING_HEADERS, false) ? true : this.requiresOutgoingHeaders;
+						
+						this.registeredIdentifiers.add(configurationIdentifier);
+						
+						if(this.requiredConfigurationsCounter == this.registeredIdentifiers.size()) {
+							this.allConfigurationsSuccessfullyRegistered = true;
+							LOG.debug("Successfully registered all [{}] configurations with identifiers {}", this.requiredConfigurationsCounter, this.registeredIdentifiers);
+							if(this.requiresCookies || this.requiresIncomingHeaders || this.requiresOutgoingHeaders) {
+								LOG.debug("Specific data required for cookies [{}], incoming headers [{}], outgoing headers [{}]", this.requiresCookies, this.requiresIncomingHeaders, this.requiresOutgoingHeaders);
+							} else {
+								LOG.debug("No specific data required");
+							}
+						}
+						
+					} else {
+						throw new RuntimeException("Unable to register access log configuration for identifier [" + configurationIdentifier + "]");
+					}
+					
+				} else {
+					throw new RuntimeException("Unable to register access log configuration [" + configurationIdentifier + "]", ar.cause());
+				}
+			});
+		});
 		
 	}
 	
 	@Override
 	public void handle(final RoutingContext context) {
+		
+		if(!allConfigurationsSuccessfullyRegistered) {
+			LOG.error("Handler not ready to log due to missing registration(s)");
+			context.next();
+		}
 		
 		long startTSmillis = System.currentTimeMillis();
 		
@@ -191,8 +151,8 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 		final HttpServerRequest request = context.request();
 		final HttpServerResponse response = context.response();
 		
-		
 		JsonObject jsonValues = new JsonObject()
+										.put(RawEvent.Request.IDENTIFIERS, this.registeredIdentifiers)
 										.put(Data.Type.START_TS_MILLIS.getFieldName(), startTSmillis)
 										.put(Data.Type.END_TS_MILLIS.getFieldName(), System.currentTimeMillis())
 										.put(Data.Type.STATUS.getFieldName(), response.getStatusCode())

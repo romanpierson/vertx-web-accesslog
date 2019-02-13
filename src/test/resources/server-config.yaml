@@ -1,0 +1,30 @@
+verticles:
+  - verticleClassName: com.mdac.vertx.web.accesslogger.verticle.AccessLoggerProducerVerticle
+    instances: 1
+    isWorker: true
+  - verticleClassName: com.mdac.vertx.web.accesslogger.HttpServerVerticle
+    instances: 1
+    config:
+      port: 8080
+      accesslogHandler:
+        isAutoDeployProducerVerticle: false
+        configurations:
+          - identifier: accesslog-formatted
+            logPattern: "%{Accept-Encoding}i %t %D cs-uri %{foo}C"
+            appenders:
+              - appenderClassName : com.mdac.vertx.web.accesslogger.appender.console.impl.ConsoleAppender
+          #- identifier: accesslog-plain
+          #  logPattern: "%{msec}t %D cs-uri %{sss}o"
+          #  appenders:
+          #    - appenderClassName : com.mdac.vertx.web.accesslogger.appender.console.impl.ConsoleAppender
+#  - verticleClassName: com.mdac.vertx.web.accesslogger.HttpServerVerticle
+#    instances: 1
+#    config:
+#      port: 8081
+#      accesslogHandler:
+#        configurations:
+#          - identifier: accesslog-formatted
+#            logPattern: '%t %D "cs-uri" %{sss}i'
+#            appenders:
+#              - appenderClassName : com.mdac.vertx.web.accesslogger.appender.console.impl.ConsoleAppender
+      

@@ -12,13 +12,10 @@
  */
 package com.mdac.vertx.web.accesslogger;
 
-import java.util.Collection;
-
-import com.mdac.vertx.web.accesslogger.appender.AppenderOptions;
 import com.mdac.vertx.web.accesslogger.impl.AccessLoggerHandlerImpl;
-import com.mdac.vertx.web.accesslogger.impl.AccessLoggerOptions;
 
 import io.vertx.core.Handler;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 
 /**
@@ -32,15 +29,14 @@ public interface AccessLoggerHandler extends Handler<RoutingContext> {
 
 	/**
 	 * 
-	 * Creates a logging handler by passing an {@link AccessLoggerOptions} configuration and a list of {@link AppenderOptions}
+	 * Creates a logging handler by passing an {@link JsonObject} configuration
 	 * 
-	 * @param accessLoggerOptions	The access logger configuration
-	 * @param appenderOptions		One or several appender configuration(s)
-	 * @return						The logging handler
+	 * @param config	The access logger configuration
+	 * @return			The logging handler
 	 */
-	static AccessLoggerHandler create(final AccessLoggerOptions accessLoggerOptions, final Collection<AppenderOptions> appenderOptions){
+	static AccessLoggerHandler create(final JsonObject config){
 		
-		return new AccessLoggerHandlerImpl(accessLoggerOptions, appenderOptions);
+		return new AccessLoggerHandlerImpl(config);
 		
 	}
 	
