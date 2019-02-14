@@ -130,6 +130,10 @@ Outgoing Response Headers | %{IDENTIFIER}o  | - |  |
 Cookie | %{IDENTIFIER}C  | - |  |
 Static value | %{IDENTIFIER}static  | - |  |
 
+### Static values
+
+For static values you should prefer to use the %{value}static element. In case you have an appender like `ConsoleAppender` or `LoggingAppender` that writes its output via the resolved pattern you can also put such static values directly into the logpattern as it will just stay as non resolved. However for other appenders like `ElasticSearchAppender` one you need to explicitly define the element.
+
 ### Empty behaviour
 
 The default way for elements where no actual value can be evaluated is to return a `NULL` value. This way the appender is able to translate this into an empty string or eg skip the value if we index towards a solution like ElasticSearch.
@@ -151,7 +155,7 @@ The default way for elements where no actual value can be evaluated is to return
 
 ### 1.3.0
 
-(2019-02-13)
+(2019-02-14)
 
 * Changed configuration from custom Option classes to plain JsonObject
 * Added plain timestamp as log element

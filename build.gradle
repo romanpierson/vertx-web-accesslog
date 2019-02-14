@@ -29,8 +29,8 @@ dependencies {
 sourceCompatibility='1.8'
 targetCompatibility='1.8'
 
-jar.archiveName = "vertx-web-accesslog-1.3.0_Beta.jar"
-bintrayUpload.packageName = "vertx-web-accesslog-1.3.0_Beta.jar"
+jar.archiveName = "vertx-web-accesslog-1.3.0.jar"
+bintrayUpload.packageName = "vertx-web-accesslog-1.3.0.jar"
 
 task sourceJar(type: Jar) {
     from sourceSets.main.allJava
@@ -42,7 +42,7 @@ publishing {
             
             groupId 'com.mdac'
             artifactId 'vertx-web-accesslog'
-            version '1.3.0_Beta'
+            version '1.3.0'
             
             from components.java
 
@@ -70,7 +70,7 @@ bintray {
         override = false
         vcsUrl = 'https://github.com/romanpierson/vertx-web-accesslog.git'
         version {
-        	name = '1.3.0_Beta'
+        	name = '1.3.0'
         }
     }
 }
