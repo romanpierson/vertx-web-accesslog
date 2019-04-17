@@ -18,7 +18,7 @@ Just add it as a dependency to your project (gradle example)
 
 ```xml
 dependencies {
-	compile 'com.mdac:vertx-web-accesslog:1.3.0'
+	compile 'com.mdac:vertx-web-accesslog:1.3.1'
 }
 ```
 
@@ -26,8 +26,8 @@ dependencies {
 
 Accesslog version | Vertx version
 ----|------
-1.3.0 | 3.3.0 - 3.6.3
-1.2.0 | 3.3.0 - 3.6.3
+1.3.1 | 3.3.0 - 3.7.0
+1.2.0 | 3.3.0 - 3.7.0
 
 Previous versions of Vertx 3 could be supported with small adaptations, most caused by changes in the vertx-web API.
 
@@ -163,3 +163,9 @@ The default way for elements where no actual value can be evaluated is to return
 * Added `EventBusAppender`
 * Fixed a bug with picking up the best log element if multiple ones potentially fit
 * Added `StaticValueElement`
+
+### 1.3.1
+
+(2019-04-17)
+
+* Fixed a bug with pattern resolver (https://github.com/romanpierson/vertx-web-accesslog/issues/11)
