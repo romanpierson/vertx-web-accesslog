@@ -50,12 +50,17 @@ public class PatternResolver {
 				
 				if(extractedPosition == null || extractedPosition.getStart() == -1){
 					continue;
-				} else if (bestStart == -1 || (extractedPosition.getStart() <= bestStart && extractedPosition.getOffset() < bestOffset)){
+				} else if (bestStart == -1 || extractedPosition.getStart() <= bestStart){
+					if(extractedPosition.getStart() == bestStart  && extractedPosition.getOffset() >= bestOffset) {
+						// Trying to retain some of the logic
+						// If the start position is equal then we must have a duplicate pattern use the item with the shorter length
+						continue;
+					}
+
 					bestStart = extractedPosition.getStart();
 					bestOffset = extractedPosition.getOffset();
 					bestElement = extractedPosition.getElement();
 				}
-				
 			}
 			
 			if(bestStart >= 0){
