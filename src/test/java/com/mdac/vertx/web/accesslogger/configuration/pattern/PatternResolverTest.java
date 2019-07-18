@@ -9,15 +9,15 @@ import com.mdac.vertx.web.accesslogger.configuration.element.impl.MethodElement;
 import com.mdac.vertx.web.accesslogger.configuration.element.impl.RequestElement;
 import com.mdac.vertx.web.accesslogger.configuration.element.impl.StaticValueElement;
 import com.mdac.vertx.web.accesslogger.configuration.element.impl.StatusElement;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PatternResolverTest {
 
@@ -84,9 +84,12 @@ public class PatternResolverTest {
     }
 
     private void assertResolvedPatterns(Collection<AccessLogElement> expected, Collection<AccessLogElement> actual) {
-        assertEquals(actual.toString(), expected.size(), actual.size());
+        
+    	assertEquals(expected.size(), actual.size(), actual.toString());
+    	
         Iterator<AccessLogElement> actualIter = actual.iterator();
         Iterator<AccessLogElement> expectedIter = expected.iterator();
+        
         while (actualIter.hasNext()) {
             AccessLogElement actualElement = actualIter.next();
             AccessLogElement expectedElement = expectedIter.next();

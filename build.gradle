@@ -20,13 +20,19 @@ dependencies {
 	
 	testCompile 'io.vertx:vertx-config:4.0.0-SNAPSHOT'
 	testCompile 'io.vertx:vertx-config-yaml:4.0.0-SNAPSHOT'
-	testCompile 'junit:junit:4.12'
+	
+	testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.0")
+    testCompile("org.junit.platform:junit-platform-launcher:1.5.0")
 	
 	// Logback (via SLF4J)
 	testRuntime 'ch.qos.logback:logback-classic:1.2.3'
 	
 }
 
+test {
+    useJUnitPlatform()
+}
 
 sourceCompatibility='1.8'
 targetCompatibility='1.8'

@@ -12,13 +12,14 @@
  */
 package com.mdac.vertx.web.accesslogger.configuration.pattern;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.Request.Data;
 import com.mdac.vertx.web.accesslogger.configuration.element.impl.RequestElement;
@@ -39,17 +40,24 @@ public class RequestElementTest {
 	final Map<String, Object> valuesWithQuery = getAllValues("uri-value", "method-value", "query-value", httpVersion); 
 	final Map<String, Object> valuesWithoutQuery = getAllValues("uri-value", "method-value", null, httpVersion); 
 
-	@Test(expected=IllegalArgumentException.class)
+	@Test
 	public void testFindInRawPatternInvalidInputNull(){
 	
-		new RequestElement().findInRawPattern(null);
+		assertThrows(IllegalArgumentException.class,
+	            ()->{
+	            	new RequestElement().findInRawPattern(null);
+	            });
+		
 		
 	}
 	
-	@Test(expected=IllegalArgumentException.class)
+	@Test
 	public void testFindInRawPatternInvalidInputEmpty(){
 	
-		new RequestElement().findInRawPattern("");
+		assertThrows(IllegalArgumentException.class,
+	            ()->{
+	            	new RequestElement().findInRawPattern("");
+	            });
 		
 	}
 	
