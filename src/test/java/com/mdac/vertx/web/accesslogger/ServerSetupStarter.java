@@ -14,6 +14,9 @@ package com.mdac.vertx.web.accesslogger;
 
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.vertx.config.ConfigRetriever;
 import io.vertx.config.ConfigRetrieverOptions;
 import io.vertx.config.ConfigStoreOptions;
@@ -21,8 +24,6 @@ import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 
 /**
  * 
@@ -37,8 +38,6 @@ public class ServerSetupStarter {
 	private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
 	
 	public static void main(String[] args) throws InterruptedException {
-		
-		System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory");
 		
 		final Vertx vertx = Vertx.vertx(new VertxOptions().setWarningExceptionTimeUnit(TimeUnit.SECONDS).setWarningExceptionTime(4).setBlockedThreadCheckIntervalUnit(TimeUnit.SECONDS).setBlockedThreadCheckInterval(4));
 		

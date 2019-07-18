@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.mdac.vertx.web.accesslogger.AccessLoggerConstants;
 import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.HandlerConfiguration;
 import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.Messages.RawEvent;
@@ -32,8 +35,6 @@ import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Cookie;
 import io.vertx.ext.web.RoutingContext;
 
@@ -93,8 +94,8 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 			}
 			
 			final JsonObject configuration = (JsonObject) xConfiguration;
-			
-			eventBus.<JsonObject>send(AccessLoggerConstants.EVENTBUS_REGISTER_EVENT_NAME, configuration, ar -> {
+
+			eventBus.<JsonObject>request(AccessLoggerConstants.EVENTBUS_REGISTER_EVENT_NAME, configuration, ar -> {
 				
 				final String configurationIdentifier = configuration.getString(Registration.Request.IDENTIFIER);
 				

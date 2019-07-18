@@ -18,6 +18,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.mdac.vertx.web.accesslogger.AccessLoggerConstants;
 import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.Messages.RawEvent;
 import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.Messages.Registration;
@@ -30,8 +33,6 @@ import com.mdac.vertx.web.accesslogger.configuration.pattern.ResolvedPatternResu
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 
 /**
  * 

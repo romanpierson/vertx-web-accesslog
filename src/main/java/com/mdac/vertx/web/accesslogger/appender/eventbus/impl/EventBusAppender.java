@@ -12,14 +12,15 @@
  */
 package com.mdac.vertx.web.accesslogger.appender.eventbus.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.mdac.vertx.web.accesslogger.appender.Appender;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 
 /**
  * 
