@@ -78,7 +78,7 @@ bintray {
 
 sonarqube {
   properties {
-    sonar.projectKey = 'romanpierson_vertx-web-accesslog'
+  	property 'sonar.projectKey', 'romanpierson_vertx-web-accesslog'
   }
 }
 
