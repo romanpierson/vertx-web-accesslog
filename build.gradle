@@ -1,6 +1,5 @@
 plugins {
     id "com.jfrog.bintray" version "1.8.4"
-    id "org.sonarqube" version "2.7"
 }
 
 repositories {
@@ -76,11 +75,6 @@ bintray {
     }
 }
 
-sonarqube {
-  properties {
-  	property 'sonar.projectKey', 'romanpierson_vertx-web-accesslog'
-  }
-}
 
 wrapper() {
   gradleVersion = '5.0'
