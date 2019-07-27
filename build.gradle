@@ -11,6 +11,7 @@ apply plugin: 'eclipse'
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
+apply plugin: 'jacoco'
 
 dependencies {
 
@@ -53,6 +54,10 @@ publishing {
     }
 }
 
+test {
+	finalizedBy jacocoTestReport
+}
+
 bintray {
 	user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
 	key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
@@ -75,6 +80,12 @@ bintray {
     }
 }
 
+jacocoTestReport {
+	reports {
+		xml.enabled = true
+		html.enabled = true
+	}
+}
 
 wrapper() {
   gradleVersion = '5.0'

@@ -1,3 +1,10 @@
 language: java
 jdk:
   - openjdk11
+  
+after_success:
+- sonar-scanner
+
+addons:
+  sonarcloud:
+    organization: "romanpierson"
