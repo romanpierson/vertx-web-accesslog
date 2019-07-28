@@ -16,6 +16,7 @@ apply plugin: 'jacoco'
 dependencies {
 
 	compile 'io.vertx:vertx-web:4.0.0-milestone1'
+	compile 'org.slf4j:slf4j-api:1.7.26'
 	
 	testCompile 'io.vertx:vertx-config:4.0.0-milestone1'
 	testCompile 'io.vertx:vertx-config-yaml:4.0.0-milestone1'

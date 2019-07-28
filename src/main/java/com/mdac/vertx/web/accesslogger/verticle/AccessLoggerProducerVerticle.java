@@ -30,8 +30,8 @@ import com.mdac.vertx.web.accesslogger.configuration.pattern.ResolvedPatternResu
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -71,20 +71,6 @@ public class AccessLoggerProducerVerticle extends AbstractVerticle {
 					}
 				}	
 			}
-			
-			
-			
-			/*identifiers.forEach(xIdentifier -> {
-				String identifier = (String) xIdentifier;
-				if(resolvedLoggerConfigurations.containsKey(identifier)) {
-					
-					JsonArray formatted = getFormattedValues(resolvedLoggerConfigurations.get(identifier).resolvedLogElements, event.body());
-					
-					for(Appender appender : resolvedLoggerConfigurations.get(identifier).rawAppender) {
-						appender.push(formatted);
-					}
-				}
-			});*/
 			
 		});
 		
