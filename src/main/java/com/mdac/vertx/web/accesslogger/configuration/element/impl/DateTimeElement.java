@@ -97,7 +97,7 @@ public class DateTimeElement implements AccessLogElement{
 				
 				return dtf;
 			} 
-			else {
+			else if(configurationTokens != null){
 				
 				// Assume this is just a format configuration
 				DateFormat dtf = new SimpleDateFormat(configurationTokens[0], Locale.ENGLISH);

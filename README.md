@@ -26,6 +26,7 @@ dependencies {
 
 Accesslog version | Vertx version
 ----|------
+1.4.0_RC1 | 4.4.0-milestone1
 1.3.1 | 3.3.0 - 3.7.0
 1.2.0 | 3.3.0 - 3.7.0
 
@@ -169,3 +170,9 @@ The default way for elements where no actual value can be evaluated is to return
 (2019-04-17)
 
 * Fixed a bug with pattern resolver (https://github.com/romanpierson/vertx-web-accesslog/issues/11)
+
+### 1.4.0_RC1
+
+(2019-07-28)
+
+* Upgrade Vertx 4, JDK 11, Junit 5, Gradle 5.5.1
