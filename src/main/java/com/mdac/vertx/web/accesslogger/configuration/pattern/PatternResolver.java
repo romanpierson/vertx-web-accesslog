@@ -36,7 +36,7 @@ public class PatternResolver {
 		
 		String rawPatternInEvaluation = rawPattern;
 		final StringBuilder sbEvaluatedPattern = new StringBuilder();
-		final Collection<AccessLogElement> logElements = new ArrayList<AccessLogElement>();
+		final Collection<AccessLogElement> logElements = new ArrayList<>();
 		
 		while(rawPatternInEvaluation != null && rawPatternInEvaluation.length() > 0){
 		

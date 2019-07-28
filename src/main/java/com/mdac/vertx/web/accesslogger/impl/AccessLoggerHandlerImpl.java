@@ -46,7 +46,7 @@ import io.vertx.ext.web.RoutingContext;
  */
 public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 
-	private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 	
 	private final EventBus eventBus;
 	
@@ -76,7 +76,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 			synchronized(lock) {
 				if(!isProducerVerticleCreated) {
 					
-					LOG.info("Start creating singleton verticle");
+					logger.info("Start creating singleton verticle");
 					
 					Vertx.currentContext().owner().deployVerticle(AccessLoggerProducerVerticle.class.getName(), new DeploymentOptions().setWorker(true));
 					
@@ -110,11 +110,11 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 						
 						if(this.requiredConfigurationsCounter == this.registeredIdentifiers.size()) {
 							this.allConfigurationsSuccessfullyRegistered = true;
-							LOG.debug("Successfully registered all [{}] configurations with identifiers {}", this.requiredConfigurationsCounter, this.registeredIdentifiers);
+							logger.debug("Successfully registered all [{}] configurations with identifiers {}", this.requiredConfigurationsCounter, this.registeredIdentifiers);
 							if(this.requiresCookies || this.requiresIncomingHeaders || this.requiresOutgoingHeaders) {
-								LOG.debug("Specific data required for cookies [{}], incoming headers [{}], outgoing headers [{}]", this.requiresCookies, this.requiresIncomingHeaders, this.requiresOutgoingHeaders);
+								logger.debug("Specific data required for cookies [{}], incoming headers [{}], outgoing headers [{}]", this.requiresCookies, this.requiresIncomingHeaders, this.requiresOutgoingHeaders);
 							} else {
-								LOG.debug("No specific data required");
+								logger.debug("No specific data required");
 							}
 						}
 						
@@ -134,7 +134,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 	public void handle(final RoutingContext context) {
 		
 		if(!allConfigurationsSuccessfullyRegistered) {
-			LOG.error("Handler not ready to log due to missing registration(s)");
+			logger.error("Handler not ready to log due to missing registration(s)");
 			context.next();
 		}
 		

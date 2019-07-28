@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 public class ServerSetupStarter {
 
 	@SuppressWarnings("unused")
-	private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 	
 	public static void main(String[] args) throws InterruptedException {
 		

@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ConsoleAppender implements Appender {
 
-	private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 	
 	private final String resolvedPattern;
 	
@@ -41,10 +41,11 @@ public class ConsoleAppender implements Appender {
 		
 		this.resolvedPattern = config.getString(AccessLoggerConstants.CONFIG_KEY_RESOLVED_PATTERN);
 		
-		LOG.info("Created ConsoleAppender with resolvedLogPattern [{}]", this.resolvedPattern);
+		logger.info("Created ConsoleAppender with resolvedLogPattern [{}]", this.resolvedPattern);
 	}
 	
 	@Override
+	@SuppressWarnings(value="squid:S106")
 	public void push(JsonArray accessEvent) {
 		
 		Object [] parameterValues = getParameterValues(accessEvent);

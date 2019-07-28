@@ -48,7 +48,7 @@ public class DateTimeElement implements AccessLogElement{
 		if(index >= 0){
 				
 				int indexEndConfigurationDatetime = rawPattern.indexOf("}t");
-				int indexEndConfiguration = rawPattern.indexOf("}");
+				int indexEndConfiguration = rawPattern.indexOf('}');
 			
 				if(indexEndConfigurationDatetime > index && (indexEndConfigurationDatetime == indexEndConfiguration)){
 					

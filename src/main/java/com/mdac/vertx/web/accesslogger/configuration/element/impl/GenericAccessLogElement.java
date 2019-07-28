@@ -28,7 +28,7 @@ public class GenericAccessLogElement implements AccessLogElement {
 	protected GenericAccessLogElement(final Collection<String> supportedPatterns,
 			                          final String valueIdentifier){
 		
-		this.supportedPatterns = supportedPatterns != null ? supportedPatterns : new ArrayList<String>();
+		this.supportedPatterns = supportedPatterns != null ? supportedPatterns : new ArrayList<>();
 		this.valueIdentifier = valueIdentifier;
 		
 	}

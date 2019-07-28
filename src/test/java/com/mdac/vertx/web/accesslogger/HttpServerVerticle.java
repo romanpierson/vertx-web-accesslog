@@ -31,7 +31,7 @@ import io.vertx.ext.web.handler.CookieHandler;
  */
 public class HttpServerVerticle extends AbstractVerticle {
 
-	private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 	
 	@Override
 	public void start() throws Exception {
@@ -84,7 +84,7 @@ public class HttpServerVerticle extends AbstractVerticle {
 					  HttpServerResponse response = routingContext.response();
 					  response.putHeader("content-type", "text/plain");
 			
-					  LOG.info("Got request for [{}]", routingContext.request().uri());
+					  logger.info("Got request for [{}]", routingContext.request().uri());
 					  
 					  // Write to the response and end it
 					  response.end("Hello World from Vert.x-Web!");
@@ -96,9 +96,9 @@ public class HttpServerVerticle extends AbstractVerticle {
 		
 		server.requestHandler(router).listen(port, ar -> {
 			if(ar.succeeded()) {
-				LOG.info("Successfully started http server on port [{}] in [{}] ms", port, System.currentTimeMillis() - startTS);
+				logger.info("Successfully started http server on port [{}] in [{}] ms", port, System.currentTimeMillis() - startTS);
 			} else {
-				LOG.error("Failed to start http server", ar.cause());
+				logger.error("Failed to start http server", ar.cause());
 			}
 		});
 		

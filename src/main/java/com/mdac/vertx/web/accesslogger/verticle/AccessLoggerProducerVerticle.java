@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
  */
 public class AccessLoggerProducerVerticle extends AbstractVerticle {
 
-	private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
 	final PatternResolver patternResolver = new PatternResolver();
 
@@ -125,30 +125,30 @@ public class AccessLoggerProducerVerticle extends AbstractVerticle {
 					config.getRawAppender().add(appenderInstance);
 
 				} catch (Exception ex) {
-					LOG.error("Failed to create appender with [{}]", ex, appenderClassName);
+					logger.error("Failed to create appender with [{}]", ex, appenderClassName);
 				}
 
 			});
 
 			resolvedLoggerConfigurations.put(identifier, config);
 
-			LOG.info("Successfully created config for [{}]", identifier);
+			logger.info("Successfully created config for [{}]", identifier);
 
 			if (config.isRequiresCookies() || config.isRequiresIncomingHeaders()
 					|| config.isRequiresOutgoingHeaders()) {
-				LOG.info(
+				logger.info(
 						"Config [{}] requires specific data for cookies [{}], incoming headers [{}], outgoing headers [{}]",
 						identifier, config.isRequiresCookies(), config.isRequiresIncomingHeaders(),
 						config.isRequiresOutgoingHeaders());
 			} else {
-				LOG.info("No specific data required for config [{}]", identifier);
+				logger.info("No specific data required for config [{}]", identifier);
 			}
 
 			populateResponse(response, config);
 
 		} else if (resolvedLoggerConfigurations.get(identifier).getOriginalLogPattern().equals(logPattern)) {
 
-			LOG.info("Found and reused config for [{}]", identifier);
+			logger.info("Found and reused config for [{}]", identifier);
 
 			populateResponse(response, resolvedLoggerConfigurations.get(identifier));
 
@@ -184,9 +184,9 @@ public class AccessLoggerProducerVerticle extends AbstractVerticle {
 	@Override
 	public void stop() throws Exception {
 
-		LOG.info("Stopping AccessLoggerProducerVerticle");
+		logger.info("Stopping AccessLoggerProducerVerticle");
 
-		LOG.info("Notifying raw appenders about shutdown");
+		logger.info("Notifying raw appenders about shutdown");
 		this.resolvedLoggerConfigurations.values().forEach(resolvedLoggerConfiguration -> {
 			resolvedLoggerConfiguration.getRawAppender().forEach(rawAppender -> rawAppender.notifyShutdown());
 		});
