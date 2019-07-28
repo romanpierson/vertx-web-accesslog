@@ -94,7 +94,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 			
 			final JsonObject configuration = (JsonObject) xConfiguration;
 			
-			eventBus.<JsonObject>send(AccessLoggerConstants.EVENTBUS_REGISTER_EVENT_NAME, configuration, ar -> {
+			eventBus.<JsonObject>request(AccessLoggerConstants.EVENTBUS_REGISTER_EVENT_NAME, configuration, ar -> {
 				
 				final String configurationIdentifier = configuration.getString(Registration.Request.IDENTIFIER);
 				
