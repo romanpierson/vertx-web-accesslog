@@ -16,9 +16,9 @@ import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
 
 public class ExtractedPosition {
 
-	final private int start;
-	final private int offset;
-	final private AccessLogElement element;
+	private final int start;
+	private final int offset;
+	private final AccessLogElement element;
 	
 	public ExtractedPosition(final int start, final int offset) {
 		super();

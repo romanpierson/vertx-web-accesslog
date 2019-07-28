@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/romanpierson/vertx-web-accesslog.svg?branch=master)](https://travis-ci.org/romanpierson/vertx-web-accesslog) ![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)
+[![Build Status](https://travis-ci.org/romanpierson/vertx-web-accesslog.svg?branch=master)](https://travis-ci.org/romanpierson/vertx-web-accesslog) 
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=romanpierson_vertx-web-accesslog&metric=coverage)](https://sonarcloud.io/dashboard?id=romanpierson_vertx-web-accesslog)
+![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)
 
 # vertx-web-accesslog
 
@@ -18,7 +20,7 @@ Just add it as a dependency to your project (gradle example)
 
 ```xml
 dependencies {
-	compile 'com.mdac:vertx-web-accesslog:1.3.1'
+	compile 'com.mdac:vertx-web-accesslog:1.4.0_RC1'
 }
 ```
 
@@ -26,6 +28,7 @@ dependencies {
 
 Accesslog version | Vertx version
 ----|------
+1.4.0_RC1 | 4.0.0-milestone1
 1.3.1 | 3.3.0 - 3.7.0
 1.2.0 | 3.3.0 - 3.7.0
 
@@ -169,3 +172,9 @@ The default way for elements where no actual value can be evaluated is to return
 (2019-04-17)
 
 * Fixed a bug with pattern resolver (https://github.com/romanpierson/vertx-web-accesslog/issues/11)
+
+### 1.4.0_RC1
+
+(2019-07-28)
+
+* Upgrade Vertx 4, JDK 11, Junit 5, Gradle 5.5.1

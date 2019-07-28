@@ -50,7 +50,7 @@ public class HeaderElement implements AccessLogElement{
 		if(index >= 0){
 				
 			
-				int indexEndConfiguration = rawPattern.indexOf("}");
+				int indexEndConfiguration = rawPattern.indexOf('}');
 			
 				if(indexEndConfiguration > index 
 					&& rawPattern.length() > indexEndConfiguration

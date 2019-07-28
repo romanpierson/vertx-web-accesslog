@@ -48,7 +48,7 @@ public class DateTimeElement implements AccessLogElement{
 		if(index >= 0){
 				
 				int indexEndConfigurationDatetime = rawPattern.indexOf("}t");
-				int indexEndConfiguration = rawPattern.indexOf("}");
+				int indexEndConfiguration = rawPattern.indexOf('}');
 			
 				if(indexEndConfigurationDatetime > index && (indexEndConfigurationDatetime == indexEndConfiguration)){
 					
@@ -97,7 +97,7 @@ public class DateTimeElement implements AccessLogElement{
 				
 				return dtf;
 			} 
-			else {
+			else if(configurationTokens != null){
 				
 				// Assume this is just a format configuration
 				DateFormat dtf = new SimpleDateFormat(configurationTokens[0], Locale.ENGLISH);

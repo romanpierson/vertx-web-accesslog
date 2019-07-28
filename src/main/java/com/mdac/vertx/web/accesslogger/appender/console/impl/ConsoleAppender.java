@@ -12,14 +12,13 @@
  */
 package com.mdac.vertx.web.accesslogger.appender.console.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.mdac.vertx.web.accesslogger.AccessLoggerConstants;
 import com.mdac.vertx.web.accesslogger.appender.Appender;
 
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -30,7 +29,7 @@ import io.vertx.core.json.JsonObject;
  */
 public class ConsoleAppender implements Appender {
 
-	private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 	
 	private final String resolvedPattern;
 	
@@ -42,10 +41,11 @@ public class ConsoleAppender implements Appender {
 		
 		this.resolvedPattern = config.getString(AccessLoggerConstants.CONFIG_KEY_RESOLVED_PATTERN);
 		
-		LOG.info("Created ConsoleAppender with resolvedLogPattern [{}]", this.resolvedPattern);
+		logger.info("Created ConsoleAppender with resolvedLogPattern [{}]", this.resolvedPattern);
 	}
 	
 	@Override
+	@SuppressWarnings(value="squid:S106")
 	public void push(JsonArray accessEvent) {
 		
 		Object [] parameterValues = getParameterValues(accessEvent);

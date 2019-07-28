@@ -5,21 +5,21 @@ plugins {
 repositories {
     mavenCentral()
     jcenter()
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
 }
 
 apply plugin: 'eclipse'
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
+apply plugin: 'jacoco'
 
 dependencies {
 
-	compile 'io.vertx:vertx-web:4.0.0-SNAPSHOT'
+	compile 'io.vertx:vertx-web:4.0.0-milestone1'
 	compile 'org.slf4j:slf4j-api:1.7.26'
 	
-	testCompile 'io.vertx:vertx-config:4.0.0-SNAPSHOT'
-	testCompile 'io.vertx:vertx-config-yaml:4.0.0-SNAPSHOT'
+	testCompile 'io.vertx:vertx-config:4.0.0-milestone1'
+	testCompile 'io.vertx:vertx-config-yaml:4.0.0-milestone1'
 	
 	testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.0")
@@ -32,13 +32,14 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
 sourceCompatibility='1.8'
 targetCompatibility='1.8'
 
-jar.archiveName = "vertx-web-accesslog-1.4.0-SNAPSHOT.jar"
-bintrayUpload.packageName = "vertx-web-accesslog-1.4.0-SNAPSHOT.jar"
+jar.archiveName = "vertx-web-accesslog-1.4.0_RC1.jar"
+bintrayUpload.packageName = "vertx-web-accesslog-1.4.0_RC1.jar"
 
 task sourceJar(type: Jar) {
     from sourceSets.main.allJava
@@ -50,7 +51,7 @@ publishing {
             
             groupId 'com.mdac'
             artifactId 'vertx-web-accesslog'
-            version '1.4.0-SNAPSHOT'
+            version '1.4.0_RC1'
             
             from components.java
 
@@ -60,6 +61,7 @@ publishing {
         }
     }
 }
+
 
 bintray {
 	user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
@@ -78,9 +80,16 @@ bintray {
         override = false
         vcsUrl = 'https://github.com/romanpierson/vertx-web-accesslog.git'
         version {
-        	name = '1.4.0-SNAPSHOT'
+        	name = '1.4.0_RC1'
         }
     }
+}
+
+jacocoTestReport {
+	reports {
+		xml.enabled = true
+		html.enabled = true
+	}
 }
 
 wrapper() {

@@ -41,7 +41,6 @@ public interface Appender {
 		
 		// Not forcing the implementations to implement if not required
 		
-		return;
 	}
 	
 	
