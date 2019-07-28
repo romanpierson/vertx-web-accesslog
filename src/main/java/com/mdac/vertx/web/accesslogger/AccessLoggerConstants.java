@@ -64,7 +64,7 @@ public interface AccessLoggerConstants {
 	
 		interface Data{
 			
-			static enum Type{
+			enum Type{
 				
 				REMOTE_HOST("remoteHost"),
 				LOCAL_HOST("localHost"),
