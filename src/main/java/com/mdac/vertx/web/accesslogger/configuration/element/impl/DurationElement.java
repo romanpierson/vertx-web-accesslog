@@ -25,7 +25,7 @@ public class DurationElement implements AccessLogElement{
 		MILLISECONDS
 	}
 
-	private final static Long INVALID_TS = new Long(-1);
+	private final static Long INVALID_TS = Long.valueOf(-1);
 	
 	private final TimeUnit timeUnit;
 	
