@@ -23,7 +23,6 @@ import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
 import com.mdac.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
 
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.web.impl.Utils;
 
 public class DateTimeElement implements AccessLogElement{
 
@@ -74,7 +73,7 @@ public class DateTimeElement implements AccessLogElement{
 		if(index >= 0){
 			
 			if(foundPosition == null || index < foundPosition.getStart()){
-				foundPosition = new ExtractedPosition(index, requestPattern.length(), new DateTimeElement(Utils.createRFC1123DateTimeFormatter()));
+				foundPosition = new ExtractedPosition(index, requestPattern.length(), new DateTimeElement(createRFC1123DateTimeFormatter()));
 			}
 		}
 		
@@ -107,7 +106,7 @@ public class DateTimeElement implements AccessLogElement{
 			}
 		}
 		
-		return Utils.createRFC1123DateTimeFormatter();
+		return createRFC1123DateTimeFormatter();
 		
 	}
 
@@ -119,6 +118,14 @@ public class DateTimeElement implements AccessLogElement{
 		} else {
 			return this.dateFormat.format(values.getLong(Data.Type.START_TS_MILLIS.getFieldName()));
 		}
+	}
+	
+	private DateFormat createRFC1123DateTimeFormatter() {
+		
+	    final DateFormat dtf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH);
+	    dtf.setTimeZone(TimeZone.getTimeZone("GMT"));
+	    return dtf;
+	    
 	}
 
 }

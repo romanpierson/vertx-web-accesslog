@@ -7,7 +7,6 @@ repositories {
     jcenter()
 }
 
-apply plugin: 'eclipse'
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
@@ -15,15 +14,17 @@ apply plugin: 'jacoco'
 
 dependencies {
 
-	compile 'io.vertx:vertx-web:4.0.0-milestone1'
+	compile 'io.vertx:vertx-web:4.0.0-milestone3'
 	compile 'org.slf4j:slf4j-api:1.7.26'
 	
-	testCompile 'io.vertx:vertx-config:4.0.0-milestone1'
-	testCompile 'io.vertx:vertx-config-yaml:4.0.0-milestone1'
+	testCompile 'io.vertx:vertx-config:4.0.0-milestone3'
+	testCompile 'io.vertx:vertx-config-yaml:4.0.0-milestone3'
 	
-	testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.0")
-    testCompile("org.junit.platform:junit-platform-launcher:1.5.0")
+	testRuntime 'com.fasterxml.jackson.core:jackson-databind:2.9.9'
+	
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.0'
+    testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.5.0'
+    testCompile 'org.junit.platform:junit-platform-launcher:1.5.0'
 	
 	// Logback (via SLF4J)
 	testRuntime 'ch.qos.logback:logback-classic:1.2.3'
@@ -38,8 +39,8 @@ test {
 sourceCompatibility='1.8'
 targetCompatibility='1.8'
 
-jar.archiveName = "vertx-web-accesslog-1.4.0_RC1.jar"
-bintrayUpload.packageName = "vertx-web-accesslog-1.4.0_RC1.jar"
+jar.archiveName = "vertx-web-accesslog-1.4.0_RC2.jar"
+bintrayUpload.packageName = "vertx-web-accesslog-1.4.0_RC2.jar"
 
 task sourceJar(type: Jar) {
     from sourceSets.main.allJava
@@ -51,7 +52,7 @@ publishing {
             
             groupId 'com.mdac'
             artifactId 'vertx-web-accesslog'
-            version '1.4.0_RC1'
+            version '1.4.0_RC2'
             
             from components.java
 
@@ -80,7 +81,7 @@ bintray {
         override = false
         vcsUrl = 'https://github.com/romanpierson/vertx-web-accesslog.git'
         version {
-        	name = '1.4.0_RC1'
+        	name = '1.4.0_RC2'
         }
     }
 }
@@ -93,6 +94,6 @@ jacocoTestReport {
 }
 
 wrapper() {
-  gradleVersion = '5.5.1'
+  gradleVersion = '5.6.4'
 }
 

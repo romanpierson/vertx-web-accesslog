@@ -14,7 +14,9 @@ package com.mdac.vertx.web.accesslogger.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.mdac.vertx.web.accesslogger.AccessLoggerConstants;
 import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.HandlerConfiguration;
@@ -28,13 +30,11 @@ import io.vertx.core.DeploymentOptions;
 import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.http.Cookie;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import io.vertx.ext.web.Cookie;
 import io.vertx.ext.web.RoutingContext;
 
 /**
@@ -180,7 +180,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 		}
 		
 		if(requiresCookies) {
-			jsonValues.put(Data.Type.COOKIES.getFieldName(), extractCookies(context.cookies()));
+			jsonValues.put(Data.Type.COOKIES.getFieldName(), extractCookies(context.cookieMap().values()));
 		}
 		
 		eventBus.send(AccessLoggerConstants.EVENTBUS_RAW_EVENT_NAME, jsonValues);
@@ -198,7 +198,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 		
 	}
 	
-	private JsonArray extractCookies(final Set<Cookie> cookies) {
+	private JsonArray extractCookies(final Collection<Cookie> cookies) {
 		
 		JsonArray jsonArCookies = new JsonArray();
 		
