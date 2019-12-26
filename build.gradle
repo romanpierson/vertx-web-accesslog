@@ -14,11 +14,11 @@ apply plugin: 'jacoco'
 
 dependencies {
 
-	compile 'io.vertx:vertx-web:4.0.0-milestone3'
+	compile 'io.vertx:vertx-web:4.0.0-milestone4'
 	compile 'org.slf4j:slf4j-api:1.7.26'
 	
-	testCompile 'io.vertx:vertx-config:4.0.0-milestone3'
-	testCompile 'io.vertx:vertx-config-yaml:4.0.0-milestone3'
+	testCompile 'io.vertx:vertx-config:4.0.0-milestone4'
+	testCompile 'io.vertx:vertx-config-yaml:4.0.0-milestone4'
 	
 	testRuntime 'com.fasterxml.jackson.core:jackson-databind:2.9.9'
 	
@@ -39,8 +39,8 @@ test {
 sourceCompatibility='1.8'
 targetCompatibility='1.8'
 
-jar.archiveName = "vertx-web-accesslog-1.4.0_RC2.jar"
-bintrayUpload.packageName = "vertx-web-accesslog-1.4.0_RC2.jar"
+jar.archiveName = "vertx-web-accesslog-1.4.0_RC3.jar"
+bintrayUpload.packageName = "vertx-web-accesslog-1.4.0_RC3.jar"
 
 task sourceJar(type: Jar) {
     from sourceSets.main.allJava
@@ -52,7 +52,7 @@ publishing {
             
             groupId 'com.mdac'
             artifactId 'vertx-web-accesslog'
-            version '1.4.0_RC2'
+            version '1.4.0_RC3'
             
             from components.java
 
@@ -81,7 +81,7 @@ bintray {
         override = false
         vcsUrl = 'https://github.com/romanpierson/vertx-web-accesslog.git'
         version {
-        	name = '1.4.0_RC2'
+        	name = '1.4.0_RC3'
         }
     }
 }
@@ -94,6 +94,6 @@ jacocoTestReport {
 }
 
 wrapper() {
-  gradleVersion = '5.6.4'
+  gradleVersion = '6.0.1'
 }
 

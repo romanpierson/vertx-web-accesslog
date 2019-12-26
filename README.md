@@ -173,8 +173,9 @@ The default way for elements where no actual value can be evaluated is to return
 
 * Fixed a bug with pattern resolver (https://github.com/romanpierson/vertx-web-accesslog/issues/11)
 
-### 1.4.0_RC2
+### 1.4.0_RC3
 
-(2019-11-04)
+(2019-11-26)
 
-* Upgrade Vertx 4, JDK 11, Junit 5, Gradle 5.6.4
+* Upgrade Vertx 4, JDK 11, Junit 5, Gradle 6.0.1
+* Added `EnvironmentValueElement`
