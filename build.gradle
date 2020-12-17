@@ -1,5 +1,8 @@
 plugins {
-    id "com.jfrog.bintray" version "1.8.4"
+	id 'java'
+	id 'maven-publish'
+	id 'jacoco'
+    id "com.jfrog.bintray" version "1.8.5"
 }
 
 repositories {
@@ -7,27 +10,31 @@ repositories {
     jcenter()
 }
 
-apply plugin: 'java'
-apply plugin: 'maven-publish'
-apply plugin: 'com.jfrog.bintray'
-apply plugin: 'jacoco'
+ext{
+	vertxVersion = '4.0.0'
+	jupiterVersion = '5.7.0'
+	jupiterLauncherVersion ='1.7.0'
+	slfApiVersion = '1.7.30'
+	jacksonDatabindVersion = '2.12.0'
+	logbackVersion = '1.2.3'
+}
 
 dependencies {
 
-	compile 'io.vertx:vertx-web:4.0.0-milestone4'
-	compile 'org.slf4j:slf4j-api:1.7.26'
+	implementation "io.vertx:vertx-web:${vertxVersion}"
+	implementation "org.slf4j:slf4j-api:${slfApiVersion}"
 	
-	testCompile 'io.vertx:vertx-config:4.0.0-milestone4'
-	testCompile 'io.vertx:vertx-config-yaml:4.0.0-milestone4'
+	//testRuntimeOnly "com.mdac:v8s:0.0.3"
+	testRuntimeOnly "io.vertx:vertx-config-yaml:${vertxVersion}"
 	
-	testRuntime 'com.fasterxml.jackson.core:jackson-databind:2.9.9'
+	testRuntimeOnly "com.fasterxml.jackson.core:jackson-databind:${jacksonDatabindVersion}"
 	
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.0'
-    testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.5.0'
-    testCompile 'org.junit.platform:junit-platform-launcher:1.5.0'
+	testImplementation "org.junit.jupiter:junit-jupiter-api:${jupiterVersion}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${jupiterVersion}"
+    testImplementation "org.junit.platform:junit-platform-launcher:${jupiterLauncherVersion}"
 	
 	// Logback (via SLF4J)
-	testRuntime 'ch.qos.logback:logback-classic:1.2.3'
+	testRuntimeOnly "ch.qos.logback:logback-classic:${logbackVersion}"
 	
 }
 
@@ -39,8 +46,8 @@ test {
 sourceCompatibility='1.8'
 targetCompatibility='1.8'
 
-jar.archiveName = "vertx-web-accesslog-1.4.0_RC3.jar"
-bintrayUpload.packageName = "vertx-web-accesslog-1.4.0_RC3.jar"
+jar.archiveFileName = "vertx-web-accesslog-1.4.0.jar"
+bintrayUpload.packageName = "vertx-web-accesslog-1.4.0.jar"
 
 task sourceJar(type: Jar) {
     from sourceSets.main.allJava
@@ -52,7 +59,7 @@ publishing {
             
             groupId 'com.mdac'
             artifactId 'vertx-web-accesslog'
-            version '1.4.0_RC3'
+            version '1.4.0'
             
             from components.java
 
@@ -81,7 +88,7 @@ bintray {
         override = false
         vcsUrl = 'https://github.com/romanpierson/vertx-web-accesslog.git'
         version {
-        	name = '1.4.0_RC3'
+        	name = '1.4.0'
         }
     }
 }
@@ -94,6 +101,6 @@ jacocoTestReport {
 }
 
 wrapper() {
-  gradleVersion = '6.0.1'
+  gradleVersion = '6.7.1'
 }
 

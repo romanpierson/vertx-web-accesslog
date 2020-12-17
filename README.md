@@ -28,7 +28,7 @@ dependencies {
 
 Accesslog version | Vertx version
 ----|------
-1.4.0_RC2 | 4.0.0-milestone3
+1.4.0 | 4.0.0
 1.3.1 | 3.3.0 - 3.7.0
 1.2.0 | 3.3.0 - 3.7.0
 
@@ -173,9 +173,9 @@ The default way for elements where no actual value can be evaluated is to return
 
 * Fixed a bug with pattern resolver (https://github.com/romanpierson/vertx-web-accesslog/issues/11)
 
-### 1.4.0_RC3
+### 1.4.0
 
-(2019-11-26)
+(2020-12-17)
 
-* Upgrade Vertx 4, JDK 11, Junit 5, Gradle 6.0.1
+* Upgrade to Vertx 4, JDK 11, Junit 5, Gradle, all libraries latest versions
 * Added `EnvironmentValueElement`
