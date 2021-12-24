@@ -14,6 +14,7 @@ package com.mdac.vertx.web.accesslogger.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -180,7 +181,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 		}
 		
 		if(requiresCookies) {
-			jsonValues.put(Data.Type.COOKIES.getFieldName(), extractCookies(context.cookieMap().values()));
+			jsonValues.put(Data.Type.COOKIES.getFieldName(), extractCookies(context.request().cookies()));
 		}
 		
 		eventBus.send(AccessLoggerConstants.EVENTBUS_RAW_EVENT_NAME, jsonValues);
@@ -198,7 +199,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 		
 	}
 	
-	private JsonArray extractCookies(final Collection<Cookie> cookies) {
+	private JsonArray extractCookies(final Set<Cookie> cookies) {
 		
 		JsonArray jsonArCookies = new JsonArray();
 		

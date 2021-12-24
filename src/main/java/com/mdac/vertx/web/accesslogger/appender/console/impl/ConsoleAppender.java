@@ -45,7 +45,6 @@ public class ConsoleAppender implements Appender {
 	}
 	
 	@Override
-	@SuppressWarnings(value="squid:S106")
 	public void push(JsonArray accessEvent) {
 		
 		Object [] parameterValues = getParameterValues(accessEvent);
