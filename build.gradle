@@ -1,6 +1,7 @@
 plugins {
 	id 'java'
 	id 'maven-publish'
+	id 'jacoco'
     id "com.jfrog.bintray" version "1.8.5"
     id "org.sonarqube" version "3.3"
 }
@@ -38,6 +39,7 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
 sourceCompatibility='1.8'
@@ -66,6 +68,14 @@ publishing {
         }
     }
 }
+
+jacocoTestReport {
+	reports {
+		xml.required = true
+		html.required = true
+	}
+}
+
 
 
 bintray {
