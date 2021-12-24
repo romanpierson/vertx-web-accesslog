@@ -25,6 +25,9 @@ jobs:
         run: ./gradlew clean build
   sonar:
     name: SonarCloud
+    env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+        SONAR_TOKEN: ${{ secrets.sonarcloud }}
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
     steps:
@@ -35,5 +38,5 @@ jobs:
           distribution: temurin
           architecture: x64
       - name: Build project
-        run: ./gradlew clean build sonarqube -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=romanpierson -Dsonar.projectKey=romanpierson_vertx-web-accesslog -Dsonar.login=${{ secrets.sonarcloud }} 
+        run: ./gradlew clean build sonarqube -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=romanpierson -Dsonar.projectKey=romanpierson_vertx-web-accesslog 
  
