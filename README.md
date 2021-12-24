@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/romanpierson/vertx-web-accesslog.svg?branch=master)](https://travis-ci.org/romanpierson/vertx-web-accesslog) 
+[![Actions Status](https://github.com/romanpierson/vertx-web-accesslog/workflows/CI/badge.svg)](https://github.com/romanpierson/vertx-web-accesslog/actions)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=romanpierson_vertx-web-accesslog&metric=coverage)](https://sonarcloud.io/dashboard?id=romanpierson_vertx-web-accesslog)
 ![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)
 
@@ -179,3 +179,10 @@ The default way for elements where no actual value can be evaluated is to return
 
 * Upgrade to Vertx 4, JDK 11, Junit 5, Gradle, all libraries latest versions
 * Added `EnvironmentValueElement`
+
+### Next
+
+(?)
+
+* Upgrade to latest versions
+* Moved from Travis to GH Actions / Gradle Sonarqube Plugin
