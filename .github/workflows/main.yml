@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  hotspot-supported:
+    name: Any (supported)
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest ]
+        java: [ 8, 11, 17 ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: temurin
+          architecture: x64
+          cache: maven
+      - name: Build project
+        run: ./gradlew clean build
+  sonar:
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          java-version: 8
+          distribution: temurin
+          architecture: x64
+          cache: maven
+      - name: Build project
+        run: ./gradlew clean build sonarqube -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=romanpierson -Dsonar.projectKey=romanpierson_vertx-web-accesslog -Dsonar.login=${{ secrets.sonarcloud }} 
+ 
