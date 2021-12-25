@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2019 Roman Pierson
+ * Copyright (c) 2016-2022 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -16,9 +16,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.mdac.vertx.web.accesslogger.AccessLoggerConstants;
 import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.HandlerConfiguration;
 import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.Messages.RawEvent;
@@ -34,6 +31,8 @@ import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.Cookie;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.impl.logging.Logger;
+import io.vertx.core.impl.logging.LoggerFactory;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
@@ -111,9 +110,13 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 						
 						if(this.requiredConfigurationsCounter == this.registeredIdentifiers.size()) {
 							this.allConfigurationsSuccessfullyRegistered = true;
-							logger.debug("Successfully registered all [{}] configurations with identifiers {}", this.requiredConfigurationsCounter, this.registeredIdentifiers);
+							if(logger.isDebugEnabled()) {
+								logger.debug("Successfully registered all [" + this.requiredConfigurationsCounter + "] configurations with identifiers " + this.registeredIdentifiers);
+							}
 							if(this.requiresCookies || this.requiresIncomingHeaders || this.requiresOutgoingHeaders) {
-								logger.debug("Specific data required for cookies [{}], incoming headers [{}], outgoing headers [{}]", this.requiresCookies, this.requiresIncomingHeaders, this.requiresOutgoingHeaders);
+								if(logger.isDebugEnabled()) {
+									logger.debug("Specific data required for cookies [" + this.requiresCookies + "], incoming headers [" + this.requiresIncomingHeaders + "], outgoing headers [" + this.requiresOutgoingHeaders + "]");
+								}
 							} else {
 								logger.debug("No specific data required");
 							}

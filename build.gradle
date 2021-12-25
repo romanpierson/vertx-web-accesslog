@@ -2,7 +2,6 @@ plugins {
 	id 'java'
 	id 'maven-publish'
 	id 'jacoco'
-    id "com.jfrog.bintray" version "1.8.5"
     id "org.sonarqube" version "3.3"
 }
 
@@ -14,7 +13,7 @@ ext{
 	vertxVersion = '4.2.3'
 	jupiterVersion = '5.8.2'
 	jupiterLauncherVersion ='1.8.2'
-	slfApiVersion = '1.7.32'
+	//slfApiVersion = '1.7.32'
 	jacksonDatabindVersion = '2.13.1'
 	logbackVersion = '1.2.3'
 }
@@ -22,7 +21,6 @@ ext{
 dependencies {
 
 	implementation "io.vertx:vertx-web:${vertxVersion}"
-	implementation "org.slf4j:slf4j-api:${slfApiVersion}"
 	
 	testRuntimeOnly "io.vertx:vertx-config-yaml:${vertxVersion}"
 	
@@ -33,6 +31,7 @@ dependencies {
     testImplementation "org.junit.platform:junit-platform-launcher:${jupiterLauncherVersion}"
 	
 	// Logback (via SLF4J)
+	//implementation "org.slf4j:slf4j-api:${slfApiVersion}"
 	testRuntimeOnly "ch.qos.logback:logback-classic:${logbackVersion}"
 	
 }
@@ -46,7 +45,6 @@ sourceCompatibility='1.8'
 targetCompatibility='1.8'
 
 jar.archiveFileName = "vertx-web-accesslog-1.4.0.jar"
-bintrayUpload.packageName = "vertx-web-accesslog-1.4.0.jar"
 
 task sourceJar(type: Jar) {
     from sourceSets.main.allJava
@@ -74,30 +72,6 @@ jacocoTestReport {
 		xml.required = true
 		html.required = true
 	}
-}
-
-
-
-bintray {
-	user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
-	key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
-    
-    publications = ['mavenJava']
-    dryRun = false
-    publish = true
-    pkg {
-        repo = 'maven'
-        name = 'com.mdac.vertx-web-accesslog'
-        licenses = ['Apache-2.0']
-        labels = ['vertx', 'log', 'accesslog']
-        publicDownloadNumbers = true
-        //Optional version descriptor
-        override = false
-        vcsUrl = 'https://github.com/romanpierson/vertx-web-accesslog.git'
-        version {
-        	name = '1.4.0'
-        }
-    }
 }
 
 wrapper() {

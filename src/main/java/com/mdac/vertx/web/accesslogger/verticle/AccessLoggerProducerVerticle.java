@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2019 Roman Pierson
+ * Copyright (c) 2016-2022 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -28,10 +28,10 @@ import com.mdac.vertx.web.accesslogger.configuration.pattern.PatternResolver;
 import com.mdac.vertx.web.accesslogger.configuration.pattern.ResolvedPatternResult;
 
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.impl.logging.Logger;
+import io.vertx.core.impl.logging.LoggerFactory;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -125,31 +125,36 @@ public class AccessLoggerProducerVerticle extends AbstractVerticle {
 					config.getRawAppender().add(appenderInstance);
 
 				} catch (Exception ex) {
-					logger.error("Failed to create appender with [{}]", ex, appenderClassName);
+					logger.error("Failed to create appender with [" + appenderClassName + "]", ex);
 				}
 
 			});
 
 			resolvedLoggerConfigurations.put(identifier, config);
 
-			logger.info("Successfully created config for [{}]", identifier);
-
+			if(logger.isInfoEnabled()) {
+				logger.info("Successfully created config for [" + identifier + "]");
+			}
+			
 			if (config.isRequiresCookies() || config.isRequiresIncomingHeaders()
 					|| config.isRequiresOutgoingHeaders()) {
-				logger.info(
-						"Config [{}] requires specific data for cookies [{}], incoming headers [{}], outgoing headers [{}]",
-						identifier, config.isRequiresCookies(), config.isRequiresIncomingHeaders(),
-						config.isRequiresOutgoingHeaders());
+				if(logger.isInfoEnabled()) {
+					logger.info("Config [" + identifier + "] requires specific data for cookies [" + config.isRequiresCookies() + "], incoming headers [" + config.isRequiresIncomingHeaders() + "], outgoing headers [" + config.isRequiresOutgoingHeaders() + "]");
+				}
 			} else {
-				logger.info("No specific data required for config [{}]", identifier);
+				if(logger.isInfoEnabled()) {
+					logger.info("No specific data required for config [" + identifier + "]");
+				}
 			}
 
 			populateResponse(response, config);
 
 		} else if (resolvedLoggerConfigurations.get(identifier).getOriginalLogPattern().equals(logPattern)) {
 
-			logger.info("Found and reused config for [{}]", identifier);
-
+			if(logger.isInfoEnabled()) {
+				logger.info("Found and reused config for [" + identifier + "]");
+			}
+			
 			populateResponse(response, resolvedLoggerConfigurations.get(identifier));
 
 		} else {

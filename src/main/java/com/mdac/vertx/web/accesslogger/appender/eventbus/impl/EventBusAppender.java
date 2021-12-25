@@ -16,10 +16,10 @@ import com.mdac.vertx.web.accesslogger.appender.Appender;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.impl.logging.Logger;
+import io.vertx.core.impl.logging.LoggerFactory;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -47,7 +47,9 @@ private final Logger logger = LoggerFactory.getLogger(this.getClass().getName())
 		
 		this.eventBusTargetAddress = config.getString(CONFIG_KEY_TARGET_ADDRESS);
 		
-		logger.info("Created EventBusAppender with eventBusTargetAddress [{}]", this.eventBusTargetAddress);
+		if(logger.isInfoEnabled()) {
+			logger.info("Created EventBusAppender with eventBusTargetAddress [" + this.eventBusTargetAddress + "]");
+		}
 	}
 	
 	@Override

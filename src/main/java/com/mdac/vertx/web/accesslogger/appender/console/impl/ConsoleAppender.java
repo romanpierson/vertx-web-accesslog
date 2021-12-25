@@ -15,10 +15,10 @@ package com.mdac.vertx.web.accesslogger.appender.console.impl;
 import com.mdac.vertx.web.accesslogger.AccessLoggerConstants;
 import com.mdac.vertx.web.accesslogger.appender.Appender;
 
+import io.vertx.core.impl.logging.Logger;
+import io.vertx.core.impl.logging.LoggerFactory;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -41,7 +41,9 @@ public class ConsoleAppender implements Appender {
 		
 		this.resolvedPattern = config.getString(AccessLoggerConstants.CONFIG_KEY_RESOLVED_PATTERN);
 		
-		logger.info("Created ConsoleAppender with resolvedLogPattern [{}]", this.resolvedPattern);
+		if(logger.isInfoEnabled()) {
+			logger.info("Created ConsoleAppender with resolvedLogPattern [" + this.resolvedPattern + "]");
+		}
 	}
 	
 	@Override
