@@ -69,7 +69,7 @@ publishing {
 
 sonarqube {
     properties {
-        property "sonar.exclusions", "src/test/**"
+        property "sonar.exclusions", "src/test/**/*.java"
     }
 }
 
