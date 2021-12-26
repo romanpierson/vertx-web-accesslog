@@ -61,11 +61,10 @@ public class DurationElement implements AccessLogElement{
 		
 		index = rawPattern.indexOf(patternSeconds);
 		
-		if(index >= 0){
+		if(index >= 0 && (foundPosition == null || index < foundPosition.getStart())){
 			
-			if(foundPosition == null || index < foundPosition.getStart()){
-				foundPosition = new ExtractedPosition(index, patternSeconds.length(), new DurationElement(TimeUnit.SECONDS));
-			}
+			foundPosition = new ExtractedPosition(index, patternSeconds.length(), new DurationElement(TimeUnit.SECONDS));
+			
 		}
 		
 		return foundPosition;

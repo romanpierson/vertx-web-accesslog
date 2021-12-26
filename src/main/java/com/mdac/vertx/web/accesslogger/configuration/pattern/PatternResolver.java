@@ -26,9 +26,7 @@ public class PatternResolver {
 
 		ServiceLoader<AccessLogElement> loader = ServiceLoader.load(AccessLogElement.class);
 
-		loader.forEach(ale -> {
-			availableElements.add(ale);
-		});
+		loader.forEach(availableElements::add);
 
 	}
 	

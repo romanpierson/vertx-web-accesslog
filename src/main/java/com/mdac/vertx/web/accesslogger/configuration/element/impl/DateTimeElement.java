@@ -70,11 +70,10 @@ public class DateTimeElement implements AccessLogElement{
 		final String requestPattern = "%t";
 		index = rawPattern.indexOf(requestPattern);
 			
-		if(index >= 0){
+		if(index >= 0 && (foundPosition == null || index < foundPosition.getStart())){
 			
-			if(foundPosition == null || index < foundPosition.getStart()){
-				foundPosition = new ExtractedPosition(index, requestPattern.length(), new DateTimeElement(createRFC1123DateTimeFormatter()));
-			}
+			foundPosition = new ExtractedPosition(index, requestPattern.length(), new DateTimeElement(createRFC1123DateTimeFormatter()));
+			
 		}
 		
 		return foundPosition;

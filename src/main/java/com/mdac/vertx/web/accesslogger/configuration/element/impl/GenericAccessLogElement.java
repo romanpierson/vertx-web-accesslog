@@ -18,9 +18,13 @@ import java.util.Collection;
 import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
 import com.mdac.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
 
+import io.vertx.core.impl.logging.Logger;
+import io.vertx.core.impl.logging.LoggerFactory;
 import io.vertx.core.json.JsonObject;
 
 public class GenericAccessLogElement implements AccessLogElement {
+
+	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
 	private final Collection<String> supportedPatterns;
 	private final String valueIdentifier;
@@ -46,10 +50,10 @@ public class GenericAccessLogElement implements AccessLogElement {
 				
 					final AccessLogElement logElement = createElementInstance();
 					
-					if(logElement != null){
-						if(foundPosition == null || index < foundPosition.getStart()){
-							foundPosition = new ExtractedPosition(index, supportedPattern.length(), logElement);
-						}
+					if(logElement != null && (foundPosition == null || index < foundPosition.getStart())){
+						
+						foundPosition = new ExtractedPosition(index, supportedPattern.length(), logElement);
+						
 					} 
 				
 			}
@@ -69,7 +73,7 @@ public class GenericAccessLogElement implements AccessLogElement {
 		try {
 			return this.getClass().getDeclaredConstructor().newInstance();
 		} catch (final Exception ex) {
-			
+			logger.error("Error when trying to create instance of class " + this.getClass().getName(), ex);
 		} 
 		
 		return null;

@@ -22,6 +22,7 @@ import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.Messages.RawEvent;
 import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.Messages.Registration;
 import com.mdac.vertx.web.accesslogger.AccessLoggerConstants.Request.Data;
 import com.mdac.vertx.web.accesslogger.AccessLoggerHandler;
+import com.mdac.vertx.web.accesslogger.exception.AccessLoggerException;
 import com.mdac.vertx.web.accesslogger.verticle.AccessLoggerProducerVerticle;
 
 import io.vertx.core.DeploymentOptions;
@@ -123,11 +124,11 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 						}
 						
 					} else {
-						throw new RuntimeException("Unable to register access log configuration for identifier [" + configurationIdentifier + "]");
+						throw new AccessLoggerException("Unable to register access log configuration for identifier [" + configurationIdentifier + "]");
 					}
 					
 				} else {
-					throw new RuntimeException("Unable to register access log configuration [" + configurationIdentifier + "]", ar.cause());
+					throw new AccessLoggerException("Unable to register access log configuration [" + configurationIdentifier + "]", ar.cause());
 				}
 			});
 		});

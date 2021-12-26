@@ -65,12 +65,9 @@ public class HostElement implements AccessLogElement{
 		
 		index = rawPattern.indexOf(patternLocalHost);
 		
-		if(index >= 0){
+		if(index >= 0 && (foundPosition == null || index < foundPosition.getStart())){
 			
-			
-				if(foundPosition == null || index < foundPosition.getStart()){
-					foundPosition = new ExtractedPosition(index, patternLocalHost.length(), new HostElement(Mode.LOCAL_HOST));
-				}
+			foundPosition = new ExtractedPosition(index, patternLocalHost.length(), new HostElement(Mode.LOCAL_HOST));
 			
 		}
 		
@@ -78,12 +75,9 @@ public class HostElement implements AccessLogElement{
 		
 		index = rawPattern.indexOf(patternLocalPort);
 		
-		if(index >= 0){
+		if(index >= 0 && (foundPosition == null || index < foundPosition.getStart())){
 			
-			
-				if(foundPosition == null || index < foundPosition.getStart()){
-					foundPosition = new ExtractedPosition(index, patternLocalPort.length(), new HostElement(Mode.LOCAL_PORT));
-				}
+			foundPosition = new ExtractedPosition(index, patternLocalPort.length(), new HostElement(Mode.LOCAL_PORT));
 			
 		}
 		

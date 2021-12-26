@@ -64,10 +64,10 @@ public class RequestElement implements AccessLogElement{
 		for (final String urlPattern : urlPatterns){
 			index = rawPattern.indexOf(urlPattern);
 			
-			if(index >= 0){
-				if(foundPosition == null || index < foundPosition.getStart()){	
-					foundPosition = new ExtractedPosition(index, urlPattern.length(), new RequestElement(RequestLogMode.URI));
-				}
+			if(index >= 0 && (foundPosition == null || index < foundPosition.getStart())){
+				
+				foundPosition = new ExtractedPosition(index, urlPattern.length(), new RequestElement(RequestLogMode.URI));
+				
 			}
 		}
 		
@@ -77,10 +77,10 @@ public class RequestElement implements AccessLogElement{
 		for (final String queryOnlyPattern : queryOnlyPatterns){
 			index = rawPattern.indexOf(queryOnlyPattern);
 					
-			if(index >= 0){
-				if(foundPosition == null || index < foundPosition.getStart()){			
-					foundPosition = new ExtractedPosition(index, queryOnlyPattern.length(), new RequestElement(RequestLogMode.QUERY_STRING));
-				}
+			if(index >= 0 && (foundPosition == null || index < foundPosition.getStart())){
+				
+				foundPosition = new ExtractedPosition(index, queryOnlyPattern.length(), new RequestElement(RequestLogMode.QUERY_STRING));
+				
 			}
 		}
 		
@@ -88,11 +88,10 @@ public class RequestElement implements AccessLogElement{
 		final String uriQueryPattern = "cs-uri";
 		index = rawPattern.indexOf(uriQueryPattern);
 			
-		if(index >= 0){
+		if(index >= 0 && (foundPosition == null || index < foundPosition.getStart())){
 				
-			if(foundPosition == null || index < foundPosition.getStart()){
-				foundPosition = new ExtractedPosition(index, uriQueryPattern.length(), new RequestElement(RequestLogMode.URI_QUERY));
-			}
+			foundPosition = new ExtractedPosition(index, uriQueryPattern.length(), new RequestElement(RequestLogMode.URI_QUERY));
+			
 		}
 		
 		return foundPosition;

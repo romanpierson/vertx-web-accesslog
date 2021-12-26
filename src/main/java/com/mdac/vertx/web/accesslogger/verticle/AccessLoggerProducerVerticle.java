@@ -37,8 +37,8 @@ import io.vertx.core.json.JsonObject;
  * 
  * Verticle that is responsible for
  * 
- * - Receiving and buffer access log meta data that arrives via the event bus -
- * Produce output as configured
+ * - Receiving and buffer access log meta data that arrives via the event bus 
+ * - Produce output as configured
  * 
  * @author Roman Pierson
  *
@@ -75,11 +75,11 @@ public class AccessLoggerProducerVerticle extends AbstractVerticle {
 
 		});
 
-		vertx.eventBus().<JsonObject>consumer(AccessLoggerConstants.EVENTBUS_REGISTER_EVENT_NAME, event -> {
+		vertx.eventBus().<JsonObject>consumer(AccessLoggerConstants.EVENTBUS_REGISTER_EVENT_NAME, event -> 
 
-			event.reply(performRegistration(event.body()));
+			event.reply(performRegistration(event.body()))
 
-		});
+		);
 
 	}
 
@@ -192,10 +192,10 @@ public class AccessLoggerProducerVerticle extends AbstractVerticle {
 		logger.info("Stopping AccessLoggerProducerVerticle");
 
 		logger.info("Notifying raw appenders about shutdown");
-		this.resolvedLoggerConfigurations.values().forEach(resolvedLoggerConfiguration -> {
-			resolvedLoggerConfiguration.getRawAppender().forEach(rawAppender -> rawAppender.notifyShutdown());
-		});
-
+		this.resolvedLoggerConfigurations.values().forEach(resolvedLoggerConfiguration -> 
+			resolvedLoggerConfiguration.getRawAppender().forEach(Appender::notifyShutdown)
+		);
+			
 		super.stop();
 
 	}

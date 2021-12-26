@@ -60,10 +60,10 @@ public class BytesSentElement implements AccessLogElement{
 		
 		index = rawPattern.indexOf(patternNull);
 		
-		if(index >= 0){
-			if(foundPosition == null || index < foundPosition.getStart()){
-				foundPosition = new ExtractedPosition(index, patternNull.length(), new BytesSentElement(Mode.NO_BYTES_NULL));
-			}
+		if(index >= 0 && (foundPosition == null || index < foundPosition.getStart())){
+			
+			foundPosition = new ExtractedPosition(index, patternNull.length(), new BytesSentElement(Mode.NO_BYTES_NULL));
+			
 		}
 		
 		return foundPosition;

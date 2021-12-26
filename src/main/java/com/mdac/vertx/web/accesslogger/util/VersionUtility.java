@@ -18,6 +18,8 @@ import io.vertx.core.json.JsonObject;
 
 public class VersionUtility {
 
+	private VersionUtility() {}
+	
 	public static String getFormattedValue(final JsonObject values) {
 		
 		final String version = values.getString(Data.Type.VERSION.getFieldName(), null);
