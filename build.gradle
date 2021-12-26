@@ -67,6 +67,12 @@ publishing {
     }
 }
 
+sonarqube {
+    properties {
+        property "sonar.exclusions", "src/test/**"
+    }
+}
+
 jacocoTestReport {
 	reports {
 		xml.required = true
