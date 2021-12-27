@@ -47,9 +47,8 @@ private final Logger logger = LoggerFactory.getLogger(this.getClass().getName())
 		
 		this.eventBusTargetAddress = config.getString(CONFIG_KEY_TARGET_ADDRESS);
 		
-		if(logger.isInfoEnabled()) {
-			logger.info("Created EventBusAppender with eventBusTargetAddress [" + this.eventBusTargetAddress + "]");
-		}
+		logger.info("Created EventBusAppender with eventBusTargetAddress [" + this.eventBusTargetAddress + "]");
+		
 	}
 	
 	@Override

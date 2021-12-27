@@ -41,9 +41,8 @@ public class ConsoleAppender implements Appender {
 		
 		this.resolvedPattern = config.getString(AccessLoggerConstants.CONFIG_KEY_RESOLVED_PATTERN);
 		
-		if(logger.isInfoEnabled()) {
-			logger.info("Created ConsoleAppender with resolvedLogPattern [" + this.resolvedPattern + "]");
-		}
+		logger.info("Created ConsoleAppender with resolvedLogPattern [" + this.resolvedPattern + "]");
+		
 	}
 	
 	@Override

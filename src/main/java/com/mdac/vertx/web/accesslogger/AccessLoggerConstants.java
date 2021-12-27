@@ -1,53 +1,67 @@
+/*
+ * Copyright (c) 2016-2022 Roman Pierson
+ * ------------------------------------------------------
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 
+ * which accompanies this distribution.
+ *
+ *     The Apache License v2.0 is available at
+ *     http://www.opensource.org/licenses/apache2.0.php
+ *
+ * You may elect to redistribute this code under either of these licenses.
+ */
 package com.mdac.vertx.web.accesslogger;
 
-public interface AccessLoggerConstants {
+public class AccessLoggerConstants {
 
-	static final String EVENTBUS_RAW_EVENT_NAME = "accesslog.event.raw";
-	static final String EVENTBUS_APPENDER_EVENT_NAME = "accesslog.event.appender";
-	static final String EVENTBUS_REGISTER_EVENT_NAME = "accesslog.event.register";
+	private AccessLoggerConstants() {}
 	
-	static final String ZONE_UTC = "UTC";
+	public static final String EVENTBUS_RAW_EVENT_NAME = "accesslog.event.raw";
+	public static final String EVENTBUS_APPENDER_EVENT_NAME = "accesslog.event.appender";
+	public static final String EVENTBUS_REGISTER_EVENT_NAME = "accesslog.event.register";
 	
-	interface HandlerConfiguration{
+	public static final String ZONE_UTC = "UTC";
+	
+	public static class HandlerConfiguration{
 		
-		static final String CONFIG_KEY_CONFIGURATIONS = "configurations";
-		static final String CONFIG_KEY_IDENTIFIER = "identifier";
-		static final String CONFIG_KEY_LOGPATTERN = "logPattern";
-		static final String CONFIG_KEY_APPENDERS = "appenders";
-		static final String CONFIG_KEY_APPENDER_CLASS_NAME = "appenderClassName";
-		static final String CONFIG_KEY_IS_AUTO_DEPLOY_PRODUCER_VERTICLE = "isAutoDeployProducerVerticle";
+		public static final String CONFIG_KEY_CONFIGURATIONS = "configurations";
+		public static final String CONFIG_KEY_IDENTIFIER = "identifier";
+		public static final String CONFIG_KEY_LOGPATTERN = "logPattern";
+		public static final String CONFIG_KEY_APPENDERS = "appenders";
+		public static final String CONFIG_KEY_APPENDER_CLASS_NAME = "appenderClassName";
+		public static final String CONFIG_KEY_IS_AUTO_DEPLOY_PRODUCER_VERTICLE = "isAutoDeployProducerVerticle";
 	}
 	
-	interface Messages {
+	public static class Messages {
 		
-		interface Registration {
+		public static class Registration {
 			
-			interface Request {
+			public static class Request {
 			
-				static final String IDENTIFIER = "identifier";
-				static final String LOGPATTERN = "logPattern";
-				static final String APPENDERS = "appenders";
-				static final String APPENDER_CLASS_NAME = "appenderClassName";
-				static final String APPENDER_CONFIG = "config";
+				public static final String IDENTIFIER = "identifier";
+				public static final String LOGPATTERN = "logPattern";
+				public static final String APPENDERS = "appenders";
+				public static final String APPENDER_CLASS_NAME = "appenderClassName";
+				public static final String APPENDER_CONFIG = "config";
 				
 			}
 			
-			interface Response {
+			public static class Response {
 				
-				static final String REQUIRES_COOKIES = "requiresCookies";
-				static final String REQUIRES_INCOMING_HEADERS = "requiresIncomingHeaders";
-				static final String REQUIRES_OUTGOING_HEADERS = "requiresOutgoingHeaders";
-				static final String RESULT = "result";
-				static final String RESULT_OK = "OK";
-				static final String RESULT_FAILED = "FAILED";
+				public static final String REQUIRES_COOKIES = "requiresCookies";
+				public static final String REQUIRES_INCOMING_HEADERS = "requiresIncomingHeaders";
+				public static final String REQUIRES_OUTGOING_HEADERS = "requiresOutgoingHeaders";
+				public static final String RESULT = "result";
+				public static final String RESULT_OK = "OK";
+				public static final String RESULT_FAILED = "FAILED";
 			}
 		}
 		
-		interface RawEvent {
+		public static class RawEvent {
 			
-			interface Request {
+			public class Request {
 				
-				static final String IDENTIFIERS = "identifiers";
+				public static final String IDENTIFIERS = "identifiers";
 				
 			}
 			
@@ -58,13 +72,13 @@ public interface AccessLoggerConstants {
 	
 	
 	
-	static final String CONFIG_KEY_RESOLVED_PATTERN = "resolvedPattern";
+	public static final String CONFIG_KEY_RESOLVED_PATTERN = "resolvedPattern";
 	
-	interface Request{
+	public static class Request{
 	
-		interface Data{
+		public static class Data{
 			
-			enum Type{
+			public enum Type{
 				
 				REMOTE_HOST("remoteHost"),
 				LOCAL_HOST("localHost"),
@@ -92,10 +106,10 @@ public interface AccessLoggerConstants {
 				}
 			}
 			
-			interface Fields{
+			public static class Fields{
 				
-				static final String COOKIE_NAME = "name";
-				static final String COOKIE_VALUE = "value";
+				public static final String COOKIE_NAME = "name";
+				public static final String COOKIE_VALUE = "value";
 				
 			}
 			

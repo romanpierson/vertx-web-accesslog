@@ -111,13 +111,13 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 						
 						if(this.requiredConfigurationsCounter == this.registeredIdentifiers.size()) {
 							this.allConfigurationsSuccessfullyRegistered = true;
-							if(logger.isDebugEnabled()) {
-								logger.debug("Successfully registered all [" + this.requiredConfigurationsCounter + "] configurations with identifiers " + this.registeredIdentifiers);
-							}
+							
+							logger.debug("Successfully registered all [" + this.requiredConfigurationsCounter + "] configurations with identifiers " + this.registeredIdentifiers);
+							
 							if(this.requiresCookies || this.requiresIncomingHeaders || this.requiresOutgoingHeaders) {
-								if(logger.isDebugEnabled()) {
-									logger.debug("Specific data required for cookies [" + this.requiresCookies + "], incoming headers [" + this.requiresIncomingHeaders + "], outgoing headers [" + this.requiresOutgoingHeaders + "]");
-								}
+								
+								logger.debug("Specific data required for cookies [" + this.requiresCookies + "], incoming headers [" + this.requiresIncomingHeaders + "], outgoing headers [" + this.requiresOutgoingHeaders + "]");
+								
 							} else {
 								logger.debug("No specific data required");
 							}
@@ -195,9 +195,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 	private JsonObject extractHeaders(final MultiMap headersMap){
 		
 		JsonObject headers = new JsonObject();
-		headersMap.forEach(entry -> {
-			headers.put(entry.getKey(), entry.getValue());
-		});
+		headersMap.forEach(entry -> headers.put(entry.getKey(), entry.getValue()));
 		
 		return headers;
 		

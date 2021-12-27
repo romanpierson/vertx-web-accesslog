@@ -132,28 +132,24 @@ public class AccessLoggerProducerVerticle extends AbstractVerticle {
 
 			resolvedLoggerConfigurations.put(identifier, config);
 
-			if(logger.isInfoEnabled()) {
-				logger.info("Successfully created config for [" + identifier + "]");
-			}
+			logger.info("Successfully created config for [" + identifier + "]");
 			
 			if (config.isRequiresCookies() || config.isRequiresIncomingHeaders()
 					|| config.isRequiresOutgoingHeaders()) {
-				if(logger.isInfoEnabled()) {
-					logger.info("Config [" + identifier + "] requires specific data for cookies [" + config.isRequiresCookies() + "], incoming headers [" + config.isRequiresIncomingHeaders() + "], outgoing headers [" + config.isRequiresOutgoingHeaders() + "]");
-				}
+				
+				logger.info("Config [" + identifier + "] requires specific data for cookies [" + config.isRequiresCookies() + "], incoming headers [" + config.isRequiresIncomingHeaders() + "], outgoing headers [" + config.isRequiresOutgoingHeaders() + "]");
+				
 			} else {
-				if(logger.isInfoEnabled()) {
-					logger.info("No specific data required for config [" + identifier + "]");
-				}
+				
+				logger.info("No specific data required for config [" + identifier + "]");
+			
 			}
 
 			populateResponse(response, config);
 
 		} else if (resolvedLoggerConfigurations.get(identifier).getOriginalLogPattern().equals(logPattern)) {
 
-			if(logger.isInfoEnabled()) {
-				logger.info("Found and reused config for [" + identifier + "]");
-			}
+			logger.info("Found and reused config for [" + identifier + "]");
 			
 			populateResponse(response, resolvedLoggerConfigurations.get(identifier));
 
