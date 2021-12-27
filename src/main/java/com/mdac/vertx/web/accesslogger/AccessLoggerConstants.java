@@ -24,6 +24,8 @@ public class AccessLoggerConstants {
 	
 	public static class HandlerConfiguration{
 		
+		private HandlerConfiguration() {}
+		
 		public static final String CONFIG_KEY_CONFIGURATIONS = "configurations";
 		public static final String CONFIG_KEY_IDENTIFIER = "identifier";
 		public static final String CONFIG_KEY_LOGPATTERN = "logPattern";
@@ -34,10 +36,16 @@ public class AccessLoggerConstants {
 	
 	public static class Messages {
 		
+		private Messages() {}
+		
 		public static class Registration {
+			
+			private Registration() {}
 			
 			public static class Request {
 			
+				private Request() {}
+				
 				public static final String IDENTIFIER = "identifier";
 				public static final String LOGPATTERN = "logPattern";
 				public static final String APPENDERS = "appenders";
@@ -47,6 +55,8 @@ public class AccessLoggerConstants {
 			}
 			
 			public static class Response {
+				
+				private Response() {}
 				
 				public static final String REQUIRES_COOKIES = "requiresCookies";
 				public static final String REQUIRES_INCOMING_HEADERS = "requiresIncomingHeaders";
@@ -59,7 +69,11 @@ public class AccessLoggerConstants {
 		
 		public static class RawEvent {
 			
+			private RawEvent() {}
+			
 			public class Request {
+				
+				private Request() {}
 				
 				public static final String IDENTIFIERS = "identifiers";
 				
@@ -76,7 +90,11 @@ public class AccessLoggerConstants {
 	
 	public static class Request{
 	
+		private Request() {}
+		
 		public static class Data{
+			
+			private Data() {}
 			
 			public enum Type{
 				
@@ -107,6 +125,8 @@ public class AccessLoggerConstants {
 			}
 			
 			public static class Fields{
+				
+				private Fields() {}
 				
 				public static final String COOKIE_NAME = "name";
 				public static final String COOKIE_VALUE = "value";
