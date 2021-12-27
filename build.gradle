@@ -32,7 +32,7 @@ dependencies {
 	
 	// Logback (via SLF4J)
 	//implementation "org.slf4j:slf4j-api:${slfApiVersion}"
-	testRuntimeOnly "ch.qos.logback:logback-classic:${logbackVersion}"
+	//testRuntimeOnly "ch.qos.logback:logback-classic:${logbackVersion}"
 	
 }
 
@@ -69,9 +69,12 @@ publishing {
 
 sonarqube {
     properties {
-        property "sonar.test.exclusions", "*.java"
+    	property "sonar.sources", "src/main"
+    	property "sonar.tests", "src/test"
+        property "sonar.test.exclusions", "**/src/test/**"
     }
 }
+
 
 jacocoTestReport {
 	reports {
