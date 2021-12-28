@@ -84,7 +84,7 @@ class AcessLogServerTest {
 		}));
 	}
 	
-	//@Test
+	@Test
 	@Order(value = 1)
 	void testValidElementsToConsoleAppender(Vertx vertx, VertxTestContext testContext) {
 		
