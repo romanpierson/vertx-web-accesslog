@@ -20,13 +20,6 @@ public class ExtractedPosition {
 	private final int offset;
 	private final AccessLogElement element;
 	
-	public ExtractedPosition(final int start, final int offset) {
-		super();
-		this.start = start;
-		this.offset = offset;
-		this.element = null;
-	}
-	
 	public ExtractedPosition(final int start, final int offset, final AccessLogElement element) {
 		super();
 		this.start = start;

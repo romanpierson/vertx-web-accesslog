@@ -185,5 +185,5 @@ The default way for elements where no actual value can be evaluated is to return
 (?)
 
 * Upgrade to latest versions
-* Moved from Travis to GH Actions / Gradle Sonarqube Plugin
+* Moved from Travis CI to Github Actions / Gradle Sonarqube Plugin
 * Removed slf4j dependency

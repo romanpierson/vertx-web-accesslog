@@ -71,7 +71,7 @@ public class AccessLoggerConstants {
 			
 			private RawEvent() {}
 			
-			public class Request {
+			public static class Request {
 				
 				private Request() {}
 				

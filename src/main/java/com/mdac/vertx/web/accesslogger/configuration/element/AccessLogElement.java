@@ -23,12 +23,7 @@ import io.vertx.core.json.JsonObject;
 public interface AccessLogElement {
 
 	
-	default ExtractedPosition findInRawPatternInternal(String rawPattern){
-		
-		// Not enforcing anymore element implementations to explicitly define this lookup functionality 
-		return null;
-		
-	}
+	ExtractedPosition findInRawPatternInternal(String rawPattern);
 	
 	/**
 	 * 

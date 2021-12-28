@@ -26,6 +26,7 @@ import com.mdac.vertx.web.accesslogger.appender.Appender;
 import com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement;
 import com.mdac.vertx.web.accesslogger.configuration.pattern.PatternResolver;
 import com.mdac.vertx.web.accesslogger.configuration.pattern.ResolvedPatternResult;
+import com.mdac.vertx.web.accesslogger.exception.AccessLoggerException;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.impl.logging.Logger;
@@ -125,7 +126,7 @@ public class AccessLoggerProducerVerticle extends AbstractVerticle {
 					config.getRawAppender().add(appenderInstance);
 
 				} catch (Exception ex) {
-					logger.error("Failed to create appender with [" + appenderClassName + "]", ex);
+					throw new AccessLoggerException("Failed to create appender with [" + appenderClassName + "]", ex);
 				}
 
 			});

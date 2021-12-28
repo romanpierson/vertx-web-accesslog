@@ -82,6 +82,19 @@ public class PatternResolverTest {
 
         assertResolvedPatterns(expected, actual);
     }
+    
+    @Test
+    public void resolvePattern_unresolvable_parts() {
+        PatternResolver patternResolver = new PatternResolver();
+        String logPattern = "xx %m yy";
+        Collection<AccessLogElement> expected = Arrays.asList(new MethodElement());
+
+        ResolvedPatternResult resolvedPatternResult = patternResolver.resolvePattern(logPattern);
+        Collection<AccessLogElement> actual = resolvedPatternResult.getLogElements();
+
+        assertResolvedPatterns(expected, actual);
+        assertEquals("xx %s yy", resolvedPatternResult.getResolvedPattern());
+    }
 
     private void assertResolvedPatterns(Collection<AccessLogElement> expected, Collection<AccessLogElement> actual) {
         

@@ -13,26 +13,18 @@ ext{
 	vertxVersion = '4.2.3'
 	jupiterVersion = '5.8.2'
 	jupiterLauncherVersion ='1.8.2'
-	//slfApiVersion = '1.7.32'
-	jacksonDatabindVersion = '2.13.1'
-	logbackVersion = '1.2.3'
 }
 
 dependencies {
 
 	implementation "io.vertx:vertx-web:${vertxVersion}"
 	
-	testRuntimeOnly "io.vertx:vertx-config-yaml:${vertxVersion}"
-	
-	testRuntimeOnly "com.fasterxml.jackson.core:jackson-databind:${jacksonDatabindVersion}"
+	testImplementation "io.vertx:vertx-config-yaml:${vertxVersion}"
+	testImplementation "io.vertx:vertx-junit5:${vertxVersion}"
 	
 	testImplementation "org.junit.jupiter:junit-jupiter-api:${jupiterVersion}"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${jupiterVersion}"
     testImplementation "org.junit.platform:junit-platform-launcher:${jupiterLauncherVersion}"
-	
-	// Logback (via SLF4J)
-	//implementation "org.slf4j:slf4j-api:${slfApiVersion}"
-	//testRuntimeOnly "ch.qos.logback:logback-classic:${logbackVersion}"
 	
 }
 
