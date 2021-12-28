@@ -63,7 +63,7 @@ class AcessLogServerTest {
 	}
 	
 	
-	@Test
+	//@Test
 	@Order(value = 1)
 	void testValidElementsToMemoryAppender(Vertx vertx, VertxTestContext testContext) {
 		
@@ -84,7 +84,7 @@ class AcessLogServerTest {
 		}));
 	}
 	
-	@Test
+	//@Test
 	@Order(value = 1)
 	void testValidElementsToConsoleAppender(Vertx vertx, VertxTestContext testContext) {
 		
