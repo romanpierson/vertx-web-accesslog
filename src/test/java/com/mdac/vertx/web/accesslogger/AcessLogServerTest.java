@@ -63,7 +63,7 @@ class AcessLogServerTest {
 	}
 	
 	
-	//@Test
+	@Test
 	@Order(value = 1)
 	void testValidElementsToMemoryAppender(Vertx vertx, VertxTestContext testContext) {
 		
