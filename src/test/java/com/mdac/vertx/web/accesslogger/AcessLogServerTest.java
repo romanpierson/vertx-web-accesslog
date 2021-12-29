@@ -17,6 +17,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpClientResponse;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.ext.web.client.WebClient;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 
@@ -90,11 +91,13 @@ class AcessLogServerTest {
 		
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
 			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-all-valid-console-appender.yaml"), testContext.succeeding(id2 -> {
-				HttpClient client = vertx.createHttpClient();
+				
+				WebClient client = WebClient.create(vertx);
 				
 				client
-					.request(HttpMethod.GET, 8080, "localhost", "/test")
-					.compose(req -> req.send().compose(HttpClientResponse::body))
+					.request(HttpMethod.GET, 8080, "localhost", "/test?param1=value1")
+					.putHeader("Cookie", "my-cookie=my-cookie-value")
+					.send()
 					.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
 							//assertThat(buffer.toString()).isEqualTo("Plop");
 							System.out.println(buffer.toString());
