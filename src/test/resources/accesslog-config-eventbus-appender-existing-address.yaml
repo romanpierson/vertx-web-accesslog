@@ -1,0 +1,8 @@
+isAutoDeployProducerVerticle: false
+configurations:
+  - identifier: accesslog-formatted
+    logPattern: '"cs-uri"'
+    appenders:
+      - appenderClassName : com.mdac.vertx.web.accesslogger.appender.eventbus.impl.EventBusAppender
+        config:
+          targetAddress: shangriLa
