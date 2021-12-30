@@ -12,7 +12,9 @@ repositories {
 ext{
 	vertxVersion = '4.2.3'
 	jupiterVersion = '5.8.2'
-	jupiterLauncherVersion ='1.8.2'
+	jupiterLauncherVersion = '1.8.2'
+	slfApiVersion = '1.7.32'
+	logbackVersion = '1.2.3'
 }
 
 dependencies {
@@ -27,6 +29,8 @@ dependencies {
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${jupiterVersion}"
     testImplementation "org.junit.platform:junit-platform-launcher:${jupiterLauncherVersion}"
 	
+	testRuntimeOnly "org.slf4j:slf4j-api:${slfApiVersion}"
+	testRuntimeOnly "ch.qos.logback:logback-classic:${logbackVersion}"
 }
 
 test {

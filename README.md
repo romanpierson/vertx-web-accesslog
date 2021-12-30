@@ -58,7 +58,7 @@ Appender | Description
 ----|------
 Console Appender | Embedded - main purpose for testing
 EventBus Appender | Embedded - simple way to forward access events to a configurable address on the event bus
-[Logging Appender](https://github.com/romanpierson/vertx-web-accesslog-logging-appender) | Using common logging functionality (logback, slf4j, etc)
+[Logging Appender] | Embedded - Using common logging functionality (logback, slf4j, etc)
 [ElasticSearch Appender](https://github.com/romanpierson/vertx-web-accesslog-elasticsearch-appender) | Experimental appender that writes data to ES
 
 ### Custom Appenders
@@ -187,3 +187,4 @@ The default way for elements where no actual value can be evaluated is to return
 * Upgrade to latest versions
 * Moved from Travis CI to Github Actions / Gradle Sonarqube Plugin
 * Removed slf4j dependency
+* Integrated `LoggingAppender` into core library

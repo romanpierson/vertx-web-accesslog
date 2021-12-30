@@ -1,0 +1,6 @@
+isAutoDeployProducerVerticle: false
+configurations:
+  - identifier: accesslog-plain
+    logPatternINVALID: "cs-uri"
+    appenders:
+      - appenderClassName : com.mdac.vertx.web.accesslogger.appender.logging.impl.LoggingAppender
