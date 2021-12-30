@@ -35,7 +35,7 @@ public class ConsoleAppender implements Appender {
 	
 	public ConsoleAppender(final JsonObject config){
 		
-		if(config == null || config.getString(AccessLoggerConstants.CONFIG_KEY_RESOLVED_PATTERN, "").trim().length() == 0){
+		if(config.getString(AccessLoggerConstants.CONFIG_KEY_RESOLVED_PATTERN, "").trim().length() == 0){
 			throw new IllegalArgumentException("resolvedPattern must not be empty");
 		}
 		

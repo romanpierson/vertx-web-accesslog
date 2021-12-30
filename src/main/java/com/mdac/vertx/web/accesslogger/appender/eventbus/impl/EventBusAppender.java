@@ -39,7 +39,7 @@ private final Logger logger = LoggerFactory.getLogger(this.getClass().getName())
 
 	public EventBusAppender(final JsonObject config){
 		
-		if(config == null || config.getString(CONFIG_KEY_TARGET_ADDRESS, "").trim().length() == 0){
+		if(config.getString(CONFIG_KEY_TARGET_ADDRESS, "").trim().length() == 0){
 			throw new IllegalArgumentException(CONFIG_KEY_TARGET_ADDRESS + " must not be empty");
 		}
 		
