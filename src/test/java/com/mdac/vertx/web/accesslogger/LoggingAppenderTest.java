@@ -54,7 +54,7 @@ class LoggingAppenderTest {
 	}
 	
 	@Test
-	@Order(value = 1)
+	@Order(value = 2)
 	void testInvalidLoggingAppenderWithMissingResolvedPatttern(Vertx vertx, VertxTestContext testContext) {
 			
 		vertx.exceptionHandler(throwable -> {
@@ -79,7 +79,7 @@ class LoggingAppenderTest {
 	}
 	
 	@Test
-	@Order(value = 1)
+	@Order(value = 3)
 	// This tests using slf4j/logback that at the end logs again to console so we can grab it
 	void testWithValidData(Vertx vertx, VertxTestContext testContext) {
 			
@@ -106,7 +106,7 @@ class LoggingAppenderTest {
 						Thread.sleep(10);
 						
 						System.setOut(originalStream);
-								
+						
 						assertEquals("/test", catchingStream.toString());
 						
 						testContext.completeNow();

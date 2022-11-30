@@ -17,7 +17,6 @@ import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpClientResponse;
 import io.vertx.core.http.HttpMethod;
-import io.vertx.ext.web.client.WebClient;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 
@@ -43,7 +42,7 @@ class AcessLogServerTest {
 	}
 	
 	@Test
-	@Order(value = 1)
+	@Order(value = 2)
 	void testInvalidConsoleAppenderWithMissingResolvedPatttern(Vertx vertx, VertxTestContext testContext) {
 			
 		vertx.exceptionHandler(throwable -> {
@@ -64,71 +63,73 @@ class AcessLogServerTest {
 	}
 	
 	
-	@Test
-	@Order(value = 1)
-	void testValidElementsToMemoryAppender(Vertx vertx, VertxTestContext testContext) {
-		
-		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-all-valid-memory-appender.yaml"), testContext.succeeding(id2 -> {
-				
-				HttpClient client = vertx.createHttpClient();
-				
-				client
-					.request(HttpMethod.GET, 8080, "localhost", "/test")
-					.compose(req -> req.send().compose(HttpClientResponse::body))
-					.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
-							//assertThat(buffer.toString()).isEqualTo("Plop");
-							System.out.println(buffer.toString());
-							testContext.completeNow();
-					})));
-			}));
-		}));
-	}
+//	@Test
+//	@Order(value = 3)
+//	void testValidElementsToMemoryAppender(Vertx vertx, VertxTestContext testContext) {
+//		
+//		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
+//			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-all-valid-memory-appender.yaml"), testContext.succeeding(id2 -> {
+//				
+//				HttpClient client = vertx.createHttpClient();
+//				
+//				Buffer requestBody = BufferImpl.buffer("testRequestBody");
+//				
+//				client
+//					.request(HttpMethod.POST, 8080, "localhost", "/posttest")
+//					.compose(req -> req.send(requestBody).compose(HttpClientResponse::body))
+//					.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
+//							//assertThat(buffer.toString()).isEqualTo("Plop");
+//							System.out.println(buffer.toString());
+//							testContext.completeNow();
+//					})));
+//			}));
+//		}));
+//	}
+//	
+//	@Test
+//	@Order(value = 4)
+//	void testValidElementsToConsoleAppender(Vertx vertx, VertxTestContext testContext) {
+//		
+//		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
+//			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-all-valid-console-appender.yaml"), testContext.succeeding(id2 -> {
+//				
+//				WebClient client = WebClient.create(vertx);
+//				
+//				client
+//					.request(HttpMethod.GET, 8080, "localhost", "/test?param1=value1")
+//					.putHeader("Cookie", "my-cookie=my-cookie-value")
+//					.send()
+//					.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
+//							//assertThat(buffer.toString()).isEqualTo("Plop");
+//							System.out.println(buffer.toString());
+//							testContext.completeNow();
+//					})));
+//			}));
+//		}));
+//	}
+//	
+//	@Test
+//	@Order(value = 5)
+//	void testAutocreationOfAppenderVerticle(Vertx vertx, VertxTestContext testContext) {
+//		
+//		vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-all-valid-console-appender-autocreation-verticle.yaml"), testContext.succeeding(id2 -> {
+//				HttpClient client = vertx.createHttpClient();
+//				
+//				client
+//					.request(HttpMethod.GET, 8080, "localhost", "/test")
+//					.compose(req -> req.send().compose(HttpClientResponse::body))
+//					.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
+//							assertThat(buffer.toString()).isEqualTo("Plop");
+//							//System.out.println(buffer.toString());
+//							testContext.completeNow();
+//					})));
+//			}));
+//	}
+	
+	
 	
 	@Test
-	@Order(value = 1)
-	void testValidElementsToConsoleAppender(Vertx vertx, VertxTestContext testContext) {
-		
-		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-all-valid-console-appender.yaml"), testContext.succeeding(id2 -> {
-				
-				WebClient client = WebClient.create(vertx);
-				
-				client
-					.request(HttpMethod.GET, 8080, "localhost", "/test?param1=value1")
-					.putHeader("Cookie", "my-cookie=my-cookie-value")
-					.send()
-					.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
-							//assertThat(buffer.toString()).isEqualTo("Plop");
-							System.out.println(buffer.toString());
-							testContext.completeNow();
-					})));
-			}));
-		}));
-	}
-	
-	@Test
-	@Order(value = 100)
-	void testAutocreationOfAppenderVerticle(Vertx vertx, VertxTestContext testContext) {
-		
-		vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-all-valid-console-appender-autocreation-verticle.yaml"), testContext.succeeding(id2 -> {
-				HttpClient client = vertx.createHttpClient();
-				
-				client
-					.request(HttpMethod.GET, 8080, "localhost", "/test")
-					.compose(req -> req.send().compose(HttpClientResponse::body))
-					.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
-							//assertThat(buffer.toString()).isEqualTo("Plop");
-							System.out.println(buffer.toString());
-							testContext.completeNow();
-					})));
-			}));
-	}
-	
-	
-	
-	@Test
-	@Order(value = 1)
+	@Order(value = 6)
 	void testEmptyResponse(Vertx vertx, VertxTestContext testContext) {
 		
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2022 Roman Pierson
+ * Copyright (c) 2016-2023 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -155,6 +155,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 		
 		final HttpServerRequest request = context.request();
 		final HttpServerResponse response = context.response();
+		
 		
 		JsonObject jsonValues = new JsonObject()
 										.put(RawEvent.Request.IDENTIFIERS, this.registeredIdentifiers)

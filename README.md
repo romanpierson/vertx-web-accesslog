@@ -4,7 +4,7 @@
 
 # vertx-web-accesslog
 
-An access log implementation to be used in vert web routes.
+An access log implementation to be used in vertx web routes.
 
 Inspired and with intention to be compliant with
 
@@ -12,28 +12,40 @@ Inspired and with intention to be compliant with
 
 * W3C Extended Log File Format (http://www.w3.org/TR/WD-logfile.html)
 
+The main idea is to have an event based logging, with the possibility (but not enforcing you to do so) to directly export a log event natively to a target system, and not having to first write and persist it to a file and then read and parse it again from there like eg ELK is doing it. The drawback that those kind of solutions have is performance but even more issues like recognizing complete stacktraces etc.
+The ElasticSearch Appender is the only appender for now that takes advantage of those benefits.
+However you are free of course to use a traditional ELK setup style and just write your output to either console or a specific logfile - and let eg logstash take over from there.
+
+## Key facts
+
+* Zero dependencies (apart of vertx-web obviously)
+* Easily extendable and customizable
+* Small memory footprint
+
+
 ## Technical Usage
 
+TODO: maven central
 The artefact is published on bintray / jcenter (https://bintray.com/romanpierson/maven/com.mdac.vertx-web-accesslog)
 
 Just add it as a dependency to your project (gradle example)
 
 ```xml
 dependencies {
-	compile 'com.mdac:vertx-web-accesslog:1.4.0_RC1'
+	compile 'com.mdac:vertx-web-accesslog:1.5.0'
 }
 ```
 
-### Compatibility with Vertx core
+## Compatibility with Vertx core
 
 Accesslog version | Vertx version
 ----|------
-1.4.0 | 4.0.0
+1.5.0 | 4.2.0 >
+1.4.0 | 4.0.0 - 4.1.x
 1.3.1 | 3.3.0 - 3.7.0
 1.2.0 | 3.3.0 - 3.7.0
 
-Previous versions of Vertx 3 could be supported with small adaptations, most caused by changes in the vertx-web API.
-
+Previous versions are listed for completeness only and not supported anymore.
 
 ## Access Log Pattern Configuration
 
@@ -52,22 +64,25 @@ META-INF
 
 ## Appenders
 
+Appenders are basically a way to send the log data to one (or multiple) backends. This ships with a set of (hopefully) useful appenders but you can create your custom appenders in a very easy way.
+
 ### Available Appenders
 
 Appender | Description
 ----|------
 Console Appender | Embedded - main purpose for testing
 EventBus Appender | Embedded - simple way to forward access events to a configurable address on the event bus
-[Logging Appender] | Embedded - Using common logging functionality (logback, slf4j, etc)
-[ElasticSearch Appender](https://github.com/romanpierson/vertx-web-accesslog-elasticsearch-appender) | Experimental appender that writes data to ES
+[Logging Appender](https://github.com/romanpierson/vertx-web-accesslog/LA__README.md) | Embedded - Using common logging functionality (logback, slf4j, etc)
+[ElasticSearch Appender](https://github.com/romanpierson/vertx-web-accesslog/ES__README.md) | Embedded - Experimental appender that writes data to ElasticSearch (For usage eg in kibana)
+
 
 ### Custom Appenders
 
 You can easily write your own appender doing 
 
-* Write your own CustomAppender class that must
-** implement `Appender` Interface
-** have a public constructor taking a `JsonObject` instance holding the configuration
+Write your own CustomAppender class that must
+* implement `Appender` Interface
+* have a public constructor taking a `JsonObject` instance holding the configuration
 
 ## AccessLoggerProducerVerticle
 
@@ -76,6 +91,8 @@ This verticle is responsible for receiving the raw data, formatting it based on 
 There is one worker instance of `AccessLoggerProducerVerticle` per vertx context started if you put configuration value `isAutoDeployProducerVerticle` to `true` (by default it is). If you prefer to manage the deployment of that verticle byself set the property to `false`.
 
 ## Usage
+
+This describes the basic usage. More specific 
 
 ### Configure route
 
@@ -130,61 +147,18 @@ Datetime Apache Timeunit | %t{msec} | - | Currently only milliseconds is support
 | Datetime Apache Configurable v2 | %{PATTERN\|TIMEZONE\|LOCALE}t | - | Specify format pattern, timezone and locale |
 Incoming Headers | %{IDENTIFIER}i  | - |  |
 Outgoing Response Headers | %{IDENTIFIER}o  | - |  |
-Cookie | %{IDENTIFIER}C  | - |  |
+Cookie | %{IDENTIFIER}C  | - | Request cookies only |
 Static value | %{IDENTIFIER}static  | - |  |
+Environment Variable value | %{IDENTIFIER}env  | - |  |
 
 ### Static values
 
 For static values you should prefer to use the %{value}static element. In case you have an appender like `ConsoleAppender` or `LoggingAppender` that writes its output via the resolved pattern you can also put such static values directly into the logpattern as it will just stay as non resolved. However for other appenders like `ElasticSearchAppender` one you need to explicitly define the element.
 
-### Empty behaviour
+### Empty behavior
 
 The default way for elements where no actual value can be evaluated is to return a `NULL` value. This way the appender is able to translate this into an empty string or eg skip the value if we index towards a solution like ElasticSearch.
 
 ## Changelog
 
-### 1.2.0
-
-(2019-01-10)
-
-* Introduced Appender API and removed all except `PrintStreamAppender` to separate projects
-* `AccessLogElerment` is able to claim what data it requires
-* General refactoring into Constants
-* Raw values are translated into formatted values and only those get passed to appenders
-* Appenders do not get passed anymore `AccessLogElement` instances
-* Fixed a bug in `DateTimeElement` that caused pattern definition not to work
-* Fixed a bug in `findInRawPatternInternal` method of several `AccessLogElement` implementations that handle several element patterns and in the case of having a pattern with those following each other this might have led to the situation of bypassing the earlier one
-* Extracting correct hostname for local host (%v)
-
-### 1.3.0
-
-(2019-02-14)
-
-* Changed configuration from custom Option classes to plain JsonObject
-* Added plain timestamp as log element
-* Replaced `PrintStreamAppender` with `ConsoleAppender`
-* Added `EventBusAppender`
-* Fixed a bug with picking up the best log element if multiple ones potentially fit
-* Added `StaticValueElement`
-
-### 1.3.1
-
-(2019-04-17)
-
-* Fixed a bug with pattern resolver (https://github.com/romanpierson/vertx-web-accesslog/issues/11)
-
-### 1.4.0
-
-(2020-12-17)
-
-* Upgrade to Vertx 4, JDK 11, Junit 5, Gradle, all libraries latest versions
-* Added `EnvironmentValueElement`
-
-### Next
-
-(?)
-
-* Upgrade to latest versions
-* Moved from Travis CI to Github Actions / Gradle Sonarqube Plugin
-* Removed slf4j dependency
-* Integrated `LoggingAppender` into core library
+Detailed changelog can be found [here](https://github.com/romanpierson/vertx-web-accesslog/CHANGELOG.md).

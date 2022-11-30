@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2019 Roman Pierson
+ * Copyright (c) 2016-2023 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -13,7 +13,6 @@
 package com.mdac.vertx.web.accesslogger.appender;
 
 import com.mdac.vertx.web.accesslogger.AccessLoggerConstants;
-import com.mdac.vertx.web.accesslogger.appender.Appender;
 
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;

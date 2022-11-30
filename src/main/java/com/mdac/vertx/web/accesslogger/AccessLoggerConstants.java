@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2022 Roman Pierson
+ * Copyright (c) 2016-2023 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -83,9 +83,6 @@ public class AccessLoggerConstants {
 		
 	}
 	
-	
-	
-	
 	public static final String CONFIG_KEY_RESOLVED_PATTERN = "resolvedPattern";
 	
 	public static class Request{
@@ -135,5 +132,24 @@ public class AccessLoggerConstants {
 			
 		}
 	}
+	
+	public static class ElasticSearchAppenderConfig{
+		
+		private ElasticSearchAppenderConfig() {}
+		
+		public static final String ELASTICSEARCH_INDEXER_EVENTBUS_EVENT_NAME = "es.indexer.event";
+		
+		public static class Field{
+			
+			private Field() {}
+			
+			public static final String TIMESTAMP = "timestamp";
+			public static final String INSTANCE_IDENTIFIER = "instance_identifier";
+			public static final String META = "meta";
+			public static final String MESSAGE = "message";
+			
+		}
+	}
+	
 	
 }

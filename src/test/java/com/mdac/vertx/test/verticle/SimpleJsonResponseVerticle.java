@@ -10,6 +10,7 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.BodyHandler;
 
 public class SimpleJsonResponseVerticle extends AbstractVerticle {
 
@@ -34,15 +35,29 @@ public class SimpleJsonResponseVerticle extends AbstractVerticle {
     		if(result.succeeded()) {
     			router
     	    		.route()
+    	    		.handler(BodyHandler.create())
     	    		.handler(AccessLoggerHandler.create(result.result())
     	    	);
     			
     			router
-				.get("/empty")
-					.handler(ctx -> {
+    				.post("/posttest")
+    					.handler(ctx -> {
+    						
+    						//System.out.println(ctx.body());
+
+    						final JsonObject resultJson = new JsonObject();
+        					
+    						resultJson.put("uri", ctx.request().uri());
+    					
+    						ctx.response().putHeader("Content-Type", "application/json; charset=utf-8").end(resultJson.encodePrettily());
+    					});
+    			
+    			router
+					.get("/empty")
+						.handler(ctx -> {
 					
-						ctx.response().putHeader("Content-Type", "application/json; charset=utf-8").end();
-					});
+							ctx.response().putHeader("Content-Type", "application/json; charset=utf-8").end();
+						});
     			
     			router
     				.get()
