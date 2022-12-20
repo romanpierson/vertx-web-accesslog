@@ -3,6 +3,6 @@ configurations:
   - identifier: accesslog-plain
     logPattern: "cs-uri"
     appenders:
-      - appenderClassName : com.mdac.vertx.web.accesslogger.appender.logging.impl.LoggingAppender
+      - appenderClassName : com.romanpierson.vertx.web.accesslogger.appender.logging.impl.LoggingAppender
         config:
           loggerName: accesslog

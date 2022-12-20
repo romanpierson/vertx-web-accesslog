@@ -1,0 +1,12 @@
+com.romanpierson.vertx.web.accesslogger.configuration.element.impl.BytesSentElement
+com.romanpierson.vertx.web.accesslogger.configuration.element.impl.CookieElement
+com.romanpierson.vertx.web.accesslogger.configuration.element.impl.DateTimeElement
+com.romanpierson.vertx.web.accesslogger.configuration.element.impl.DurationElement
+com.romanpierson.vertx.web.accesslogger.configuration.element.impl.HeaderElement
+com.romanpierson.vertx.web.accesslogger.configuration.element.impl.HostElement
+com.romanpierson.vertx.web.accesslogger.configuration.element.impl.MethodElement
+com.romanpierson.vertx.web.accesslogger.configuration.element.impl.RequestElement
+com.romanpierson.vertx.web.accesslogger.configuration.element.impl.StatusElement
+com.romanpierson.vertx.web.accesslogger.configuration.element.impl.VersionElement
+com.romanpierson.vertx.web.accesslogger.configuration.element.impl.StaticValueElement
+com.romanpierson.vertx.web.accesslogger.configuration.element.impl.EnvironmentValueElement

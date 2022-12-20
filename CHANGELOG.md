@@ -34,14 +34,15 @@
 
 (2020-12-17)
 
-* Upgrade to Vertx 4, JDK 11, Junit 5, Gradle, all libraries latest versions
+* Upgrade to Vertx 4, Junit 5, Gradle, all libraries latest versions
 * Added `EnvironmentValueElement`
 
 ### 1.5.0
 
 (?)
 
+* Moved package `com.mdac` to `com.romanpierson` (for maven central)
 * Upgrade to latest versions
 * Moved from Travis CI to Github Actions / Gradle Sonarqube Plugin
 * Removed slf4j dependency
-* Integrated `LoggingAppender` into core library
+* Integrated `LoggingAppender` and `ElasticSearchAppender` into core library

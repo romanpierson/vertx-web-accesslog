@@ -32,7 +32,7 @@ Just add it as a dependency to your project (gradle example)
 
 ```xml
 dependencies {
-	compile 'com.mdac:vertx-web-accesslog:1.5.0'
+	compile 'com.romanpierson:vertx-web-accesslog:1.5.0'
 }
 ```
 
@@ -58,7 +58,7 @@ You can easily create your custom implementation of `AccessLogElement` by creati
 ```xml
 META-INF
  services
-  com.mdac.vertx.web.accesslogger.configuration.element.AccessLogElement
+  com.romanpierson.vertx.web.accesslogger.configuration.element.AccessLogElement
 }
 ```
 
@@ -72,8 +72,8 @@ Appender | Description
 ----|------
 Console Appender | Embedded - main purpose for testing
 EventBus Appender | Embedded - simple way to forward access events to a configurable address on the event bus
-[Logging Appender](https://github.com/romanpierson/vertx-web-accesslog/LA__README.md) | Embedded - Using common logging functionality (logback, slf4j, etc)
-[ElasticSearch Appender](https://github.com/romanpierson/vertx-web-accesslog/ES__README.md) | Embedded - Experimental appender that writes data to ElasticSearch (For usage eg in kibana)
+[Logging Appender](https://github.com/romanpierson/vertx-web-accesslog/LA_README.md) | Embedded - Using common logging functionality (logback, slf4j, etc)
+[ElasticSearch Appender](https://github.com/romanpierson/vertx-web-accesslog/ES_README.md) | Embedded - Experimental appender that writes data to ElasticSearch (For usage eg in kibana)
 
 
 ### Custom Appenders
@@ -114,11 +114,11 @@ configurations:
   - identifier: accesslog-formatted
     logPattern: '%{}t %D "cs-uri"'
     appenders:
-      - appenderClassName : com.mdac.vertx.web.accesslogger.appender.console.impl.ConsoleAppender
+      - appenderClassName : com.romanpierson.vertx.web.accesslogger.appender.console.impl.ConsoleAppender
   - identifier: accesslog-plain
     logPattern: "%{msec}t %D cs-uri"
     appenders:
-      - appenderClassName : com.mdac.vertx.web.accesslogger.appender.console.impl.ConsoleAppender
+      - appenderClassName : com.romanpierson.vertx.web.accesslogger.appender.console.impl.ConsoleAppender
 ```
 
 ## Supported log elements

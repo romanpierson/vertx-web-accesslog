@@ -3,4 +3,4 @@ configurations:
   - identifier: accesslog-formatted
     logPattern: '%{}t %D %T "cs-uri" %h %v %p %b %B %{header-in}i %{header-out}o %{my-cookie}C %{my-static-value}static'
     appenders:
-      - appenderClassName : com.mdac.vertx.web.accesslogger.appender.console.impl.ConsoleAppender
+      - appenderClassName : com.romanpierson.vertx.web.accesslogger.appender.console.impl.ConsoleAppender
