@@ -1,6 +1,6 @@
 [![Actions Status](https://github.com/romanpierson/vertx-web-accesslog/workflows/CI/badge.svg)](https://github.com/romanpierson/vertx-web-accesslog/actions)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=romanpierson_vertx-web-accesslog&metric=coverage)](https://sonarcloud.io/dashboard?id=romanpierson_vertx-web-accesslog)
-![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)
+[![Awesome](https://github.com/vert-x3/vertx-awesome)](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)
 
 # vertx-web-accesslog
 
@@ -59,7 +59,6 @@ You can easily create your custom implementation of `AccessLogElement` by creati
 META-INF
  services
   com.romanpierson.vertx.web.accesslogger.configuration.element.AccessLogElement
-}
 ```
 
 ## Appenders
@@ -72,8 +71,8 @@ Appender | Description
 ----|------
 Console Appender | Embedded - main purpose for testing
 EventBus Appender | Embedded - simple way to forward access events to a configurable address on the event bus
-[Logging Appender](https://github.com/romanpierson/vertx-web-accesslog/LA_README.md) | Embedded - Using common logging functionality (logback, slf4j, etc)
-[ElasticSearch Appender](https://github.com/romanpierson/vertx-web-accesslog/ES_README.md) | Embedded - Experimental appender that writes data to ElasticSearch (For usage eg in kibana)
+[Logging Appender](https://github.com/romanpierson/vertx-web-accesslog/blob/master/LA_README.md) | Embedded - Using common logging functionality (logback, slf4j, etc)
+[ElasticSearch Appender](https://github.com/romanpierson/vertx-web-accesslog/blob/master/ES_README.md) | Embedded - Experimental appender that writes data to ElasticSearch (For usage eg in kibana)
 
 
 ### Custom Appenders
@@ -161,4 +160,4 @@ The default way for elements where no actual value can be evaluated is to return
 
 ## Changelog
 
-Detailed changelog can be found [here](https://github.com/romanpierson/vertx-web-accesslog/CHANGELOG.md).
+Detailed changelog can be found [here](https://github.com/romanpierson/vertx-web-accesslog/blob/master/CHANGELOG.md).
