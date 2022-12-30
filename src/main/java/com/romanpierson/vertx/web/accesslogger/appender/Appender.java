@@ -29,7 +29,7 @@ public interface Appender {
 	 * 
 	 * Its the appenders responsibility to implement local storage 
 	 * 
-	 * @param accessEvents	List of access events the appender should handle - those are no copies
+	 * @param accessEvent	List of access events the appender should handle - those are no copies
 	 */
 	void push(JsonArray accessEvent);
 	

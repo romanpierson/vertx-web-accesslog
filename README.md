@@ -72,7 +72,8 @@ Appender | Description
 Console Appender | Embedded - main purpose for testing
 EventBus Appender | Embedded - simple way to forward access events to a configurable address on the event bus
 [Logging Appender](https://github.com/romanpierson/vertx-web-accesslog/blob/master/LA_README.md) | Embedded - Using common logging functionality (logback, slf4j, etc)
-[ElasticSearch Appender](https://github.com/romanpierson/vertx-web-accesslog/blob/master/ES_README.md) | Embedded - Experimental appender that writes data to ElasticSearch (For usage eg in kibana)
+[ElasticSearch Appender](https://github.com/romanpierson/vertx-web-accesslog/blob/master/ES_README.md) | Embedded - Experimental appender that writes data to ElasticSearch (For usage eg in kibana) / / Requires [Vertx ElasticSearch Indexer](https://github.com/romanpierson/vertx-elasticsearch-indexer)
+
 
 
 ### Custom Appenders
@@ -91,7 +92,7 @@ There is one worker instance of `AccessLoggerProducerVerticle` per vertx context
 
 ## Usage
 
-This describes the basic usage. More specific 
+This describes the basic usage. More specific info eg about the different appenders can be found on the links.
 
 ### Configure route
 
@@ -143,7 +144,7 @@ Version / Protocol | %H | - | |
 Datetime Apache | %t | - | Logs by default the request timestamp using format 'EEE, dd MMM yyyy HH:mm:ss zzz', Locale English and Timezone GMT  |
 Datetime Apache Timeunit | %t{msec} | - | Currently only milliseconds is supported  |
 | Datetime Apache Configurable v1 | %{PATTERN}t | - | Specify the format pattern, by default it is used Locale English and Timezone GMT |
-| Datetime Apache Configurable v2 | %{PATTERN\|TIMEZONE\|LOCALE}t | - | Specify format pattern, timezone and locale |
+| Datetime Apache Configurable v2 | %{PATTERN\|TIMEZONE\|LANGUAGE}t | - | Specify format pattern, timezone and language |
 Incoming Headers | %{IDENTIFIER}i  | - |  |
 Outgoing Response Headers | %{IDENTIFIER}o  | - |  |
 Cookie | %{IDENTIFIER}C  | - | Request cookies only |
@@ -161,3 +162,7 @@ The default way for elements where no actual value can be evaluated is to return
 ## Changelog
 
 Detailed changelog can be found [here](https://github.com/romanpierson/vertx-web-accesslog/blob/master/CHANGELOG.md).
+
+## Demo Playground
+
+A sample project that shows usage of this (and other related features) can be found Requires [here](https://github.com/romanpierson/vertx-logging-playground).

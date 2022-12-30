@@ -27,7 +27,9 @@ import io.vertx.core.json.JsonObject;
 
 /**
  * 
- * An implementation of {@link Appender} that writes to {@link ElasticSearchIndexerVerticle}
+ * An implementation of {@link Appender} that writes to {ElasticSearchIndexerVerticle}
+ * 
+ * see https://github.com/romanpierson/vertx-elasticsearch-indexer
  * 
  * @author Roman Pierson
  *

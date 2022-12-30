@@ -1,85 +1,86 @@
-## THIS PROJECT IS DEPRECATED AND DISCONTINUED
-
-Its functionality is integrated now as part of [vertx-web-accesslog](https://github.com/romanpierson/vertx-web-accesslog)
-
-# vertx-web-accesslog-logging-appender
-
-An appender implementation to be used with [vertx-web-accesslog](https://github.com/romanpierson/vertx-web-accesslog).
-
 Generating the access log files is performed in a transparent way by vertx logger. Therefore there is any restriction regarding the logging framework used behind (however logback is recommended and test case is implemented using logback / SLF4J). Main reason for this is to not have a dependency on a specific logging framework and also to ensure that implementation details like for example rollover strategies (size, daily, etc) are dealt with by the logging framework.
 
-## Technical Usage
 
-The artefact is published on bintray / jcenter (https://bintray.com/romanpierson/maven/com.mdac.vertx-web-accesslog-logging-appender)
+# Usage
 
-Just add it as a dependency to your project (gradle example)
+## Appender Configuration
 
-```xml
-dependencies {
-	compile 'com.mdac:vertx-web-accesslog-logging-appender:1.4.0'
-}
-```
-
-## Usage
-
-### Configure route
-
-Just put an instance of AccessLogHandler as first route handler.
-
-```java
-Router router = Router.router(vertx);
-
-JsonObject config = .... load or create your configuration json
-
-router.route().handler(AccessLoggerHandler.create(config));
-
-```
-
-As configuration is now done by plain JsonObject its very simple to use and inject configuration eg by yaml, see as an example `ServerSetupStarter`
+As configuration is now done by plain JsonObject its very simple to use and inject configuration eg by yaml, see as an example:
 
 ```yaml
 configurations:
   - identifier: accesslog-formatted
     logPattern: '%{}t %D "cs-uri"'
     appenders:
-      - appenderClassName : com.mdac.vertx.web.accesslogger.appender.logging.impl.LoggingAppender
+      - appenderClassName : com.romanpierson.vertx.web.accesslogger.appender.logging.impl.LoggingAppender
         config:
           loggerName: accesslog
 ```
 
 
-### Configure Logger
+## Configure Logger
 
 The logger itself in the current solution does not has a built in mechanism to write to the physical access file. Instead this is done by the logging framework used behind.  
 
-#### In the code before defining the access log handler
+### Logback Configuration
+
+This shows how eg you define with logback.xml - as you see the loggerName has to match with what is defined in the appender configuration
+
+```xml
+<configuration>
+  
+  <appender name="ACCESS_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  	<file>${access.location}/access.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+    	<fileNamePattern>access.%d{yyyy-MM-dd}.log</fileNamePattern>
+		<maxHistory>10</maxHistory>
+    </rollingPolicy>
+    <encoder>
+     	<pattern>%msg%n</pattern>
+    	<immediateFlush>true</immediateFlush>
+    </encoder>
+  </appender>
+  
+  
+	<appender name="ACCESS_FILE_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+  		<discardingThreshold>0</discardingThreshold>
+  		<queueSize>500</queueSize>
+  		<maxFlushTime>5000</maxFlushTime>
+ 		<appender-ref ref="ACCESS_FILE" />
+ 	</appender>
+  
+  
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender" level="info">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+  
+  <logger name="accesslog" level="info" additivity="false">
+      <appender-ref ref="ACCESS_FILE" />
+    </logger>
+    
+  <root level="info">
+    <appender-ref ref="STDOUT" />
+  </root>
+  
+</configuration>
+```
+
+If you use a dynamic part like the root log folder you have make sure it is set like this when you create the vertx instance byself:
 
 ```java
 System.setProperty("access.location", "/tmp/accesslog ");
+
+// Start vertx here...
+
 ```
 
-#### Using a fatjar like this (Be aware that the properties have to go before the jar in order to get picked up):
+If you are using a fatjar it needs to be like this (Be aware that the properties have to go before the jar in order to get picked up):
 
 ```java
 java \
 -Daccess.location=/Users/x/y/logs \
 -jar myFatJar.jar 
 ```
-
-Make sure that the logger name defined on the appender corresponds with the one defined in the loggers implementation configuration.
-
-For example see the different logging framework specific configuration files in `test.resources` directory and adapt the `build.gradle` file to use different log frameworks, by default logback version is active. 
-
-## Changelog
-
-### 1.2.0
-
-(2019-01-10)
-
-* Initial version (extracted from vertx-web-accesslog implementation)
-
-### 1.4.0
-
-(2020-12-24)
-
-* Upgrade Vertx 4
