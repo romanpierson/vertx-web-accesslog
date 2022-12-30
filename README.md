@@ -72,8 +72,7 @@ Appender | Description
 Console Appender | Embedded - main purpose for testing
 EventBus Appender | Embedded - simple way to forward access events to a configurable address on the event bus
 [Logging Appender](https://github.com/romanpierson/vertx-web-accesslog/blob/master/LA_README.md) | Embedded - Using common logging functionality (logback, slf4j, etc)
-[ElasticSearch Appender](https://github.com/romanpierson/vertx-web-accesslog/blob/master/ES_README.md) | Embedded - Experimental appender that writes data to ElasticSearch (For usage eg in kibana) 
- Requires [Vertx ElasticSearch Indexer](https://github.com/romanpierson/vertx-elasticsearch-indexer)
+[ElasticSearch Appender](https://github.com/romanpierson/vertx-web-accesslog/blob/master/ES_README.md) | Embedded - Experimental appender that writes data to ElasticSearch (For usage eg in kibana)  Requires [Vertx ElasticSearch Indexer](https://github.com/romanpierson/vertx-elasticsearch-indexer)
 
 
 
