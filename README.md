@@ -25,8 +25,7 @@ However you are free of course to use a traditional ELK setup style and just wri
 
 ## Technical Usage
 
-TODO: maven central
-The artefact is published on bintray / jcenter (https://bintray.com/romanpierson/maven/com.mdac.vertx-web-accesslog)
+The artefact is published on maven central.
 
 Just add it as a dependency to your project (gradle example)
 
@@ -165,4 +164,4 @@ Detailed changelog can be found [here](https://github.com/romanpierson/vertx-web
 
 ## Demo Playground
 
-A sample project that shows usage of this (and other related features) can be found Requires [here](https://github.com/romanpierson/vertx-logging-playground).
+A sample project that shows usage of this (and other related features) can be found [here](https://github.com/romanpierson/vertx-logging-playground).
