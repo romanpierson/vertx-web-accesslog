@@ -3,6 +3,8 @@ plugins {
 	id 'maven-publish'
 	id 'jacoco'
     id "org.sonarqube" version "3.5.0.2730"
+    id 'maven'
+    id 'signing'
 }
 
 repositories {
@@ -41,27 +43,45 @@ test {
 sourceCompatibility='1.8'
 targetCompatibility='1.8'
 
-jar.archiveFileName = "vertx-web-accesslog-1.5.0.jar"
+group = "com.romanpierson"
+archivesBaseName = "vertx-web-accesslog"
+version = "1.5.0-SNAPSHOT"
 
-task sourceJar(type: Jar) {
-    from sourceSets.main.allJava
+jar.archiveFileName = "vertx-web-accesslog-1.5.0-SNAPSHOT.jar"
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
 }
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
             
-            groupId 'com.mdac'
+            groupId 'com.romanpierson'
             artifactId 'vertx-web-accesslog'
-            version '1.5.0'
+            version '1.5.0-SNAPSHOT'
             
             from components.java
 
-            artifact sourceJar {
+            artifact sourcesJar {
                 classifier "sources"
             }
         }
     }
+}
+
+artifacts {
+    archives sourcesJar, javadocJar
+}
+
+signing {
+    sign configurations.archives
 }
 
 sonarqube {
@@ -81,6 +101,52 @@ jacocoTestReport {
 }
 
 wrapper() {
-  gradleVersion = '7.6'
+  gradleVersion = '6.9.3'
 }
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      pom.project {
+        name 'Vertx Web Accesslog'
+        description 'An access log implementation to be used in vert web routes - inspired by apache / tomcat access log configuration'
+        packaging 'jar'
+        url 'https://github.com/romanpierson/vertx-web-accesslog'
+
+        scm {
+          connection 'scm:git@github.com:romanpierson/vertx-web-accesslog.git'
+          developerConnection 'scm:git@github.com:romanpierson/vertx-web-accesslog.git'
+          url 'https://github.com/romanpierson/vertx-web-accesslog.git'
+        }
+
+        licenses {
+          license {
+            name 'The Apache License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+          }
+        }
+
+        developers {
+          developer {
+            id 'romanpierson'
+            name 'Roman Pierson'
+            email 'yo@romanpierson.com'
+          }
+        }
+      }
+    }
+  }
+}
+
+
 
