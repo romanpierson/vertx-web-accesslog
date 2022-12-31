@@ -39,7 +39,7 @@
 
 ### 1.5.0
 
-(?)
+(2022-12-30)
 
 * Moved package `com.mdac` to `com.romanpierson` (for maven central)
 * Upgrade to latest versions
