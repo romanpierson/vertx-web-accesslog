@@ -12,6 +12,9 @@
  */
 package com.romanpierson.vertx.web.accesslogger.configuration.element.impl;
 
+import static com.romanpierson.vertx.web.accesslogger.configuration.pattern.PatternResolver.extractBestPositionFromPostfixPatternIfApplicable;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -24,36 +27,26 @@ import io.vertx.core.json.JsonObject;
 
 public class CookieElement implements AccessLogElement{
 
-	private final String identifier; 
+	private String identifier; 
 	
-	public CookieElement() {
-		this.identifier = null;
-	}
-	
-	private CookieElement(final String identifier) {
-		this.identifier = identifier;
+	public static CookieElement of(final String identifier) {
+		
+		CookieElement element = new CookieElement();
+		element.identifier = identifier;
+		
+		return element;
 	}
 
 	@Override
-	public ExtractedPosition findInRawPatternInternal(final String rawPattern) {
+	public Collection<ExtractedPosition> findInRawPatternInternal(final String rawPattern) {
 		
-		final int index = rawPattern.indexOf("%{");
+		Collection<ExtractedPosition> foundPositions = new ArrayList<>(1);
 		
-		if(index >= 0){
-				
-				int indexEndConfiguration = rawPattern.indexOf("}C");
-			
-				if(indexEndConfiguration > index)
-				{
-					String configurationString = rawPattern.substring(index + 2, indexEndConfiguration);
-					
-					return new ExtractedPosition(index, configurationString.length() + 4, new CookieElement(configurationString));
-				}
-			
-		}
+		extractBestPositionFromPostfixPatternIfApplicable(rawPattern, "C", 
+			json -> CookieElement.of(json.getString("configuration")))
+			.ifPresent(foundPositions::add);
 		
-		
-		return null;
+		return foundPositions;
 	}
 
 	@Override

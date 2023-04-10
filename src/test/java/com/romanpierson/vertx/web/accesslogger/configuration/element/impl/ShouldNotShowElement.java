@@ -12,8 +12,7 @@
  */
 package com.romanpierson.vertx.web.accesslogger.configuration.element.impl;
 
-
-import static com.romanpierson.vertx.web.accesslogger.configuration.pattern.PatternResolver.extractBestPositionFromPostfixPatternIfApplicable;
+import static com.romanpierson.vertx.web.accesslogger.configuration.pattern.PatternResolver.extractBestPositionFromFixPatternIfApplicable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,36 +22,24 @@ import com.romanpierson.vertx.web.accesslogger.configuration.pattern.ExtractedPo
 
 import io.vertx.core.json.JsonObject;
 
-public class EnvironmentValueElement implements AccessLogElement{
-
-	private String value; 
-	
-	public static EnvironmentValueElement of(final String value) {
-		
-		EnvironmentValueElement element = new EnvironmentValueElement();
-		element.value = System.getenv(value);
-		
-		return element;
-	}
+public class ShouldNotShowElement implements AccessLogElement{
 	
 	@Override
 	public Collection<ExtractedPosition> findInRawPatternInternal(final String rawPattern) {
 		
 		Collection<ExtractedPosition> foundPositions = new ArrayList<>(1);
 		
-		extractBestPositionFromPostfixPatternIfApplicable(rawPattern, "env", 
-			json -> EnvironmentValueElement.of(json.getString("configuration")))
-			.ifPresent(foundPositions::add);
-			
+		extractBestPositionFromFixPatternIfApplicable(rawPattern, "%x", () -> new ShouldNotShowElement()).ifPresent(foundPositions::add);
+		
 		return foundPositions;
+		
 	}
 	
 	@Override
 	public String getFormattedValue(final JsonObject values) {
-		
-		return this.value;
+	
+		return "shouldNotShow";
 		
 	}
 	
-
 }

@@ -1,0 +1,8 @@
+isAutoDeployProducerVerticle: false
+configurations:
+  - identifier: accesslog-formatted
+    logPattern: '%b %B'
+    appenders:
+      - appenderClassName : com.romanpierson.vertx.web.accesslogger.appender.eventbus.impl.EventBusAppender
+        config:
+          targetAddress: target

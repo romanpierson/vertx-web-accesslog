@@ -12,19 +12,48 @@
  */
 package com.romanpierson.vertx.web.accesslogger.configuration.pattern;
 
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import com.romanpierson.vertx.web.accesslogger.configuration.element.AccessLogElement;
+
+import io.vertx.core.json.JsonObject;
 
 public class ExtractedPosition {
 
 	private final int start;
 	private final int offset;
-	private final AccessLogElement element;
+	private final Supplier<AccessLogElement> elementSupplier;
+	private final Function<JsonObject,AccessLogElement> elementFunction;
+	private final JsonObject config;
 	
-	public ExtractedPosition(final int start, final int offset, final AccessLogElement element) {
+	public static ExtractedPosition build(final int start, final int offset, 
+			final Supplier<AccessLogElement> elementSupplier) 
+	{
+		
+		return new ExtractedPosition(start, offset, elementSupplier, null, null);
+		
+	}
+	
+	public static ExtractedPosition build(final int start, final int offset, 
+			final Function<JsonObject,AccessLogElement> elementFunction, JsonObject config) 
+	{
+		
+		return new ExtractedPosition(start, offset, null, elementFunction, config);
+		
+	}
+	
+	private ExtractedPosition(final int start, final int offset, 
+			final Supplier<AccessLogElement> elementSupplier,
+			final Function<JsonObject,AccessLogElement> elementFunction,
+			JsonObject config) {
+		
 		super();
 		this.start = start;
 		this.offset = offset;
-		this.element = element;
+		this.elementSupplier = elementSupplier;
+		this.elementFunction = elementFunction;
+		this.config = config;
 	}
 
 	public int getStart() {
@@ -35,10 +64,32 @@ public class ExtractedPosition {
 		return offset;
 	}
 
-	public AccessLogElement getElement() {
-		return element;
+	public Supplier<AccessLogElement> getElementSupplier() {
+		return elementSupplier;
 	}
 	
+	public Function<JsonObject,AccessLogElement> getElementFunction(){
+		return elementFunction;
+	}
+
+	public JsonObject getConfig() {
+		return config;
+	}
 	
-	
+	public boolean isCustom() {
+		
+		if(elementSupplier != null) {
+			
+			return !elementSupplier.get().getClass().getName().startsWith("com.romanpierson.vertx.web.accesslogger.configuration.element");
+			
+		}else if(elementFunction != null && config != null) {
+			
+			return !elementFunction.apply(config).getClass().getName().startsWith("com.romanpierson.vertx.web.accesslogger.configuration.element");
+			
+		}else {
+			throw new IllegalStateException("Extracted Position must either have element supplier or function");
+		}
+		
+	}
+		
 }

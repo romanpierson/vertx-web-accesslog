@@ -12,6 +12,11 @@
  */
 package com.romanpierson.vertx.web.accesslogger.configuration.element.impl;
 
+import static com.romanpierson.vertx.web.accesslogger.configuration.pattern.PatternResolver.extractBestPositionFromPostfixPatternIfApplicable;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
 import com.romanpierson.vertx.web.accesslogger.configuration.element.AccessLogElement;
 import com.romanpierson.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
 
@@ -19,38 +24,26 @@ import io.vertx.core.json.JsonObject;
 
 public class StaticValueElement implements AccessLogElement{
 
-	private final String value; 
+	private String value; 
 	
-	private StaticValueElement(final String value) {
-		this.value = value;
+	public static StaticValueElement of(final String value) {
+		
+		StaticValueElement element = new StaticValueElement();
+		element.value = value;
+		
+		return element;
 	}
 	
-	public StaticValueElement() {
-		this.value = null;
-	}
-
 	@Override
-	public ExtractedPosition findInRawPatternInternal(final String rawPattern) {
+	public Collection<ExtractedPosition> findInRawPatternInternal(final String rawPattern) {
 		
-		final int index = rawPattern.indexOf("%{");
+		Collection<ExtractedPosition> foundPositions = new ArrayList<>(1);
 		
-		if(index >= 0){
-				
+		extractBestPositionFromPostfixPatternIfApplicable(rawPattern, "static", 
+			json -> StaticValueElement.of(json.getString("configuration")))
+			.ifPresent(foundPositions::add);
 			
-				int indexEndConfiguration = rawPattern.indexOf('}');
-			
-				if(indexEndConfiguration > index 
-					&& rawPattern.length() > indexEndConfiguration
-					&& (rawPattern.substring(indexEndConfiguration + 1).startsWith("static")))
-				{
-					String configurationString = rawPattern.substring(index + 2, indexEndConfiguration);
-					return new ExtractedPosition(index, configurationString.length() + 9, new StaticValueElement(configurationString));
-				}
-			
-		}
-		
-		
-		return null;
+		return foundPositions;
 	}
 	
 	@Override

@@ -10,7 +10,7 @@ repositories {
 }
 
 ext{
-	vertxVersion = '4.3.5'
+	vertxVersion = '4.4.1'
 	jupiterVersion = '5.9.1'
 	jupiterLauncherVersion = '1.9.1'
 	slfApiVersion = '2.0.5'
@@ -34,6 +34,7 @@ dependencies {
 }
 
 test {
+	environment "envVar1", "envVal1"
     useJUnitPlatform()
     finalizedBy jacocoTestReport
 }
@@ -41,10 +42,10 @@ test {
 sourceCompatibility='1.8'
 targetCompatibility='1.8'
 
-jar.archiveFileName = "vertx-web-accesslog-1.5.0.jar"
+jar.archiveFileName = "vertx-web-accesslog-1.6.0_RC1.jar"
 
-task sourceJar(type: Jar) {
-    from sourceSets.main.allJava
+java {
+    withSourcesJar()
 }
 
 publishing {
@@ -53,13 +54,10 @@ publishing {
             
             groupId 'com.mdac'
             artifactId 'vertx-web-accesslog'
-            version '1.5.0'
+            version '1.6.0_RC1'
             
             from components.java
 
-            artifact sourceJar {
-                classifier "sources"
-            }
         }
     }
 }
@@ -81,6 +79,6 @@ jacocoTestReport {
 }
 
 wrapper() {
-  gradleVersion = '7.6'
+  gradleVersion = '8.0.2'
 }
 

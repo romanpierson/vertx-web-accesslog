@@ -23,7 +23,7 @@ import io.vertx.core.json.JsonObject;
 public interface AccessLogElement {
 
 	
-	ExtractedPosition findInRawPatternInternal(String rawPattern);
+	Collection<ExtractedPosition> findInRawPatternInternal(String rawPattern);
 	
 	/**
 	 * 
@@ -32,11 +32,7 @@ public interface AccessLogElement {
 	 * @param rawPattern		The pattern you want to search on
 	 * @return					A matching extracted position or NULL
 	 */
-	default ExtractedPosition findInRawPattern(final String rawPattern){
-		
-		if(rawPattern == null || rawPattern.trim().length() == 0){
-			throw new IllegalArgumentException("Parameter rawPattern must not be empty");
-		}
+	default Collection<ExtractedPosition> findInRawPattern(final String rawPattern){
 		
 		return findInRawPatternInternal(rawPattern);
 		

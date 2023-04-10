@@ -12,15 +12,22 @@
  */
 package com.romanpierson.vertx.web.accesslogger.configuration.element.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Objects;
+
 import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants.Request.Data;
 import com.romanpierson.vertx.web.accesslogger.configuration.element.AccessLogElement;
 import com.romanpierson.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
+import com.romanpierson.vertx.web.accesslogger.util.FormatUtility;
+
+import static com.romanpierson.vertx.web.accesslogger.configuration.pattern.PatternResolver.extractBestPositionFromFixPatternIfApplicable;
 
 import io.vertx.core.json.JsonObject;
 
 public class HostElement implements AccessLogElement{
 
-	private final Mode mode;
+	private Mode mode;
 	
 	private enum Mode{
 		
@@ -30,58 +37,28 @@ public class HostElement implements AccessLogElement{
 		
 	}
 	
-	public HostElement(){
+	public static HostElement of(final Mode mode){
 		
-		this.mode = null;
+		Objects.requireNonNull(mode, "mode must not be  null");
 		
-	}
-	
-	public HostElement(final Mode mode){
+		HostElement element = new HostElement();
 		
-		if(mode == null){
-			throw new IllegalArgumentException("mode must not be  null");
-		}
+		element.mode = mode;
 		
-		this.mode = mode;
+		return element;
 		
 	}
 	
 	@Override
-	public ExtractedPosition findInRawPatternInternal(final String rawPattern) {
+	public Collection<ExtractedPosition> findInRawPatternInternal(final String rawPattern) {
 		
-		ExtractedPosition foundPosition = null;
+		Collection<ExtractedPosition> foundPositions = new ArrayList<>(3);
 		
-		String patternRemoteHost = "%h";
+		extractBestPositionFromFixPatternIfApplicable(rawPattern, "%h", () -> HostElement.of(Mode.REMOTE_HOST)).ifPresent(foundPositions::add);
+		extractBestPositionFromFixPatternIfApplicable(rawPattern, "%v", () -> HostElement.of(Mode.LOCAL_HOST)).ifPresent(foundPositions::add);
+		extractBestPositionFromFixPatternIfApplicable(rawPattern, "%p", () -> HostElement.of(Mode.LOCAL_PORT)).ifPresent(foundPositions::add);
 		
-		int index = rawPattern.indexOf(patternRemoteHost);
-		
-		if(index >= 0){
-			
-				foundPosition = new ExtractedPosition(index, patternRemoteHost.length(), new HostElement(Mode.REMOTE_HOST));
-			
-		}
-		
-		String patternLocalHost = "%v";
-		
-		index = rawPattern.indexOf(patternLocalHost);
-		
-		if(index >= 0 && (foundPosition == null || index < foundPosition.getStart())){
-			
-			foundPosition = new ExtractedPosition(index, patternLocalHost.length(), new HostElement(Mode.LOCAL_HOST));
-			
-		}
-		
-		String patternLocalPort = "%p";
-		
-		index = rawPattern.indexOf(patternLocalPort);
-		
-		if(index >= 0 && (foundPosition == null || index < foundPosition.getStart())){
-			
-			foundPosition = new ExtractedPosition(index, patternLocalPort.length(), new HostElement(Mode.LOCAL_PORT));
-			
-		}
-		
-		return foundPosition;
+		return foundPositions;
 	}
 	
 	@Override
@@ -90,17 +67,15 @@ public class HostElement implements AccessLogElement{
 		switch (this.mode){
 		
 			case LOCAL_HOST:
-				return values.containsKey(Data.Type.LOCAL_HOST.getFieldName()) ? values.getString(Data.Type.LOCAL_HOST.getFieldName()) : null;
+				return FormatUtility.getStringOrNull(values, Data.Type.LOCAL_HOST.getFieldName());
 			case LOCAL_PORT:
-				return values.containsKey(Data.Type.LOCAL_PORT.getFieldName()) ? ("" + values.getInteger(Data.Type.LOCAL_PORT.getFieldName())) : null;
+				return FormatUtility.getIntegerOrNull(values, Data.Type.LOCAL_PORT.getFieldName());
 			case REMOTE_HOST:
-				return values.containsKey(Data.Type.REMOTE_HOST.getFieldName()) ? values.getString(Data.Type.REMOTE_HOST.getFieldName()) : null;
+				return FormatUtility.getStringOrNull(values, Data.Type.REMOTE_HOST.getFieldName());
 			default:
-				break;
+				throw new IllegalStateException(String.format("mode %s not supported", this.mode.name()));
 			
 		}
-		
-		return null;
 	}
 	
 }

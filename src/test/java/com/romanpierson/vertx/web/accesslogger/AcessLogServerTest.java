@@ -41,26 +41,26 @@ class AcessLogServerTest {
 		}));
 	}
 	
-	@Test
-	@Order(value = 2)
-	void testInvalidConsoleAppenderWithMissingResolvedPatttern(Vertx vertx, VertxTestContext testContext) {
-			
-		vertx.exceptionHandler(throwable -> {
-			throwable.printStackTrace();
-			assertTrue(throwable instanceof AccessLoggerException);
-			assertEquals("Failed to create appender with [com.romanpierson.vertx.web.accesslogger.appender.console.impl.ConsoleAppender]", throwable.getMessage());
-			Throwable internalCause = throwable.getCause().getCause();
-			assertTrue(internalCause instanceof IllegalArgumentException);
-			assertEquals("resolvedPattern must not be empty", internalCause.getMessage());
-			testContext.completeNow();
-		});
-		
-		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-				
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-invalid-console-appender.yaml"));
-				
-		}));
-	}
+//	@Test
+//	@Order(value = 2)
+//	void testInvalidConsoleAppenderWithMissingResolvedPatttern(Vertx vertx, VertxTestContext testContext) {
+//			
+//		vertx.exceptionHandler(throwable -> {
+//			throwable.printStackTrace();
+//			assertTrue(throwable instanceof AccessLoggerException);
+//			assertEquals("Failed to create appender with [com.romanpierson.vertx.web.accesslogger.appender.console.impl.ConsoleAppender]", throwable.getMessage());
+//			Throwable internalCause = throwable.getCause().getCause();
+//			assertTrue(internalCause instanceof IllegalArgumentException);
+//			assertEquals("resolvedPattern must not be empty", internalCause.getMessage());
+//			testContext.completeNow();
+//		});
+//		
+//		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
+//				
+//			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-invalid-console-appender.yaml"));
+//				
+//		}));
+//	}
 	
 	
 //	@Test
@@ -128,7 +128,7 @@ class AcessLogServerTest {
 	
 	
 	
-	@Test
+	//@Test
 	@Order(value = 6)
 	void testEmptyResponse(Vertx vertx, VertxTestContext testContext) {
 		

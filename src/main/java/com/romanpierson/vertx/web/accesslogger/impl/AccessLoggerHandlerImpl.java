@@ -14,7 +14,9 @@ package com.romanpierson.vertx.web.accesslogger.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants;
 import com.romanpierson.vertx.web.accesslogger.AccessLoggerHandler;
@@ -61,6 +63,8 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 	
 	private static final Object lock = new Object();
 	private static boolean isProducerVerticleCreated = false;
+	
+	private Map<String,Supplier<Object>> additionalDataCollectors;
 	
 	public AccessLoggerHandlerImpl(final JsonObject handlerConfiguration) {
 		
@@ -173,9 +177,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 			jsonValues.put(Data.Type.QUERY.getFieldName(), request.query());
 		}
 		
-		if(response.bytesWritten() > 0){
-			jsonValues.put(Data.Type.BYTES_SENT.getFieldName(), response.bytesWritten());
-		}
+		jsonValues.put(Data.Type.BYTES_SENT.getFieldName(), response.bytesWritten());
 		
 		if(requiresIncomingHeaders) {
 			jsonValues.put(Data.Type.REQUEST_HEADERS.getFieldName(), extractHeaders(request.headers()));
@@ -189,6 +191,13 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 			jsonValues.put(Data.Type.COOKIES.getFieldName(), extractCookies(context.request().cookies()));
 		}
 		
+		//TODO
+//		for(Map.Entry<String, Supplier<Object>> additionalDataCollector : additionalDataCollectors.entrySet()) {
+//			
+//			jsonValues.put(additionalDataCollector.getKey(), additionalDataCollector.getValue().get());
+//			
+//		}
+		
 		eventBus.send(AccessLoggerConstants.EVENTBUS_RAW_EVENT_NAME, jsonValues);
 		
 	}
@@ -197,6 +206,8 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 		
 		JsonObject headers = new JsonObject();
 		headersMap.forEach(entry -> headers.put(entry.getKey(), entry.getValue()));
+		
+		System.out.println(headers);
 		
 		return headers;
 		

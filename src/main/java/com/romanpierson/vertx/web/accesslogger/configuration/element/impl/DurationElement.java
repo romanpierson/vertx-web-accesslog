@@ -12,74 +12,52 @@
  */
 package com.romanpierson.vertx.web.accesslogger.configuration.element.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants.Request.Data;
 import com.romanpierson.vertx.web.accesslogger.configuration.element.AccessLogElement;
 import com.romanpierson.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
+import static com.romanpierson.vertx.web.accesslogger.configuration.pattern.PatternResolver.extractBestPositionFromFixPatternIfApplicable;
 
 import io.vertx.core.json.JsonObject;
 
 public class DurationElement implements AccessLogElement{
 
-	public enum TimeUnit{
+	private enum TimeUnit{
+		
 		SECONDS,
 		MILLISECONDS
-	}
-
-	private static final Long INVALID_TS = Long.valueOf(-1);
-	
-	private final TimeUnit timeUnit;
-	
-	public DurationElement(){
-	
-		this.timeUnit = null;
 		
 	}
 	
-	public DurationElement(final TimeUnit timeUnit){
+	private TimeUnit timeUnit;
+	
+	public static DurationElement of(final TimeUnit timeUnit){
 		
-		this.timeUnit = timeUnit;
+		DurationElement element = new DurationElement();
+		element.timeUnit = timeUnit;
 		
+		return element;
 	}
 	
 	
 	@Override
-	public ExtractedPosition findInRawPatternInternal(final String rawPattern) {
+	public Collection<ExtractedPosition> findInRawPatternInternal(final String rawPattern) {
 		
-		ExtractedPosition foundPosition = null;
+		Collection<ExtractedPosition> foundPositions = new ArrayList<>(2);
 		
-		String patternMillis = "%D";
+		extractBestPositionFromFixPatternIfApplicable(rawPattern, "%D", () -> DurationElement.of(TimeUnit.MILLISECONDS)).ifPresent(foundPositions::add);
+		extractBestPositionFromFixPatternIfApplicable(rawPattern, "%T", () -> DurationElement.of(TimeUnit.SECONDS)).ifPresent(foundPositions::add);
 		
-		int index = rawPattern.indexOf(patternMillis);
-		
-		if(index >= 0){
-			
-			foundPosition = new ExtractedPosition(index, patternMillis.length(), new DurationElement(TimeUnit.MILLISECONDS));
-			
-		}
-		
-		String patternSeconds = "%T";
-		
-		index = rawPattern.indexOf(patternSeconds);
-		
-		if(index >= 0 && (foundPosition == null || index < foundPosition.getStart())){
-			
-			foundPosition = new ExtractedPosition(index, patternSeconds.length(), new DurationElement(TimeUnit.SECONDS));
-			
-		}
-		
-		return foundPosition;
+		return foundPositions;
 	}
-
 	
 	@Override
 	public String getFormattedValue(final JsonObject values) {
 		
-		final Long startTS = values.getLong(Data.Type.START_TS_MILLIS.getFieldName(), INVALID_TS);
-		final Long endTS = values.getLong(Data.Type.END_TS_MILLIS.getFieldName(), INVALID_TS);
-		
-		if(startTS == null || endTS == null){
-			return "-";
-		}
+		final Long startTS = values.getLong(Data.Type.START_TS_MILLIS.getFieldName());
+		final Long endTS = values.getLong(Data.Type.END_TS_MILLIS.getFieldName());
 		
 		long duration = endTS.longValue() - startTS.longValue();
 		
@@ -87,7 +65,7 @@ public class DurationElement implements AccessLogElement{
 			duration = duration / 1000;
 		}
 		
-		return duration > 0 ? "" + duration : "0";
+		return duration > 0 ? Long.toString(duration) : "0";
 	}
 
 }

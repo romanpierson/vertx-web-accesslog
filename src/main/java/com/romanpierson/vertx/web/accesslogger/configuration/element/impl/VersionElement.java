@@ -12,16 +12,27 @@
  */
 package com.romanpierson.vertx.web.accesslogger.configuration.element.impl;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collection;
 
+import com.romanpierson.vertx.web.accesslogger.configuration.element.AccessLogElement;
+import com.romanpierson.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
+import static com.romanpierson.vertx.web.accesslogger.configuration.pattern.PatternResolver.extractBestPositionFromFixPatternIfApplicable;
 import com.romanpierson.vertx.web.accesslogger.util.VersionUtility;
 
 import io.vertx.core.json.JsonObject;
 
-public class VersionElement extends GenericAccessLogElement{
+public class VersionElement implements AccessLogElement{
 
-	public VersionElement(){
-		super(Arrays.asList("%H"), null);
+	@Override
+	public Collection<ExtractedPosition> findInRawPatternInternal(final String rawPattern) {
+		
+		Collection<ExtractedPosition> foundPositions = new ArrayList<>(1);
+		
+		extractBestPositionFromFixPatternIfApplicable(rawPattern, "%H", () -> new VersionElement()).ifPresent(foundPositions::add);
+		
+		return foundPositions;
+		
 	}
 
 	@Override

@@ -17,8 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 
-import com.romanpierson.vertx.web.accesslogger.util.VersionUtility;
-
 import io.vertx.core.json.JsonObject;
 
 /**

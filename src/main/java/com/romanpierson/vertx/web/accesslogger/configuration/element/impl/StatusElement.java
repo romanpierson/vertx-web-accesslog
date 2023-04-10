@@ -12,14 +12,36 @@
  */
 package com.romanpierson.vertx.web.accesslogger.configuration.element.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants.Request.Data;
+import com.romanpierson.vertx.web.accesslogger.configuration.element.AccessLogElement;
+import com.romanpierson.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
+import static com.romanpierson.vertx.web.accesslogger.configuration.pattern.PatternResolver.extractBestPositionFromFixPatternsIfApplicable;
 
-public class StatusElement extends GenericAccessLogElement{
+import io.vertx.core.json.JsonObject;
 
-	public StatusElement(){
-		super(Arrays.asList("sc-status", "%s"), Data.Type.STATUS.getFieldName());
+public class StatusElement implements AccessLogElement{
+
+	
+	@Override
+	public Collection<ExtractedPosition> findInRawPatternInternal(final String rawPattern) {
+		
+		Collection<ExtractedPosition> foundPositions = new ArrayList<>(2);
+		
+		extractBestPositionFromFixPatternsIfApplicable(rawPattern, Arrays.asList("sc-status", "%s"), () -> new StatusElement()).ifPresent(foundPositions::addAll);
+		
+		return foundPositions;
+		
+	}
+	
+	@Override
+	public String getFormattedValue(final JsonObject values) {
+		
+		return Integer.toString(values.getInteger(Data.Type.STATUS.getFieldName()));
+		
 	}
 	
 }

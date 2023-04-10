@@ -12,15 +12,21 @@
  */
 package com.romanpierson.vertx.web.accesslogger.configuration.element.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants.Request.Data;
 import com.romanpierson.vertx.web.accesslogger.configuration.element.AccessLogElement;
 import com.romanpierson.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
+import static com.romanpierson.vertx.web.accesslogger.configuration.pattern.PatternResolver.extractBestPositionFromFixPatternIfApplicable;
 
 import io.vertx.core.json.JsonObject;
 
 public class BytesSentElement implements AccessLogElement{
 
-	private final Mode mode;
+	private Mode mode;
+	
+	private final Long DEFAULT_VALUE = Long.valueOf(0);
 	
 	private enum Mode{
 		
@@ -29,57 +35,35 @@ public class BytesSentElement implements AccessLogElement{
 		
 	}
 	
-	public BytesSentElement(){
+	public static BytesSentElement of(final Mode mode){
 		
-		this.mode = null;
+		BytesSentElement element = new BytesSentElement();
+		element.mode = mode;
 		
-	}
-	
-	private BytesSentElement(final Mode mode){
-		
-		this.mode = mode;
-		
+		return element;
 	}
 	
 	@Override
-	public ExtractedPosition findInRawPatternInternal(final String rawPattern) {
+	public Collection<ExtractedPosition> findInRawPatternInternal(final String rawPattern) {
 		
-		ExtractedPosition foundPosition = null;
+		Collection<ExtractedPosition> foundPositions = new ArrayList<>(2);
 		
-		String patternDash = "%b";
+		extractBestPositionFromFixPatternIfApplicable(rawPattern, "%b", () -> BytesSentElement.of(Mode.NO_BYTES_DASH)).ifPresent(foundPositions::add);
+		extractBestPositionFromFixPatternIfApplicable(rawPattern, "%B", () -> BytesSentElement.of(Mode.NO_BYTES_NULL)).ifPresent(foundPositions::add);
+
+		return foundPositions;
 		
-		int index = rawPattern.indexOf(patternDash);
-		
-		if(index >= 0){
-			
-			foundPosition = new ExtractedPosition(index, patternDash.length(), new BytesSentElement(Mode.NO_BYTES_DASH));
-			
-		}
-		
-		String patternNull = "%B";
-		
-		index = rawPattern.indexOf(patternNull);
-		
-		if(index >= 0 && (foundPosition == null || index < foundPosition.getStart())){
-			
-			foundPosition = new ExtractedPosition(index, patternNull.length(), new BytesSentElement(Mode.NO_BYTES_NULL));
-			
-		}
-		
-		return foundPosition;
 	}
 	
 	@Override
 	public String getFormattedValue(final JsonObject values) {
 	
-		if(values.containsKey(Data.Type.BYTES_SENT.getFieldName())){
-			
-			return "" + values.getLong(Data.Type.BYTES_SENT.getFieldName());
-			
+		final long bytes = values.getLong(Data.Type.BYTES_SENT.getFieldName(), DEFAULT_VALUE);
+		
+		if(bytes > 0) {
+			return Long.toString(bytes);
 		} else {
-			
 			return Mode.NO_BYTES_DASH.equals(this.mode) ? "-" : "0";
-			
 		}
 		
 	}

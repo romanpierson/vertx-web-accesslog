@@ -14,14 +14,15 @@ package com.romanpierson.vertx.web.accesslogger.configuration.pattern;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ServiceLoader;
 
 import org.junit.jupiter.api.Test;
 
 import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants.Request.Data;
+import com.romanpierson.vertx.web.accesslogger.configuration.element.impl.DurationElement;
 import com.romanpierson.vertx.web.accesslogger.configuration.element.impl.RequestElement;
 import com.romanpierson.vertx.web.accesslogger.util.VersionUtility;
 
@@ -29,17 +30,36 @@ import io.vertx.core.json.JsonObject;
 
 /**
  * 
- * Tests {@link RequestElement}
+ * Tests some special conditions for {@link DurationElement}
  * 
  * @author Roman Pierson
  *
  */
-public class RequestElementTest {
+public class DurationElementCustomTest {
 	
 	final String httpVersion = "HTTP_1_1";
 	final Map<String, Object> valuesWithQuery = getAllValues("uri-value", "method-value", "query-value", httpVersion); 
 	final Map<String, Object> valuesWithoutQuery = getAllValues("uri-value", "method-value", null, httpVersion); 
 
+	//@Test
+	public void testFindInRawPatternApacheFirstRequestLine(){
+		
+		//DurationElement.of(TimeUnit.SECONDS);
+		
+		
+		final String expectedOutputWithQuery = "method-value uri-value?query-value " + VersionUtility.getFormattedValue(new JsonObject(valuesWithQuery));
+		final String expectedOutputWithoutQuery = "method-value uri-value " + VersionUtility.getFormattedValue(new JsonObject(valuesWithQuery));
+		
+		ExtractedPosition ep = new RequestElement().findInRawPattern("%r").iterator().next();
+		assertNotNull(ep);
+		assertEquals(0, ep.getStart());
+		assertEquals("%r".length(), ep.getOffset());
+		
+		// Test if the output of the looked up element is correct
+		assertEquals(expectedOutputWithQuery, ep.getElementSupplier().get().getFormattedValue(new JsonObject(valuesWithQuery)));
+		assertEquals(expectedOutputWithoutQuery, ep.getElementSupplier().get().getFormattedValue(new JsonObject(valuesWithoutQuery)));
+	}
+	
 	/**
 	@Test
 	public void testFindInRawPatternInvalidInputNull(){

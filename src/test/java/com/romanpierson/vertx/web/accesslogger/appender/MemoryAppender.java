@@ -13,7 +13,6 @@
 package com.romanpierson.vertx.web.accesslogger.appender;
 
 import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants;
-import com.romanpierson.vertx.web.accesslogger.appender.Appender;
 
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;

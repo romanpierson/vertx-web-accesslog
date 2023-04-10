@@ -12,19 +12,22 @@
  */
 package com.romanpierson.vertx.web.accesslogger.configuration.element.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
 import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants.Request.Data;
 import com.romanpierson.vertx.web.accesslogger.configuration.element.AccessLogElement;
 import com.romanpierson.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
+import static com.romanpierson.vertx.web.accesslogger.configuration.pattern.PatternResolver.extractBestPositionFromFixPatternsIfApplicable;
+import static com.romanpierson.vertx.web.accesslogger.configuration.pattern.PatternResolver.extractBestPositionFromFixPatternIfApplicable;
 import com.romanpierson.vertx.web.accesslogger.util.VersionUtility;
 
 import io.vertx.core.json.JsonObject;
 
 public class RequestElement implements AccessLogElement{
 
-	private final RequestLogMode requestLogMode;
+	private RequestLogMode requestLogMode;
 	
 	private enum RequestLogMode{
 		
@@ -35,66 +38,25 @@ public class RequestElement implements AccessLogElement{
 		
 	}
 	
-	public RequestElement() {
-		this.requestLogMode = null;
-	}
-	
-	private RequestElement(final RequestLogMode requestLogMode) {
-		this.requestLogMode = requestLogMode;
+	public static RequestElement of(final RequestLogMode requestLogMode) {
+		
+		RequestElement element = new RequestElement();
+		element.requestLogMode = requestLogMode;
+		
+		return element;
 	}
 
 	@Override
-	public ExtractedPosition findInRawPatternInternal(final String rawPattern) {
+	public Collection<ExtractedPosition> findInRawPatternInternal(final String rawPattern) {
 		
-		ExtractedPosition foundPosition = null;
+		Collection<ExtractedPosition> foundPositions = new ArrayList<>(6);
 		
-		// Apache request format
-		final String requestPattern = "%r";
-		int index = rawPattern.indexOf(requestPattern);
-			
-		if(index >= 0){
-				
-			foundPosition = new ExtractedPosition(index, requestPattern.length(), new RequestElement(RequestLogMode.APACHE_FIRST_REQUEST_LINE));
-			
-		}
+		extractBestPositionFromFixPatternIfApplicable(rawPattern, "%r", () -> RequestElement.of(RequestLogMode.APACHE_FIRST_REQUEST_LINE)).ifPresent(foundPositions::add);
+		extractBestPositionFromFixPatternsIfApplicable(rawPattern, Arrays.asList("%U", "cs-uri-stem"), () -> RequestElement.of(RequestLogMode.URI)).ifPresent(foundPositions::addAll);
+		extractBestPositionFromFixPatternsIfApplicable(rawPattern, Arrays.asList("%q", "cs-uri-query"), () -> RequestElement.of(RequestLogMode.QUERY_STRING)).ifPresent(foundPositions::addAll);
+		extractBestPositionFromFixPatternIfApplicable(rawPattern, "cs-uri", () -> RequestElement.of(RequestLogMode.URI_QUERY)).ifPresent(foundPositions::add);
 		
-		// URI mode only
-		final Collection<String> urlPatterns = Arrays.asList("%U", "cs-uri-stem");
-		
-		for (final String urlPattern : urlPatterns){
-			index = rawPattern.indexOf(urlPattern);
-			
-			if(index >= 0 && (foundPosition == null || index < foundPosition.getStart())){
-				
-				foundPosition = new ExtractedPosition(index, urlPattern.length(), new RequestElement(RequestLogMode.URI));
-				
-			}
-		}
-		
-		// URI query mode only
-		final Collection<String> queryOnlyPatterns = Arrays.asList("%q", "cs-uri-query");
-				
-		for (final String queryOnlyPattern : queryOnlyPatterns){
-			index = rawPattern.indexOf(queryOnlyPattern);
-					
-			if(index >= 0 && (foundPosition == null || index < foundPosition.getStart())){
-				
-				foundPosition = new ExtractedPosition(index, queryOnlyPattern.length(), new RequestElement(RequestLogMode.QUERY_STRING));
-				
-			}
-		}
-		
-		// Complete URI including query
-		final String uriQueryPattern = "cs-uri";
-		index = rawPattern.indexOf(uriQueryPattern);
-			
-		if(index >= 0 && (foundPosition == null || index < foundPosition.getStart())){
-				
-			foundPosition = new ExtractedPosition(index, uriQueryPattern.length(), new RequestElement(RequestLogMode.URI_QUERY));
-			
-		}
-		
-		return foundPosition;
+		return foundPositions;
 	}
 
 

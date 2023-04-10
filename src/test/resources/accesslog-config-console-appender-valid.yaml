@@ -1,0 +1,6 @@
+isAutoDeployProducerVerticle: false
+configurations:
+  - identifier: accesslog-plain
+    logPattern: "cs-uri"
+    appenders:
+      - appenderClassName : com.romanpierson.vertx.web.accesslogger.appender.console.impl.ConsoleAppender

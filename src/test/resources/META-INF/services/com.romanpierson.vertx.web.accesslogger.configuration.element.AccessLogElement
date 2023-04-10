@@ -10,3 +10,6 @@ com.romanpierson.vertx.web.accesslogger.configuration.element.impl.StatusElement
 com.romanpierson.vertx.web.accesslogger.configuration.element.impl.VersionElement
 com.romanpierson.vertx.web.accesslogger.configuration.element.impl.StaticValueElement
 com.romanpierson.vertx.web.accesslogger.configuration.element.impl.EnvironmentValueElement
+com.romanpierson.vertx.web.accesslogger.configuration.element.impl.ShouldNotShowElement
+com.romanpierson.custom.element.ShouldShowElement
+com.romanpierson.custom.element.ShouldNotShowElement

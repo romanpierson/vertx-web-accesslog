@@ -12,19 +12,21 @@
  */
 package com.romanpierson.vertx.web.accesslogger.configuration.element.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
 import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants.Request.Data;
 import com.romanpierson.vertx.web.accesslogger.configuration.element.AccessLogElement;
 import com.romanpierson.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
+import static com.romanpierson.vertx.web.accesslogger.configuration.pattern.PatternResolver.extractBestPositionFromPostfixPatternIfApplicable;
 
 import io.vertx.core.json.JsonObject;
 
 public class HeaderElement implements AccessLogElement{
 
-	private final Mode mode;
-	private final String identifier; 
+	private Mode mode;
+	private String identifier; 
 	
 	private enum Mode{
 		
@@ -32,39 +34,30 @@ public class HeaderElement implements AccessLogElement{
 		OUTGOING
 		
 	}
-	public HeaderElement() {
-		this.mode = null;
-		this.identifier = null;
-	}
 	
-	private HeaderElement(final Mode mode, final String identifier) {
-		this.mode = mode;
-		this.identifier = identifier;
+	public static HeaderElement of(final Mode mode, final String identifier) {
+		
+		HeaderElement element = new HeaderElement();
+		element.mode = mode;
+		element.identifier = identifier;
+		
+		return element;
 	}
 
 	@Override
-	public ExtractedPosition findInRawPatternInternal(final String rawPattern) {
+	public Collection<ExtractedPosition> findInRawPatternInternal(final String rawPattern) {
 		
-		final int index = rawPattern.indexOf("%{");
+		Collection<ExtractedPosition> foundPositions = new ArrayList<>(2);
 		
-		if(index >= 0){
-				
+		extractBestPositionFromPostfixPatternIfApplicable(rawPattern, "i", 
+			json -> HeaderElement.of(Mode.INCOMING, json.getString("configuration")))
+			.ifPresent(foundPositions::add);
+		
+		extractBestPositionFromPostfixPatternIfApplicable(rawPattern, "o", 
+			json -> HeaderElement.of(Mode.OUTGOING, json.getString("configuration")))
+			.ifPresent(foundPositions::add);
 			
-				int indexEndConfiguration = rawPattern.indexOf('}');
-			
-				if(indexEndConfiguration > index 
-					&& rawPattern.length() > indexEndConfiguration
-					&& (rawPattern.charAt(indexEndConfiguration + 1) == 'i' || rawPattern.charAt(indexEndConfiguration + 1) == 'o'))
-				{
-					String configurationString = rawPattern.substring(index + 2, indexEndConfiguration);
-					
-					return new ExtractedPosition(index, configurationString.length() + 4, new HeaderElement(rawPattern.charAt(indexEndConfiguration + 1) == 'i' ? Mode.INCOMING : Mode.OUTGOING, configurationString));
-				}
-			
-		}
-		
-		
-		return null;
+		return foundPositions;
 	}
 	
 	@Override

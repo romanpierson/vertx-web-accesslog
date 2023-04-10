@@ -1,5 +1,6 @@
 package com.romanpierson.vertx.web.accesslogger;
 
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -11,7 +12,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.opentest4j.AssertionFailedError;
 
 import com.romanpierson.vertx.test.verticle.SimpleJsonResponseVerticle;
 import com.romanpierson.vertx.web.accesslogger.exception.AccessLoggerException;
@@ -26,60 +26,31 @@ import io.vertx.junit5.VertxTestContext;
 
 @ExtendWith(VertxExtension.class)
 @TestMethodOrder(OrderAnnotation.class)
-class LoggingAppenderTest {
+class ConsoleAppenderTest {
 
 	@Test
 	@Order(value = 1)
-	void testInvalidConfig(Vertx vertx, VertxTestContext testContext) {
+	void testInvalidConsoleAppenderWithMissingResolvedPatttern(Vertx vertx, VertxTestContext testContext) {
 			
 		vertx.exceptionHandler(throwable -> {
-			
-			try {
-				assertTrue(throwable instanceof AccessLoggerException);
-				assertEquals("Failed to create appender with [com.romanpierson.vertx.web.accesslogger.appender.logging.impl.LoggingAppender]", throwable.getMessage());
-				Throwable internalCause = throwable.getCause().getCause();
-				assertTrue(internalCause instanceof IllegalArgumentException);
-				assertEquals("loggerName must not be empty", internalCause.getMessage());
-			}catch(AssertionFailedError ex) {
-				testContext.failNow(ex);
-			}
+			throwable.printStackTrace();
+			assertTrue(throwable instanceof AccessLoggerException);
+			assertEquals("Failed to create appender with [com.romanpierson.vertx.web.accesslogger.appender.console.impl.ConsoleAppender]", throwable.getMessage());
+			Throwable internalCause = throwable.getCause().getCause();
+			assertTrue(internalCause instanceof IllegalArgumentException);
+			assertEquals("resolvedPattern must not be empty", internalCause.getMessage());
 			testContext.completeNow();
 		});
 		
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
 				
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-logging-appender-invalid-loggername.yaml"));
+			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-invalid-console-appender.yaml"));
 				
 		}));
 	}
 	
 	@Test
 	@Order(value = 2)
-	void testInvalidLoggingAppenderWithMissingResolvedPatttern(Vertx vertx, VertxTestContext testContext) {
-			
-		vertx.exceptionHandler(throwable -> {
-			
-			try {
-				assertTrue(throwable instanceof AccessLoggerException);
-				assertEquals("Failed to create appender with [com.romanpierson.vertx.web.accesslogger.appender.logging.impl.LoggingAppender]", throwable.getMessage());
-				Throwable internalCause = throwable.getCause().getCause();
-				assertTrue(internalCause instanceof IllegalArgumentException);
-				assertEquals("resolvedPattern must not be empty", internalCause.getMessage());
-			}catch(AssertionFailedError ex) {
-				testContext.failNow(ex);
-			}
-			testContext.completeNow();
-		});
-		
-		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-				
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-logging-appender-invalid-logpattern.yaml"));
-				
-		}));
-	}
-	
-	@Test
-	@Order(value = 3)
 	// This tests using slf4j/logback that at the end logs again to console so we can grab it
 	void testWithValidData(Vertx vertx, VertxTestContext testContext) {
 			
@@ -91,7 +62,7 @@ class LoggingAppenderTest {
 		});
 		
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-logging-appender-valid.yaml"), testContext.succeeding(id2 -> {
+			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-console-appender-valid.yaml"), testContext.succeeding(id2 -> {
 					
 				System.setOut(new PrintStream(catchingStream));
 				
