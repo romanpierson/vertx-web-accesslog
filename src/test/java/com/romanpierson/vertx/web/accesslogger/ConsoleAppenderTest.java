@@ -44,7 +44,7 @@ class ConsoleAppenderTest {
 		
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
 				
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-invalid-console-appender.yaml"));
+			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-invalid-console-appender.yaml", 8102));
 				
 		}));
 	}
@@ -62,14 +62,14 @@ class ConsoleAppenderTest {
 		});
 		
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-console-appender-valid.yaml"), testContext.succeeding(id2 -> {
+			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-console-appender-valid.yaml", 8103), testContext.succeeding(id2 -> {
 					
 				System.setOut(new PrintStream(catchingStream));
 				
 				HttpClient client = vertx.createHttpClient();
 				
 				client
-					.request(HttpMethod.GET, 8080, "localhost", "/test")
+					.request(HttpMethod.GET, 8103, "localhost", "/test")
 					.compose(req -> req.send().compose(HttpClientResponse::body))
 					.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
 					

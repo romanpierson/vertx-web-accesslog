@@ -15,9 +15,11 @@ import io.vertx.ext.web.handler.BodyHandler;
 public class SimpleJsonResponseVerticle extends AbstractVerticle {
 
 	private final String configFile;
+	private final int port;
 	
-	public SimpleJsonResponseVerticle(String configFile) {
+	public SimpleJsonResponseVerticle(String configFile, int port) {
 		this.configFile = configFile;
+		this.port = port;
 	}
 	
     @Override
@@ -70,7 +72,7 @@ public class SimpleJsonResponseVerticle extends AbstractVerticle {
     						ctx.response().putHeader("Content-Type", "application/json; charset=utf-8").end(resultJson.encodePrettily());
     					});
     			
-    			vertx.createHttpServer().requestHandler(router).listen(8080);
+    			vertx.createHttpServer().requestHandler(router).listen(port);
     			
     			startPromise.complete();
     		}

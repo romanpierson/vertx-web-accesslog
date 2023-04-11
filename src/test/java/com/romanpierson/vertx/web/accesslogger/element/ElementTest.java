@@ -48,12 +48,12 @@ class ElementTest {
 		});
 		
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-elements-empty-result.yaml"), testContext.succeeding(id2 -> {
+			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-elements-empty-result.yaml", 8100), testContext.succeeding(id2 -> {
 				
 				HttpClient client = vertx.createHttpClient();
 				
 				client
-					.request(HttpMethod.GET, 8080, "localhost", "/empty")
+					.request(HttpMethod.GET, 8100, "localhost", "/empty")
 					.compose(req -> req.send().compose(HttpClientResponse::body))
 					.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
 							
@@ -93,7 +93,7 @@ class ElementTest {
 			assertEquals("HTTP/1.1", message.body().getString(6));
 			assertNotNull(message.body().getString(7));
 			assertEquals("localhost", message.body().getString(8));
-			assertEquals("8080", message.body().getString(9));
+			assertEquals("8101", message.body().getString(9));
 			assertEquals("GET", message.body().getString(10));
 			assertEquals("GET", message.body().getString(11));
 			assertEquals("GET /nonEmpty?foo=bar HTTP/1.1", message.body().getString(12));
@@ -116,12 +116,12 @@ class ElementTest {
 		});
 		
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-elements-result.yaml"), testContext.succeeding(id2 -> {
+			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-elements-result.yaml", 8101), testContext.succeeding(id2 -> {
 				
 				WebClient client = WebClient.create(vertx);
 				
 				client
-					.request(HttpMethod.GET, 8080, "localhost", "/nonEmpty?foo=bar")
+					.request(HttpMethod.GET, 8101, "localhost", "/nonEmpty?foo=bar")
 					.putHeader("header1", "header1val")
 					.send()
 					//.onComplete(null)
