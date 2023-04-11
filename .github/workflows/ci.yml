@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  hotspot-supported:
+  ci:
     name: Any (supported)
     strategy:
       fail-fast: false
@@ -15,10 +15,10 @@ jobs:
         java: [ 11 ]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java }}
-          distribution: adopt
+          distribution: temurin
       - name: Build project
         run: ./gradlew clean build
