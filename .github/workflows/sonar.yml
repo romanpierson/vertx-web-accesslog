@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v2
         with:
-          java-version: 8
+          java-version: 11
           distribution: adopt
       - name: Build project
         run: ./gradlew clean build  sonarqube -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=romanpierson -Dsonar.projectKey=romanpierson_vertx-web-accesslog
