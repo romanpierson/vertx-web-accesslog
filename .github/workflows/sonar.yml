@@ -20,5 +20,5 @@ jobs:
           java-version: 8
           distribution: adopt
       - name: Build project
-        run: ./gradlew clean build 
+        run: ./gradlew clean build  sonarqube -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=romanpierson -Dsonar.projectKey=romanpierson_vertx-web-accesslog
  
