@@ -58,6 +58,12 @@ class EventBusAppenderTest {
 				
 				HttpClient client = vertx.createHttpClient();
 				
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
 				client
 					.request(HttpMethod.GET, 8106, "localhost", "/test")
 					.compose(req -> req.send().compose(HttpClientResponse::body))
@@ -86,6 +92,12 @@ class EventBusAppenderTest {
 			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-eventbus-appender-existing-address.yaml", 8107), testContext.succeeding(id2 -> {
 				
 				HttpClient client = vertx.createHttpClient();
+				
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				
 				client
 					.request(HttpMethod.GET, 8107, "localhost", "/test")

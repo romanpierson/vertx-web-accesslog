@@ -68,6 +68,12 @@ class ConsoleAppenderTest {
 				
 				HttpClient client = vertx.createHttpClient();
 				
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
 				client
 					.request(HttpMethod.GET, 8103, "localhost", "/test")
 					.compose(req -> req.send().compose(HttpClientResponse::body))

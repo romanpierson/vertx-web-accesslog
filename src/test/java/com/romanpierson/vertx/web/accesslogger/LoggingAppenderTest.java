@@ -93,6 +93,12 @@ class LoggingAppenderTest {
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
 			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-logging-appender-valid.yaml", 8110), testContext.succeeding(id2 -> {
 					
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
 				System.setOut(new PrintStream(catchingStream));
 				
 				HttpClient client = vertx.createHttpClient();

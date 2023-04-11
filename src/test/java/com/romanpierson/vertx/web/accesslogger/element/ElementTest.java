@@ -52,6 +52,12 @@ class ElementTest {
 				
 				HttpClient client = vertx.createHttpClient();
 				
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
 				client
 					.request(HttpMethod.GET, 8100, "localhost", "/empty")
 					.compose(req -> req.send().compose(HttpClientResponse::body))
@@ -119,6 +125,12 @@ class ElementTest {
 			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-elements-result.yaml", 8101), testContext.succeeding(id2 -> {
 				
 				WebClient client = WebClient.create(vertx);
+				
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				
 				client
 					.request(HttpMethod.GET, 8101, "localhost", "/nonEmpty?foo=bar")

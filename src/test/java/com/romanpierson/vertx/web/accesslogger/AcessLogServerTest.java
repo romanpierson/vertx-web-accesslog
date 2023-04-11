@@ -128,13 +128,19 @@ class AcessLogServerTest {
 	
 	
 	
-	//@Test
+	@Test
 	@Order(value = 6)
 	void testEmptyResponse(Vertx vertx, VertxTestContext testContext) {
 		
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
 			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-all-valid-console-appender.yaml", 8112), testContext.succeeding(id2 -> {
 				HttpClient client = vertx.createHttpClient();
+				
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				
 				client
 					.request(HttpMethod.GET, 8112, "localhost", "/empty")
