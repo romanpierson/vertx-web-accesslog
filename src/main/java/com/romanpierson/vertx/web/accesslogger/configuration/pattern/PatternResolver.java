@@ -43,8 +43,6 @@ public class PatternResolver {
 		
 		while(rawPatternInEvaluation != null && rawPatternInEvaluation.length() > 0){
 		
-			//int bestStart = -1;
-			//int bestOffset = 0;
 			ExtractedPosition currentBestMatchingElement = null;
 			
 			for(final AccessLogElement element : availableElements){
@@ -83,27 +81,6 @@ public class PatternResolver {
 							}
 						}
 						
-						// Passed element starts later then the best we have for now so we can ignore it
-						
-//						
-//						if(matchingElement.getStart() == bestStart) {
-//							
-//							if(matchingElement.getOffset() > bestOffset) {
-//								// Trying to retain some of the logic
-//								// If the start position is equal then we must have a duplicate pattern use the item with the shorter length
-//								continue;
-//							}
-//							
-//							if(matchingElement.getOffset() == bestOffset  ) {
-//								// All identical - we give priority to non default elements to allow overwriting same pattern with custom elements
-//								
-//							}
-//							
-//						}
-//	
-//						bestStart = matchingElement.getStart();
-//						bestOffset = matchingElement.getOffset();
-//						bestMatchingElement = matchingElement;
 					}
 				}
 			}

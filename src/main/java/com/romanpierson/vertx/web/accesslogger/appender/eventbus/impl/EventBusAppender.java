@@ -32,7 +32,7 @@ public class EventBusAppender implements Appender {
 
 private static final String CONFIG_KEY_TARGET_ADDRESS = "targetAddress";
 
-private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
 	private final EventBus vertxEventBus;
 	private final String eventBusTargetAddress;

@@ -14,9 +14,7 @@ package com.romanpierson.vertx.web.accesslogger.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
 import java.util.Set;
-import java.util.function.Supplier;
 
 import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants;
 import com.romanpierson.vertx.web.accesslogger.AccessLoggerHandler;
@@ -64,8 +62,6 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 	private static final Object lock = new Object();
 	private static boolean isProducerVerticleCreated = false;
 	
-	private Map<String,Supplier<Object>> additionalDataCollectors;
-	
 	public AccessLoggerHandlerImpl(final JsonObject handlerConfiguration) {
 		
 		if(handlerConfiguration == null || handlerConfiguration.getJsonArray(HandlerConfiguration.CONFIG_KEY_CONFIGURATIONS, new JsonArray()).size() <= 0){
@@ -76,7 +72,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 		
 		eventBus = Vertx.currentContext().owner().eventBus();
 		
-		if(handlerConfiguration.getBoolean(HandlerConfiguration.CONFIG_KEY_IS_AUTO_DEPLOY_PRODUCER_VERTICLE, true)) {
+		if(Boolean.TRUE.equals(handlerConfiguration.getBoolean(HandlerConfiguration.CONFIG_KEY_IS_AUTO_DEPLOY_PRODUCER_VERTICLE, true))) {
 			
 			synchronized(lock) {
 				if(!isProducerVerticleCreated) {
@@ -191,13 +187,6 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 			jsonValues.put(Data.Type.COOKIES.getFieldName(), extractCookies(context.request().cookies()));
 		}
 		
-		//TODO
-//		for(Map.Entry<String, Supplier<Object>> additionalDataCollector : additionalDataCollectors.entrySet()) {
-//			
-//			jsonValues.put(additionalDataCollector.getKey(), additionalDataCollector.getValue().get());
-//			
-//		}
-		
 		eventBus.send(AccessLoggerConstants.EVENTBUS_RAW_EVENT_NAME, jsonValues);
 		
 	}
@@ -206,8 +195,6 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 		
 		JsonObject headers = new JsonObject();
 		headersMap.forEach(entry -> headers.put(entry.getKey(), entry.getValue()));
-		
-		System.out.println(headers);
 		
 		return headers;
 		

@@ -29,7 +29,7 @@ public class VersionElement implements AccessLogElement{
 		
 		Collection<ExtractedPosition> foundPositions = new ArrayList<>(1);
 		
-		extractBestPositionFromFixPatternIfApplicable(rawPattern, "%H", () -> new VersionElement()).ifPresent(foundPositions::add);
+		extractBestPositionFromFixPatternIfApplicable(rawPattern, "%H", VersionElement::new).ifPresent(foundPositions::add);
 		
 		return foundPositions;
 		

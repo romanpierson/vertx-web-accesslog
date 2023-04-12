@@ -26,7 +26,7 @@ public class BytesSentElement implements AccessLogElement{
 
 	private Mode mode;
 	
-	private final Long DEFAULT_VALUE = Long.valueOf(0);
+	private static final Long DEFAULT_VALUE = Long.valueOf(0);
 	
 	private enum Mode{
 		

@@ -36,7 +36,7 @@ import io.vertx.core.json.JsonObject;
  */
 public class ElasticSearchAppender implements Appender {
 
-	private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 	
 	private static final String CONFIG_KEY_INSTANCE_IDENTIFER = "instanceIdentifier";
 	private static final String CONFIG_KEY_TIMESTAMP_POSITION = "timestampPosition";
@@ -63,7 +63,7 @@ public class ElasticSearchAppender implements Appender {
 		this.instanceIdentifier = config.getString(CONFIG_KEY_INSTANCE_IDENTIFER);
 		this.fieldNames = config.getJsonArray(CONFIG_KEY_FIELD_NAMES).getList();
 		
-		LOG.info("Created ElasticSearchAppender with " + CONFIG_KEY_INSTANCE_IDENTIFER + " [" + this.instanceIdentifier + "], " + CONFIG_KEY_TIMESTAMP_POSITION + " [" + this.timestampPosition + "], " + CONFIG_KEY_FIELD_NAMES + " " +this.fieldNames);
+		logger.info("Created ElasticSearchAppender with " + CONFIG_KEY_INSTANCE_IDENTIFER + " [" + this.instanceIdentifier + "], " + CONFIG_KEY_TIMESTAMP_POSITION + " [" + this.timestampPosition + "], " + CONFIG_KEY_FIELD_NAMES + " " +this.fieldNames);
 	}
 	
 	private String[] getParameterValues(final JsonArray values){

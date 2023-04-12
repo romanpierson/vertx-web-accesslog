@@ -31,7 +31,7 @@ public class StatusElement implements AccessLogElement{
 		
 		Collection<ExtractedPosition> foundPositions = new ArrayList<>(2);
 		
-		extractBestPositionFromFixPatternsIfApplicable(rawPattern, Arrays.asList("sc-status", "%s"), () -> new StatusElement()).ifPresent(foundPositions::addAll);
+		extractBestPositionFromFixPatternsIfApplicable(rawPattern, Arrays.asList("sc-status", "%s"), StatusElement::new).ifPresent(foundPositions::addAll);
 		
 		return foundPositions;
 		

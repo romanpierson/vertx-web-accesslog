@@ -33,7 +33,7 @@ public class MethodElement implements AccessLogElement{
 		
 		Collection<ExtractedPosition> foundPositions = new ArrayList<>(2);
 		
-		extractBestPositionFromFixPatternsIfApplicable(rawPattern, Arrays.asList("cs-method", "%m"), () -> new MethodElement()).ifPresent(foundPositions::addAll);
+		extractBestPositionFromFixPatternsIfApplicable(rawPattern, Arrays.asList("cs-method", "%m"), MethodElement::new).ifPresent(foundPositions::addAll);
 		
 		return foundPositions;
 		
@@ -43,7 +43,7 @@ public class MethodElement implements AccessLogElement{
 	public String getFormattedValue(final JsonObject values) {
 		
 		return FormatUtility.getStringOrNull(values, Data.Type.METHOD.getFieldName());
-		//return values.getValue(Data.Type.METHOD.getFieldName()) != null ?  ("" + values.getValue(Data.Type.METHOD.getFieldName())) : null;
+	
 	}
 	
 }
