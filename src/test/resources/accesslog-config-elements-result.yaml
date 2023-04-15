@@ -1,7 +1,7 @@
 isAutoDeployProducerVerticle: false
 configurations:
   - identifier: accesslog-formatted
-    logPattern: '%b %B %D %T sc-status %s %H %h %v %p cs-method %m %r cs-uri %U cs-uri-stem %q cs-uri-query %t %{msec}t %x %{xy}static %{envVar1}env %{header1}i %{header2}i %{Content-Type}o %{header3}o'
+    logPattern: '%b %B %D %T sc-status %s %H %h %v %p cs-method %m %r cs-uri %U cs-uri-stem %q cs-uri-query %t %{msec}t %x %{xy}static %{envVar1}env %{header1}i %{header2}i %{Content-Type}o %{header3}o %{cookie1}C %{cookie2}C %{cookieFoo}C'
     appenders:
       - appenderClassName : com.romanpierson.vertx.web.accesslogger.appender.eventbus.impl.EventBusAppender
         config:

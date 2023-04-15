@@ -11,8 +11,6 @@ import com.romanpierson.vertx.test.verticle.SimpleJsonResponseVerticle;
 import com.romanpierson.vertx.web.accesslogger.verticle.AccessLoggerProducerVerticle;
 
 import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpClient;
-import io.vertx.core.http.HttpClientResponse;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonArray;
 import io.vertx.ext.web.client.WebClient;
@@ -48,21 +46,15 @@ class ElementTest {
 		});
 		
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-elements-empty-result.yaml", 8100), testContext.succeeding(id2 -> {
+			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-elements-empty-result.yaml"), testContext.succeeding(id2 -> {
 				
-				HttpClient client = vertx.createHttpClient();
-				
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				WebClient client = WebClient.create(vertx);
 				
 				client
-					.request(HttpMethod.GET, 8100, "localhost", "/empty")
-					.compose(req -> req.send().compose(HttpClientResponse::body))
+					.request(HttpMethod.GET, 8080, "localhost", "/empty")
+					.send()
 					.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
-							
+						
 					})));
 			}));
 		}));
@@ -86,9 +78,9 @@ class ElementTest {
 		
 		vertx.eventBus().<JsonArray>consumer("target", message -> {
 			
-			System.out.println(message.body());
+			//System.out.println(message.body());
 			
-			assertEquals(27, message.body().size());
+			assertEquals(30, message.body().size());
 			
 			assertEquals("33", message.body().getString(0));
 			assertEquals("33", message.body().getString(1));
@@ -99,7 +91,7 @@ class ElementTest {
 			assertEquals("HTTP/1.1", message.body().getString(6));
 			assertNotNull(message.body().getString(7));
 			assertEquals("localhost", message.body().getString(8));
-			assertEquals("8101", message.body().getString(9));
+			assertEquals("8080", message.body().getString(9));
 			assertEquals("GET", message.body().getString(10));
 			assertEquals("GET", message.body().getString(11));
 			assertEquals("GET /nonEmpty?foo=bar HTTP/1.1", message.body().getString(12));
@@ -117,28 +109,23 @@ class ElementTest {
 			assertEquals("", message.body().getString(24));
 			assertEquals("application/json; charset=utf-8", message.body().getString(25));
 			assertEquals("", message.body().getString(26));
+			assertEquals("cookie1Value", message.body().getString(27));
+			assertEquals("cookie2Value", message.body().getString(28));
+			assertEquals("", message.body().getString(29));
 			
 			testContext.completeNow();
 		});
 		
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-elements-result.yaml", 8101), testContext.succeeding(id2 -> {
+			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-elements-result.yaml"), testContext.succeeding(id2 -> {
 				
 				WebClient client = WebClient.create(vertx);
 				
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				
 				client
-					.request(HttpMethod.GET, 8101, "localhost", "/nonEmpty?foo=bar")
+					.request(HttpMethod.GET, 8080, "localhost", "/nonEmpty?foo=bar")
 					.putHeader("header1", "header1val")
+					.putHeader("Cookie", "cookie1=cookie1Value; cookie2=cookie2Value")
 					.send()
-					//.onComplete(null)
-					//.compose(req -> req.send().compose(HttpClientResponse::body))
-					
 					.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
 							
 					})));

@@ -40,7 +40,7 @@ class ElasticSearchAppenderTest {
 		});
 		
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-elasticsearch-appender-valid.yaml", 8104), testContext.succeeding(id2 -> {
+			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-elasticsearch-appender-valid.yaml"), testContext.succeeding(id2 -> {
 				
 				try {
 					Thread.sleep(1000);
@@ -51,7 +51,7 @@ class ElasticSearchAppenderTest {
 				HttpClient client = vertx.createHttpClient();
 				
 				client
-					.request(HttpMethod.GET, 8104, "localhost", "/test")
+					.request(HttpMethod.GET, 8080, "localhost", "/test")
 					.compose(req -> req.send().compose(HttpClientResponse::body))
 					.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
 							

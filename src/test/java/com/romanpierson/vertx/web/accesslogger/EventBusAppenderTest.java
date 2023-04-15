@@ -40,7 +40,7 @@ class EventBusAppenderTest {
 		
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
 				
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-eventbus-appender-invalid-config.yaml", 8105));
+			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-eventbus-appender-invalid-config.yaml"));
 				
 		}));
 	}
@@ -54,7 +54,7 @@ class EventBusAppenderTest {
 		});
 		
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-eventbus-appender-inexisting-address.yaml", 8106), testContext.succeeding(id2 -> {
+			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-eventbus-appender-inexisting-address.yaml"), testContext.succeeding(id2 -> {
 				
 				HttpClient client = vertx.createHttpClient();
 				
@@ -65,7 +65,7 @@ class EventBusAppenderTest {
 				}
 				
 				client
-					.request(HttpMethod.GET, 8106, "localhost", "/test")
+					.request(HttpMethod.GET, 8080, "localhost", "/test")
 					.compose(req -> req.send().compose(HttpClientResponse::body))
 					.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
 							testContext.completeNow();
@@ -89,7 +89,7 @@ class EventBusAppenderTest {
 		});
 		
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-eventbus-appender-existing-address.yaml", 8107), testContext.succeeding(id2 -> {
+			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-eventbus-appender-existing-address.yaml"), testContext.succeeding(id2 -> {
 				
 				HttpClient client = vertx.createHttpClient();
 				
@@ -100,7 +100,7 @@ class EventBusAppenderTest {
 				}
 				
 				client
-					.request(HttpMethod.GET, 8107, "localhost", "/test")
+					.request(HttpMethod.GET, 8080, "localhost", "/test")
 					.compose(req -> req.send().compose(HttpClientResponse::body))
 					.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
 							

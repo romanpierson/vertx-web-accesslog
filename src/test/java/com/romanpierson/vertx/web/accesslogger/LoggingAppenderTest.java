@@ -48,7 +48,7 @@ class LoggingAppenderTest {
 		
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
 				
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-logging-appender-invalid-loggername.yaml", 8108));
+			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-logging-appender-invalid-loggername.yaml"));
 				
 		}));
 	}
@@ -73,7 +73,7 @@ class LoggingAppenderTest {
 		
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
 				
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-logging-appender-invalid-logpattern.yaml", 8109));
+			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-logging-appender-invalid-logpattern.yaml"));
 				
 		}));
 	}
@@ -91,7 +91,7 @@ class LoggingAppenderTest {
 		});
 		
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-logging-appender-valid.yaml", 8110), testContext.succeeding(id2 -> {
+			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-logging-appender-valid.yaml"), testContext.succeeding(id2 -> {
 					
 				try {
 					Thread.sleep(1000);
@@ -104,7 +104,7 @@ class LoggingAppenderTest {
 				HttpClient client = vertx.createHttpClient();
 				
 				client
-					.request(HttpMethod.GET, 8110, "localhost", "/test")
+					.request(HttpMethod.GET, 8080, "localhost", "/test")
 					.compose(req -> req.send().compose(HttpClientResponse::body))
 					.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
 					

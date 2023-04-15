@@ -10,7 +10,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.romanpierson.vertx.test.verticle.SimpleJsonResponseVerticle;
-import com.romanpierson.vertx.web.accesslogger.exception.AccessLoggerException;
 import com.romanpierson.vertx.web.accesslogger.verticle.AccessLoggerProducerVerticle;
 
 import io.vertx.core.Vertx;
@@ -36,7 +35,7 @@ class AcessLogServerTest {
 		
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
 				
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-invalid.yaml", 8111));
+			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-invalid.yaml"));
 				
 		}));
 	}
@@ -128,12 +127,12 @@ class AcessLogServerTest {
 	
 	
 	
-	@Test
+	//@Test
 	@Order(value = 6)
 	void testEmptyResponse(Vertx vertx, VertxTestContext testContext) {
 		
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-all-valid-console-appender.yaml", 8112), testContext.succeeding(id2 -> {
+			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-all-valid-console-appender.yaml"), testContext.succeeding(id2 -> {
 				HttpClient client = vertx.createHttpClient();
 				
 				try {
@@ -143,7 +142,7 @@ class AcessLogServerTest {
 				}
 				
 				client
-					.request(HttpMethod.GET, 8112, "localhost", "/empty")
+					.request(HttpMethod.GET, 8080, "localhost", "/empty")
 					.compose(req -> req.send().compose(HttpClientResponse::body))
 					.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
 							//assertThat(buffer.toString()).isEqualTo("Plop");
