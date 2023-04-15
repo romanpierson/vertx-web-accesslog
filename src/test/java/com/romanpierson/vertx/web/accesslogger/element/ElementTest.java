@@ -14,6 +14,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonArray;
 import io.vertx.ext.web.client.WebClient;
+import io.vertx.ext.web.client.WebClientOptions;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 
@@ -48,7 +49,7 @@ class ElementTest {
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
 			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-elements-empty-result.yaml"), testContext.succeeding(id2 -> {
 				
-				WebClient client = WebClient.create(vertx);
+				WebClient client = WebClient.create(vertx, new WebClientOptions().setConnectTimeout(1000));
 				
 				client
 					.request(HttpMethod.GET, 8080, "localhost", "/empty")
@@ -119,7 +120,7 @@ class ElementTest {
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
 			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-elements-result.yaml"), testContext.succeeding(id2 -> {
 				
-				WebClient client = WebClient.create(vertx);
+				WebClient client = WebClient.create(vertx, new WebClientOptions().setConnectTimeout(1000));
 				
 				client
 					.request(HttpMethod.GET, 8080, "localhost", "/nonEmpty?foo=bar")
