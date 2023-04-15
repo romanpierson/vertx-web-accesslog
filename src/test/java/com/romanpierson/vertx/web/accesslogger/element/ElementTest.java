@@ -49,7 +49,14 @@ class ElementTest {
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
 			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-elements-empty-result.yaml"), testContext.succeeding(id2 -> {
 				
-				WebClient client = WebClient.create(vertx, new WebClientOptions().setConnectTimeout(1000));
+				WebClient client = WebClient.create(vertx);
+				
+				// Just to fix github actions issue
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// we dont care
+				}
 				
 				client
 					.request(HttpMethod.GET, 8080, "localhost", "/empty")
@@ -120,7 +127,14 @@ class ElementTest {
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
 			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-elements-result.yaml"), testContext.succeeding(id2 -> {
 				
-				WebClient client = WebClient.create(vertx, new WebClientOptions().setConnectTimeout(1000));
+				WebClient client = WebClient.create(vertx);
+				
+				// Just to fix github actions issue
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// we dont care
+				}
 				
 				client
 					.request(HttpMethod.GET, 8080, "localhost", "/nonEmpty?foo=bar")

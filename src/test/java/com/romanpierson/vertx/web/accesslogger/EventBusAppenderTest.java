@@ -93,10 +93,11 @@ class EventBusAppenderTest {
 				
 				HttpClient client = vertx.createHttpClient();
 				
+				// Just to fix github actions issue
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					// we dont care
 				}
 				
 				client
