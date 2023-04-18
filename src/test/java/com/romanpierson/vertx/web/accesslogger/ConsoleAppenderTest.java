@@ -51,7 +51,6 @@ class ConsoleAppenderTest {
 	
 	@Test
 	@Order(value = 2)
-	// This tests using slf4j/logback that at the end logs again to console so we can grab it
 	void testWithValidData(Vertx vertx, VertxTestContext testContext) {
 			
 		PrintStream originalStream = System.out;
@@ -68,10 +67,11 @@ class ConsoleAppenderTest {
 				
 				HttpClient client = vertx.createHttpClient();
 				
+				// Just to fix github actions issue
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					// we dont care
 				}
 				
 				client
@@ -79,14 +79,9 @@ class ConsoleAppenderTest {
 					.compose(req -> req.send().compose(HttpClientResponse::body))
 					.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
 					
-						// Ensure it got logged by slf4j/logback
-						Thread.sleep(10);
+						assertEquals("/test\n", catchingStream.toString()); // Has a newline at the end....
 						
 						System.setOut(originalStream);
-						
-						// TODO this needs to be fixed
-						//System.out.println(catchingStream);
-						//assertEquals("/test", catchingStream.toString());
 						
 						testContext.completeNow();
 						

@@ -2,13 +2,17 @@ package com.romanpierson.vertx.web.accesslogger;
 
 
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.romanpierson.vertx.test.verticle.SimpleJsonResponseVerticle;
 import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants.ElasticSearchAppenderConfig;
+import com.romanpierson.vertx.web.accesslogger.exception.AccessLoggerException;
 import com.romanpierson.vertx.web.accesslogger.verticle.AccessLoggerProducerVerticle;
 
 import io.vertx.core.Vertx;
@@ -23,9 +27,45 @@ import io.vertx.junit5.VertxTestContext;
 @TestMethodOrder(OrderAnnotation.class)
 class ElasticSearchAppenderTest {
 
+	@Test
+	void testInvalidElasticSearchAppenderWithMissingInstanceIdentifier(Vertx vertx, VertxTestContext testContext) {
+			
+		vertx.exceptionHandler(throwable -> {
+			assertTrue(throwable instanceof AccessLoggerException);
+			assertEquals("Failed to create appender with [com.romanpierson.vertx.web.accesslogger.appender.elasticsearch.impl.ElasticSearchAppender]", throwable.getMessage());
+			Throwable internalCause = throwable.getCause().getCause();
+			assertTrue(internalCause instanceof IllegalArgumentException);
+			assertEquals("instanceIdentifier must not be empty", internalCause.getMessage());
+			testContext.completeNow();
+		});
+		
+		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
+				
+			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-elasticsearch-appender-invalid-instance.yaml"));
+				
+		}));
+	}
 	
 	@Test
-	@Order(value = 1)
+	void testInvalidElasticSearchAppenderWithMissingFieldNames(Vertx vertx, VertxTestContext testContext) {
+			
+		vertx.exceptionHandler(throwable -> {
+			assertTrue(throwable instanceof AccessLoggerException);
+			assertEquals("Failed to create appender with [com.romanpierson.vertx.web.accesslogger.appender.elasticsearch.impl.ElasticSearchAppender]", throwable.getMessage());
+			Throwable internalCause = throwable.getCause().getCause();
+			assertTrue(internalCause instanceof IllegalArgumentException);
+			assertEquals("fieldNames must not be empty", internalCause.getMessage());
+			testContext.completeNow();
+		});
+		
+		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
+				
+			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-elasticsearch-appender-invalid-fieldnames.yaml"));
+				
+		}));
+	}
+	
+	@Test
 	void testValid(Vertx vertx, VertxTestContext testContext) {
 			
 		vertx.exceptionHandler(throwable -> {
@@ -36,16 +76,18 @@ class ElasticSearchAppenderTest {
 			//assertEquals(1, message.body().size());
 			//assertEquals("/test", message.body().getString(0));
 			System.out.println(message.body());
+			// TODO verify content
 			testContext.completeNow();
 		});
 		
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
 			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-elasticsearch-appender-valid.yaml"), testContext.succeeding(id2 -> {
 				
+				// Just to fix github actions issue
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					// we dont care
 				}
 				
 				HttpClient client = vertx.createHttpClient();

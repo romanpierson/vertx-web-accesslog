@@ -7,7 +7,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +28,6 @@ import io.vertx.junit5.VertxTestContext;
 class LoggingAppenderTest {
 
 	@Test
-	@Order(value = 1)
 	void testInvalidConfig(Vertx vertx, VertxTestContext testContext) {
 			
 		vertx.exceptionHandler(throwable -> {
@@ -54,7 +52,6 @@ class LoggingAppenderTest {
 	}
 	
 	@Test
-	@Order(value = 2)
 	void testInvalidLoggingAppenderWithMissingResolvedPatttern(Vertx vertx, VertxTestContext testContext) {
 			
 		vertx.exceptionHandler(throwable -> {
@@ -78,8 +75,8 @@ class LoggingAppenderTest {
 		}));
 	}
 	
+	// TODO this test needs to be fixed - need to check how the message written by logback can be read and verified
 	@Test
-	@Order(value = 3)
 	// This tests using slf4j/logback that at the end logs again to console so we can grab it
 	void testWithValidData(Vertx vertx, VertxTestContext testContext) {
 			
@@ -93,10 +90,11 @@ class LoggingAppenderTest {
 		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
 			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-logging-appender-valid.yaml"), testContext.succeeding(id2 -> {
 					
+				// Just to fix github actions issue
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					// we dont care
 				}
 				
 				System.setOut(new PrintStream(catchingStream));
@@ -109,11 +107,13 @@ class LoggingAppenderTest {
 					.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
 					
 						// Ensure it got logged by slf4j/logback
-						Thread.sleep(10);
+						Thread.sleep(1000);
+						
+						//assertEquals("/test\n", catchingStream.toString());
 						
 						System.setOut(originalStream);
 						
-						// TODO this needs to be fixed
+						
 						//System.out.println(catchingStream);
 						//assertEquals("/test", catchingStream.toString());
 						
