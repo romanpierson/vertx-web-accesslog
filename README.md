@@ -68,12 +68,15 @@ To facility this and to avoid boilerplate code there are static helpers in Patte
 
 Method | Resolves pattern | Remarks | Examples
 ----|------|--|----
-extractBestPositionFromFixPatternIfApplicable | <VALUE> | Whatever value is matched and resolved | `%b` `cs-uri`
-extractBestPositionFromFixPatternsIfApplicable | <VALUE> | Like above but you can pass a list of values to be matched | `%b` `cs-uri`
+extractBestPositionFromFixPatternIfApplicable | `<VALUE>` | Whatever value is matched and resolved | `%b` `cs-uri`
+extractBestPositionFromFixPatternsIfApplicable | `<VALUE>` | Like above but you can pass a list of values to be matched | `%b` `cs-uri`
+extractBestPositionFromPostfixPatternIfApplicable | `%{<CONFIGURATION>}POSTIFX` |  Searches for a postfixed pattern and extracts a configuration string that is passed later to your defined function  | `%{msec}t`
+extractBestPositionFromPostfixPatternAndAdditionalCheckIfApplicable | `%{<CONFIGURATION>}POSTIFX` | Like above but let you define an additional function that checks if the found configuration value is valid for your element to be handled  | `%{msec}t`
 
+### Redefine existing elements with your custom one
 
-extractBestPositionFromPostfixPatternIfApplicable
-extractBestPositionFromPostfixPatternAndAdditionalCheckIfApplicable
+By defining your custom element using same pattern as an existing one shipped with this library it will have preference over the predefined one. 
+
 
 ## Appenders
 
