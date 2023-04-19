@@ -30,11 +30,16 @@ public interface AccessLogElement {
 	 * 
 	 * 
 	 * @param rawPattern		The pattern you want to search on
-	 * @return					A matching extracted position or NULL
+	 * @return					A list of matching extracted positions
 	 */
 	default Collection<ExtractedPosition> findInRawPattern(final String rawPattern){
 		
-		return findInRawPatternInternal(rawPattern);
+		final Collection<ExtractedPosition> foundPatterns = findInRawPatternInternal(rawPattern);
+		
+		// TODO Ensure there are no invalid positions
+		
+		//if(matchingElement == null || matchingElement.getStart() == -1){
+		return foundPatterns;
 		
 	}
 	

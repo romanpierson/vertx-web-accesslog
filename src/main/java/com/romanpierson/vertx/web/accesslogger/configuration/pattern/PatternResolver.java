@@ -21,10 +21,14 @@ import java.util.function.Supplier;
 
 import com.romanpierson.vertx.web.accesslogger.configuration.element.AccessLogElement;
 
+import io.vertx.core.impl.logging.Logger;
+import io.vertx.core.impl.logging.LoggerFactory;
 import io.vertx.core.json.JsonObject;
 
 public class PatternResolver {
 
+	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+	
 	final Collection<AccessLogElement> availableElements = new ArrayList<>(); 
 	
 	public PatternResolver() {
@@ -51,32 +55,40 @@ public class PatternResolver {
 				
 				for(final ExtractedPosition matchingElement : matchingElements) {
 				
-					if(matchingElement == null || matchingElement.getStart() == -1){
-						continue;
-					} else if (currentBestMatchingElement == null) {
+					if (currentBestMatchingElement == null) {
+						
 						// First element that matches at all - take it
 						currentBestMatchingElement = matchingElement;
-						continue;
+						
 					} else {
 						// There is already a current best matching element so we need to check if this one is "better"
 						if(matchingElement.getStart() < currentBestMatchingElement.getStart()) {
+							
+							// The new element starts earlier so should be a better match
 							currentBestMatchingElement = matchingElement;
-							continue;
+							
 						} else if(matchingElement.getStart() == currentBestMatchingElement.getStart()) {
+							
 							// Both starts at same 
 							if(matchingElement.getOffset() > currentBestMatchingElement.getOffset()) {
+								
 								// Trying to retain some of the logic
 								// If the start position is equal then we must have a duplicate pattern use the item with the shorter length
 								continue;
+								
 							} else if (matchingElement.getOffset() == currentBestMatchingElement.getOffset()) {
+								
 								// All identical - we give priority to non default elements to allow overwriting same pattern with custom elements
 								if(matchingElement.isCustom() && !currentBestMatchingElement.isCustom()) {
+									
 									currentBestMatchingElement = matchingElement;
-									continue;
-								} else if ((matchingElement.isCustom() && currentBestMatchingElement.isCustom())
-										|| (!matchingElement.isCustom() && !currentBestMatchingElement.isCustom())) {
-									// TODO warn as both are same 
+									
+								} else if ((matchingElement.isCustom() && currentBestMatchingElement.isCustom()) || (!matchingElement.isCustom() && !currentBestMatchingElement.isCustom())) {
+									
+									// warn as both are same 
+									logger.warn("Found two elements that have identical match - first found will be used");
 								}
+								
 								// If we get here means we got a no custom element and already custom element is set - so we can ignore
 							}
 						}
