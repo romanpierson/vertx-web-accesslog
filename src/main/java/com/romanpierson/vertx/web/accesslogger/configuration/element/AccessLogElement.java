@@ -14,6 +14,8 @@ package com.romanpierson.vertx.web.accesslogger.configuration.element;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants;
 import com.romanpierson.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
@@ -36,9 +38,14 @@ public interface AccessLogElement {
 		
 		final Collection<ExtractedPosition> foundPatterns = findInRawPatternInternal(rawPattern);
 		
-		// TODO Ensure there are no invalid positions
+		for(final ExtractedPosition ep : foundPatterns) {
+			if(ep == null || ep.getStart() == -1){
+				// at least one element is invalid for further usage - so we will clean the elements
+				return foundPatterns.stream().filter(Objects::nonNull).filter(ep2 -> ep2.getStart() >= 0).collect(Collectors.toList());
+			}
+		}
 		
-		//if(matchingElement == null || matchingElement.getStart() == -1){
+		// All elements clean when we get here
 		return foundPatterns;
 		
 	}

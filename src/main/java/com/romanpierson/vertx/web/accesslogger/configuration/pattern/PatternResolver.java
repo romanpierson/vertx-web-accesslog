@@ -74,7 +74,7 @@ public class PatternResolver {
 								
 								// Trying to retain some of the logic
 								// If the start position is equal then we must have a duplicate pattern use the item with the shorter length
-								continue;
+								// Basically we prefer shorter offset as it seems more precise
 								
 							} else if (matchingElement.getOffset() == currentBestMatchingElement.getOffset()) {
 								
