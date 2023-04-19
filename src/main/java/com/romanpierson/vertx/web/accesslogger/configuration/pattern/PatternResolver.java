@@ -161,7 +161,8 @@ public class PatternResolver {
 			{
 				String configurationString = rawPattern.substring(index + 2, indexEndConfiguration);
 				
-				final JsonObject configurationJson = JsonObject.of("configuration", configurationString);
+				final JsonObject configurationJson = new JsonObject();
+				configurationJson.put("configuration", configurationString);
 				
 				// Check if the potential element is able to support the provided configuration
 				

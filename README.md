@@ -31,7 +31,7 @@ Just add it as a dependency to your project (gradle example)
 
 ```xml
 dependencies {
-	compile 'com.romanpierson:vertx-web-accesslog:1.5.0'
+	compile 'com.romanpierson:vertx-web-accesslog:1.6.0'
 }
 ```
 
@@ -39,6 +39,7 @@ dependencies {
 
 Accesslog version | Vertx version
 ----|------
+1.6.0 | 4.3.0 >
 1.5.0 | 4.2.0 >
 1.4.0 | 4.0.0 - 4.1.x
 1.3.1 | 3.3.0 - 3.7.0

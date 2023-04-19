@@ -46,3 +46,12 @@
 * Moved from Travis CI to Github Actions / Gradle Sonarqube Plugin
 * Removed slf4j dependency
 * Integrated `LoggingAppender` and `ElasticSearchAppender` into core library
+
+### 1.6.0
+
+(2023-04-19)
+
+* Refactored and simplified PatternResolver and Element code using java functions
+* Raised test coverage
+* Allow easy overwriting of existing patterns with custom elements
+* Upgrade to latest versions
