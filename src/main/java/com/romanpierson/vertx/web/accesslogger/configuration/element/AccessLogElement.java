@@ -65,7 +65,7 @@ public interface AccessLogElement {
 		
 	}
 
-	abstract String getFormattedValue(JsonObject values);
+	String getFormattedValue(JsonObject values);
 	
 	
 	
