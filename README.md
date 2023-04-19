@@ -60,6 +60,21 @@ META-INF
   com.romanpierson.vertx.web.accesslogger.configuration.element.AccessLogElement
 ```
 
+As ServiceLoader SPI is intented to work with objects unfortunately your AccessLogElement implementation requires a parameter less constructor.
+
+In order that the pattern resolver is able to resolve your new element against a pattern you have to implement your resolving condition by implementing `findInRawPatternInternal(rawPattern)` method.
+
+To facility this and to avoid boilerplate code there are static helpers in PatternResolver that simplifies that a lot.
+
+Method | Resolves pattern | Remarks | Examples
+----|------|--|----
+extractBestPositionFromFixPatternIfApplicable | <VALUE> | Whatever value is matched and resolved | `%b` `cs-uri`
+extractBestPositionFromFixPatternsIfApplicable | <VALUE> | Like above but you can pass a list of values to be matched | `%b` `cs-uri`
+
+
+extractBestPositionFromPostfixPatternIfApplicable
+extractBestPositionFromPostfixPatternAndAdditionalCheckIfApplicable
+
 ## Appenders
 
 Appenders are basically a way to send the log data to one (or multiple) backends. This ships with a set of (hopefully) useful appenders but you can create your custom appenders in a very easy way.
