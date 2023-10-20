@@ -7,14 +7,17 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://s01.oss.sonatype.org/content/repositories/snapshots"
+    }
 }
 
 ext{
-	vertxVersion = '4.4.1'
-	jupiterVersion = '5.9.1'
-	jupiterLauncherVersion = '1.9.1'
-	slfApiVersion = '2.0.5'
-	logbackVersion = '1.4.5'
+	vertxVersion = '5.0.0-SNAPSHOT'
+	jupiterVersion = '5.10.0'
+	jupiterLauncherVersion = '1.10.0'
+	slfApiVersion = '2.0.9'
+	logbackVersion = '1.4.11'
 }
 
 dependencies {

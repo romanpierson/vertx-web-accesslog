@@ -39,11 +39,13 @@ class ElasticSearchAppenderTest {
 			testContext.completeNow();
 		});
 		
-		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-				
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-elasticsearch-appender-invalid-instance.yaml"));
-				
-		}));
+		vertx
+			.deployVerticle(new AccessLoggerProducerVerticle())
+			.onComplete(testContext.succeeding(deploymentId -> {
+				vertx
+					.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-invalid-console-appender.yaml"))
+					.onComplete(testContext.succeedingThenComplete());
+			}));
 	}
 	
 	@Test
@@ -58,11 +60,13 @@ class ElasticSearchAppenderTest {
 			testContext.completeNow();
 		});
 		
-		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-				
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-elasticsearch-appender-invalid-fieldnames.yaml"));
-				
-		}));
+		vertx
+			.deployVerticle(new AccessLoggerProducerVerticle())
+			.onComplete(testContext.succeeding(deploymentId -> {
+				vertx
+					.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-elasticsearch-appender-invalid-fieldnames.yaml"))
+					.onComplete(testContext.succeedingThenComplete());
+			}));
 	}
 	
 	@Test
@@ -80,25 +84,31 @@ class ElasticSearchAppenderTest {
 			testContext.completeNow();
 		});
 		
-		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-elasticsearch-appender-valid.yaml"), testContext.succeeding(id2 -> {
-				
-				// Just to fix github actions issue
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// we dont care
-				}
-				
-				HttpClient client = vertx.createHttpClient();
-				
-				client
-					.request(HttpMethod.GET, 8080, "localhost", "/test")
-					.compose(req -> req.send().compose(HttpClientResponse::body))
-					.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
+		vertx
+			.deployVerticle(new AccessLoggerProducerVerticle())
+				.onComplete(testContext.succeeding(deploymentId -> {
+					vertx
+						.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-elasticsearch-appender-valid.yaml"))
+						.onComplete(testContext.succeeding(deploymentId2 -> {
 							
-					})));
-			}));
-		}));
+							// Just to fix github actions issue
+							try {
+								Thread.sleep(1000);
+							} catch (InterruptedException e) {
+								// we dont care
+							}
+							
+							HttpClient client = vertx.createHttpClient();
+							
+							client
+								.request(HttpMethod.GET, 8080, "localhost", "/test")
+								.compose(req -> req.send().compose(HttpClientResponse::body))
+								.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
+										
+								})));
+							
+						}));
+				}));
+		
 	}
 }

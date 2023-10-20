@@ -33,7 +33,6 @@ class ConsoleAppenderTest {
 	void testInvalidConsoleAppenderWithMissingResolvedPatttern(Vertx vertx, VertxTestContext testContext) {
 			
 		vertx.exceptionHandler(throwable -> {
-			throwable.printStackTrace();
 			assertTrue(throwable instanceof AccessLoggerException);
 			assertEquals("Failed to create appender with [com.romanpierson.vertx.web.accesslogger.appender.console.impl.ConsoleAppender]", throwable.getMessage());
 			Throwable internalCause = throwable.getCause().getCause();
@@ -42,11 +41,15 @@ class ConsoleAppenderTest {
 			testContext.completeNow();
 		});
 		
-		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-				
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-invalid-console-appender.yaml"));
-				
-		}));
+		vertx
+			.deployVerticle(new AccessLoggerProducerVerticle())
+			.onComplete(testContext.succeeding(deploymentId -> {
+				vertx
+					.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-invalid-console-appender.yaml"))
+					.onComplete(testContext.succeedingThenComplete());
+			}));
+		
+		
 	}
 	
 	@Test
@@ -60,33 +63,38 @@ class ConsoleAppenderTest {
 			testContext.failNow(throwable);
 		});
 		
-		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-console-appender-valid.yaml"), testContext.succeeding(id2 -> {
+		vertx
+		.deployVerticle(new AccessLoggerProducerVerticle())
+		.onComplete(testContext.succeeding(deploymentId -> {
+			vertx
+				.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-console-appender-valid.yaml"))
+				.onComplete(testContext.succeeding(deploymentId2 -> {
 					
-				System.setOut(new PrintStream(catchingStream));
-				
-				HttpClient client = vertx.createHttpClient();
-				
-				// Just to fix github actions issue
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// we dont care
-				}
-				
-				client
-					.request(HttpMethod.GET, 8080, "localhost", "/test")
-					.compose(req -> req.send().compose(HttpClientResponse::body))
-					.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
+					System.setOut(new PrintStream(catchingStream));
 					
-						assertEquals("/test\n", catchingStream.toString()); // Has a newline at the end....
+					HttpClient client = vertx.createHttpClient();
+					
+					// Just to fix github actions issue
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// we dont care
+					}
+					
+					client
+						.request(HttpMethod.GET, 8080, "localhost", "/test")
+						.compose(req -> req.send().compose(HttpClientResponse::body))
+						.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
 						
-						System.setOut(originalStream);
-						
-						testContext.completeNow();
-						
-					})));
-			}));
+							assertEquals("/test\n", catchingStream.toString()); // Has a newline at the end....
+							
+							System.setOut(originalStream);
+							
+							testContext.completeNow();
+							
+						})));
+				}));
 		}));
+		
 	}
 }

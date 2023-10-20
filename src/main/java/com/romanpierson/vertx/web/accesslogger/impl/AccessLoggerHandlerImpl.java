@@ -95,41 +95,43 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 			
 			final JsonObject configuration = (JsonObject) xConfiguration;
 			
-			eventBus.<JsonObject>request(AccessLoggerConstants.EVENTBUS_REGISTER_EVENT_NAME, configuration, ar -> {
-				
-				final String configurationIdentifier = configuration.getString(Registration.Request.IDENTIFIER);
-				
-				if(ar.succeeded()) {
-					JsonObject response = ar.result().body();
-					if(Registration.Response.RESULT_OK.equals(response.getString(Registration.Response.RESULT, null))){
-						
-						this.requiresCookies = response.getBoolean(Registration.Response.REQUIRES_COOKIES, false) ? true : this.requiresCookies;
-						this.requiresIncomingHeaders = response.getBoolean(Registration.Response.REQUIRES_INCOMING_HEADERS, false) ? true : this.requiresIncomingHeaders;
-						this.requiresOutgoingHeaders = response.getBoolean(Registration.Response.REQUIRES_OUTGOING_HEADERS, false) ? true : this.requiresOutgoingHeaders;
-						
-						this.registeredIdentifiers.add(configurationIdentifier);
-						
-						if(this.requiredConfigurationsCounter == this.registeredIdentifiers.size()) {
-							this.allConfigurationsSuccessfullyRegistered = true;
+			eventBus
+				.<JsonObject>request(AccessLoggerConstants.EVENTBUS_REGISTER_EVENT_NAME, configuration)
+				.onComplete(ar -> {
+					
+					final String configurationIdentifier = configuration.getString(Registration.Request.IDENTIFIER);
+					
+					if(ar.succeeded()) {
+						JsonObject response = ar.result().body();
+						if(Registration.Response.RESULT_OK.equals(response.getString(Registration.Response.RESULT, null))){
 							
-							logger.debug("Successfully registered all [" + this.requiredConfigurationsCounter + "] configurations with identifiers " + this.registeredIdentifiers);
+							this.requiresCookies = response.getBoolean(Registration.Response.REQUIRES_COOKIES, false) ? true : this.requiresCookies;
+							this.requiresIncomingHeaders = response.getBoolean(Registration.Response.REQUIRES_INCOMING_HEADERS, false) ? true : this.requiresIncomingHeaders;
+							this.requiresOutgoingHeaders = response.getBoolean(Registration.Response.REQUIRES_OUTGOING_HEADERS, false) ? true : this.requiresOutgoingHeaders;
 							
-							if(this.requiresCookies || this.requiresIncomingHeaders || this.requiresOutgoingHeaders) {
+							this.registeredIdentifiers.add(configurationIdentifier);
+							
+							if(this.requiredConfigurationsCounter == this.registeredIdentifiers.size()) {
+								this.allConfigurationsSuccessfullyRegistered = true;
 								
-								logger.debug("Specific data required for cookies [" + this.requiresCookies + "], incoming headers [" + this.requiresIncomingHeaders + "], outgoing headers [" + this.requiresOutgoingHeaders + "]");
+								logger.debug("Successfully registered all [" + this.requiredConfigurationsCounter + "] configurations with identifiers " + this.registeredIdentifiers);
 								
-							} else {
-								logger.debug("No specific data required");
+								if(this.requiresCookies || this.requiresIncomingHeaders || this.requiresOutgoingHeaders) {
+									
+									logger.debug("Specific data required for cookies [" + this.requiresCookies + "], incoming headers [" + this.requiresIncomingHeaders + "], outgoing headers [" + this.requiresOutgoingHeaders + "]");
+									
+								} else {
+									logger.debug("No specific data required");
+								}
 							}
+							
+						} else {
+							throw new AccessLoggerException("Unable to register access log configuration for identifier [" + configurationIdentifier + "]");
 						}
 						
 					} else {
-						throw new AccessLoggerException("Unable to register access log configuration for identifier [" + configurationIdentifier + "]");
+						throw new AccessLoggerException("Unable to register access log configuration [" + configurationIdentifier + "]", ar.cause());
 					}
-					
-				} else {
-					throw new AccessLoggerException("Unable to register access log configuration [" + configurationIdentifier + "]", ar.cause());
-				}
 			});
 		});
 		
@@ -166,7 +168,8 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 										.put(Data.Type.URI.getFieldName(), request.path())
 										.put(Data.Type.VERSION.getFieldName(), request.version())
 										.put(Data.Type.REMOTE_HOST.getFieldName(), request.remoteAddress().host())
-										.put(Data.Type.LOCAL_HOST.getFieldName(), request.host().contains(":") ? request.host().substring(0, request.host().indexOf(":")): request.host())
+										// TODO
+										//.put(Data.Type.LOCAL_HOST.getFieldName(), request.host().contains(":") ? request.host().substring(0, request.host().indexOf(":")): request.host())
 										.put(Data.Type.LOCAL_PORT.getFieldName(), request.localAddress().port());
 		
 		if(request.query() != null && !request.query().trim().isEmpty()){

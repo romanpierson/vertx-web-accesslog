@@ -30,16 +30,21 @@ class AcessLogServerTest {
 	void testInvalidConfig(Vertx vertx, VertxTestContext testContext) {
 			
 		vertx.exceptionHandler(throwable -> {
+			throwable.printStackTrace();
 			assertTrue(throwable instanceof IllegalArgumentException);
 			assertEquals("must specify at least one valid configuration", throwable.getMessage());
 			testContext.completeNow();
 		});
 		
-		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
+		vertx
+			.deployVerticle(new AccessLoggerProducerVerticle())
+			.onComplete(testContext.succeeding(deploymentId -> {
+				vertx
+					.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-invalid.yaml"))
+					.onComplete(testContext.succeedingThenComplete());
+			}));
 				
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-invalid.yaml"));
-				
-		}));
+		
 	}
 
 	

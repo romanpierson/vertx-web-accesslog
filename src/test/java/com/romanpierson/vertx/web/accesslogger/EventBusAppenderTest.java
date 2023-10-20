@@ -38,11 +38,14 @@ class EventBusAppenderTest {
 			testContext.completeNow();
 		});
 		
-		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-				
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-eventbus-appender-invalid-config.yaml"));
-				
-		}));
+		vertx
+			.deployVerticle(new AccessLoggerProducerVerticle())
+			.onComplete(testContext.succeeding(deploymentId -> {
+				vertx
+					.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-eventbus-appender-invalid-config.yaml"))
+					.onComplete(testContext.succeedingThenComplete());
+			}));
+		
 	}
 	
 	@Test
@@ -53,25 +56,31 @@ class EventBusAppenderTest {
 			testContext.failNow(throwable);
 		});
 		
-		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-eventbus-appender-inexisting-address.yaml"), testContext.succeeding(id2 -> {
-				
-				HttpClient client = vertx.createHttpClient();
-				
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				
-				client
-					.request(HttpMethod.GET, 8080, "localhost", "/test")
-					.compose(req -> req.send().compose(HttpClientResponse::body))
-					.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
-							testContext.completeNow();
-					})));
-			}));
-		}));
+		vertx
+			.deployVerticle(new AccessLoggerProducerVerticle())
+				.onComplete(testContext.succeeding(deploymentId -> {
+					vertx
+						.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-eventbus-appender-inexisting-address.yaml"))
+						.onComplete(testContext.succeeding(deploymentId2 -> {
+							
+							HttpClient client = vertx.createHttpClient();
+							
+							try {
+								Thread.sleep(1000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							
+							client
+								.request(HttpMethod.GET, 8080, "localhost", "/test")
+								.compose(req -> req.send().compose(HttpClientResponse::body))
+								.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
+										testContext.completeNow();
+								})));
+							
+						}));
+				}));
+		
 	}
 	
 	@Test
@@ -88,25 +97,32 @@ class EventBusAppenderTest {
 			testContext.completeNow();
 		});
 		
-		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-eventbus-appender-existing-address.yaml"), testContext.succeeding(id2 -> {
-				
-				HttpClient client = vertx.createHttpClient();
-				
-				// Just to fix github actions issue
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// we dont care
-				}
-				
-				client
-					.request(HttpMethod.GET, 8080, "localhost", "/test")
-					.compose(req -> req.send().compose(HttpClientResponse::body))
-					.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
+		vertx
+			.deployVerticle(new AccessLoggerProducerVerticle())
+				.onComplete(testContext.succeeding(deploymentId -> {
+					vertx
+						.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-eventbus-appender-existing-address.yaml"))
+						.onComplete(testContext.succeeding(deploymentId2 -> {
 							
-					})));
-			}));
-		}));
+							HttpClient client = vertx.createHttpClient();
+							
+							// Just to fix github actions issue
+							try {
+								Thread.sleep(1000);
+							} catch (InterruptedException e) {
+								// we dont care
+							}
+							
+							client
+								.request(HttpMethod.GET, 8080, "localhost", "/test")
+								.compose(req -> req.send().compose(HttpClientResponse::body))
+								.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
+										
+								})));
+							
+						}));
+				}));
+		
+		
 	}
 }
