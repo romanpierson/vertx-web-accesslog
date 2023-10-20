@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - feature/vertx5
 
 jobs:
   ci:
