@@ -14,9 +14,12 @@ package com.romanpierson.vertx.web.accesslogger.configuration.element.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 
+import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants;
 import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants.Request.Data;
+import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants.Request.Data.Type;
 import com.romanpierson.vertx.web.accesslogger.configuration.element.AccessLogElement;
 import com.romanpierson.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
 import com.romanpierson.vertx.web.accesslogger.util.FormatUtility;
@@ -67,7 +70,7 @@ public class HostElement implements AccessLogElement{
 		switch (this.mode){
 		
 			case LOCAL_HOST:
-				return FormatUtility.getStringOrNull(values, Data.Type.LOCAL_HOST.getFieldName());
+				return FormatUtility.getHostFromHeaderOrNull(values);
 			case LOCAL_PORT:
 				return FormatUtility.getIntegerOrNull(values, Data.Type.LOCAL_PORT.getFieldName());
 			case REMOTE_HOST:
@@ -77,5 +80,18 @@ public class HostElement implements AccessLogElement{
 			
 		}
 	}
+
+	@Override
+	public Collection<Type> claimDataParts() {
+
+		if(Mode.LOCAL_HOST.equals(this.mode)) {
+			// Host is in headers
+			return Collections.singletonList(AccessLoggerConstants.Request.Data.Type.REQUEST_HEADERS);
+		}
+		
+		return AccessLogElement.super.claimDataParts();
+	}
+	
+	
 	
 }

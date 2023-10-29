@@ -27,6 +27,7 @@ import com.romanpierson.vertx.web.accesslogger.verticle.AccessLoggerProducerVert
 
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.MultiMap;
+import io.vertx.core.ThreadingModel;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.Cookie;
@@ -79,10 +80,16 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 					
 					logger.info("Start creating singleton verticle");
 					
-					Vertx.currentContext().owner().deployVerticle(AccessLoggerProducerVerticle.class.getName(), new DeploymentOptions().setWorker(true));
-					
-					isProducerVerticleCreated = true;
-						
+					Vertx.currentContext().owner().deployVerticle(AccessLoggerProducerVerticle.class.getName(), new DeploymentOptions().setThreadingModel(ThreadingModel.WORKER))
+						.onComplete(ar -> {
+							
+							if(ar.succeeded()) {
+								isProducerVerticleCreated = true;
+							} else {
+								throw new AccessLoggerException("Unable to deploy AccessLoggerProducerVerticle", ar.cause());
+							}
+							
+						});
 				}
 			}
 		} 

@@ -96,8 +96,6 @@ class ElementTest {
 		
 		vertx.eventBus().<JsonArray>consumer("target", message -> {
 			
-			//System.out.println(message.body());
-			
 			assertEquals(30, message.body().size());
 			
 			assertEquals("33", message.body().getString(0));
@@ -108,8 +106,7 @@ class ElementTest {
 			assertEquals("200", message.body().getString(5));
 			assertEquals("HTTP/1.1", message.body().getString(6));
 			assertNotNull(message.body().getString(7));
-			// TODO 
-			//assertEquals("localhost", message.body().getString(8));
+			assertEquals("localhost", message.body().getString(8));
 			assertEquals("8080", message.body().getString(9));
 			assertEquals("GET", message.body().getString(10));
 			assertEquals("GET", message.body().getString(11));
