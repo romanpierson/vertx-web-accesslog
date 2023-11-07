@@ -70,7 +70,7 @@ public class HostElement implements AccessLogElement{
 		switch (this.mode){
 		
 			case LOCAL_HOST:
-				return FormatUtility.getHostFromHeaderOrNull(values);
+				return FormatUtility.getStringOrNull(values, Data.Type.LOCAL_HOST.getFieldName());
 			case LOCAL_PORT:
 				return FormatUtility.getIntegerOrNull(values, Data.Type.LOCAL_PORT.getFieldName());
 			case REMOTE_HOST:
