@@ -1,10 +1,9 @@
-name: CI
+name: vert.x (4.x)
 
 on:
   push:
     branches:
-      - master
-      - feature/vertx5
+      - s
 
 jobs:
   ci:
