@@ -10,7 +10,7 @@ repositories {
 }
 
 ext{
-	vertxVersion = '4.4.1'
+	vertxVersion = '4.4.6'
 	jupiterVersion = '5.9.1'
 	jupiterLauncherVersion = '1.9.1'
 	slfApiVersion = '2.0.5'
