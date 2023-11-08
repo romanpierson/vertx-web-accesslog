@@ -45,7 +45,7 @@ test {
 sourceCompatibility='1.8'
 targetCompatibility='1.8'
 
-jar.archiveFileName = "vertx-web-accesslog-1.6.0.jar"
+jar.archiveFileName = "vertx-web-accesslog-5.0.0-SNAPSHOT.jar"
 
 java {
     withSourcesJar()
@@ -57,7 +57,7 @@ publishing {
             
             groupId 'com.mdac'
             artifactId 'vertx-web-accesslog'
-            version '1.6.0'
+            version '5.0.0-SNAPSHOT'
             
             from components.java
 
