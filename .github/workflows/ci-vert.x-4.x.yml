@@ -3,7 +3,7 @@ name: vert.x (4.x)
 on:
   push:
     branches:
-      - s
+      - vert.x-4.x
 
 jobs:
   ci:
