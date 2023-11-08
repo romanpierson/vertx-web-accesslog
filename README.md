@@ -1,4 +1,5 @@
-[![Actions Status](https://github.com/romanpierson/vertx-web-accesslog/workflows/CI/badge.svg)](https://github.com/romanpierson/vertx-web-accesslog/actions)
+[![Build Status (5.x)](https://github.com/romanpierson/vertx-web-accesslog/actions/workflows/ci-vert.x-5.x.yml/badge.svg)](https://github.com/romanpierson/vertx-web-accesslog/actions/workflows/ci-vert.x-5.x.yml)
+[![Build Status (4.x)](https://github.com/romanpierson/vertx-web-accesslog/actions/workflows/ci-vert.x-4.x.yml/badge.svg)](https://github.com/romanpierson/vertx-web-accesslog/actions/workflows/ci-vert.x-4.x.yml)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=romanpierson_vertx-web-accesslog&metric=coverage)](https://sonarcloud.io/dashboard?id=romanpierson_vertx-web-accesslog)
 [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/vert-x3/vertx-awesome)
 
@@ -39,6 +40,7 @@ dependencies {
 
 Accesslog version | Vertx version
 ----|------
+5.0.0-SNAPSHOT | 5.0.0-SNAPSHOT > 
 1.6.0 | 4.3.0 >
 1.5.0 | 4.2.0 >
 1.4.0 | 4.0.0 - 4.1.x
