@@ -11,10 +11,10 @@ repositories {
 
 ext{
 	vertxVersion = '4.4.6'
-	jupiterVersion = '5.9.1'
-	jupiterLauncherVersion = '1.9.1'
-	slfApiVersion = '2.0.5'
-	logbackVersion = '1.4.5'
+	jupiterVersion = '5.10.0'
+	jupiterLauncherVersion = '1.10.0'
+	slfApiVersion = '2.0.9'
+	logbackVersion = '1.4.11'
 }
 
 dependencies {
