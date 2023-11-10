@@ -194,7 +194,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 	private JsonObject extractHeaders(final MultiMap headersMap){
 		
 		JsonObject headers = new JsonObject();
-		headersMap.forEach(entry -> headers.put(entry.getKey(), entry.getValue()));
+		headersMap.forEach(entry -> headers.put(entry.getKey().toLowerCase(), entry.getValue()));
 		
 		return headers;
 		

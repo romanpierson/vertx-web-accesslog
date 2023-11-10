@@ -55,3 +55,10 @@
 * Raised test coverage
 * Allow easy overwriting of existing patterns with custom elements
 * Upgrade to latest versions
+
+### 1.6.1
+
+(2023-11-10)
+
+* Headers case insensitive
+* Upgrade to latest versions
