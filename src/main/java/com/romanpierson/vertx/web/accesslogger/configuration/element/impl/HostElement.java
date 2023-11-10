@@ -81,17 +81,5 @@ public class HostElement implements AccessLogElement{
 		}
 	}
 
-	@Override
-	public Collection<Type> claimDataParts() {
-
-		if(Mode.LOCAL_HOST.equals(this.mode)) {
-			// Host is in headers
-			return Collections.singletonList(AccessLoggerConstants.Request.Data.Type.REQUEST_HEADERS);
-		}
-		
-		return AccessLogElement.super.claimDataParts();
-	}
-	
-	
 	
 }
