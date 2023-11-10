@@ -165,9 +165,6 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 		final HttpServerRequest request = context.request();
 		final HttpServerResponse response = context.response();
 		
-		// getHeader is case insensitive
-		final String headerHostValue = request.getHeader("Host");
-		
 		JsonObject jsonValues = new JsonObject()
 										.put(RawEvent.Request.IDENTIFIERS, this.registeredIdentifiers)
 										.put(Data.Type.START_TS_MILLIS.getFieldName(), startTSmillis)
@@ -177,7 +174,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 										.put(Data.Type.URI.getFieldName(), request.path())
 										.put(Data.Type.VERSION.getFieldName(), request.version())
 										.put(Data.Type.REMOTE_HOST.getFieldName(), request.remoteAddress().host())
-										.put(Data.Type.LOCAL_HOST.getFieldName(), headerHostValue.contains(":") ? headerHostValue.substring(0, headerHostValue.indexOf(":")): headerHostValue)
+										.put(Data.Type.LOCAL_HOST.getFieldName(), request.authority() == null ? null : request.authority().host())
 										.put(Data.Type.LOCAL_PORT.getFieldName(), request.localAddress().port());
 		
 		if(request.query() != null && !request.query().trim().isEmpty()){
@@ -205,7 +202,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 	private JsonObject extractHeaders(final MultiMap headersMap){
 		
 		JsonObject headers = new JsonObject();
-		headersMap.forEach(entry -> headers.put(entry.getKey(), entry.getValue()));
+		headersMap.forEach(entry -> headers.put(entry.getKey().toLowerCase(), entry.getValue()));
 		
 		return headers;
 		

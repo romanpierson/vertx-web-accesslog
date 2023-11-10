@@ -96,7 +96,7 @@ class ElementTest {
 		
 		vertx.eventBus().<JsonArray>consumer("target", message -> {
 			
-			assertEquals(30, message.body().size());
+			assertEquals(32, message.body().size());
 			
 			assertEquals("33", message.body().getString(0));
 			assertEquals("33", message.body().getString(1));
@@ -122,12 +122,14 @@ class ElementTest {
 			assertEquals("xy", message.body().getString(21));
 			assertEquals("envVal1", message.body().getString(22));
 			assertEquals("header1val", message.body().getString(23));
-			assertEquals("", message.body().getString(24));
-			assertEquals("application/json; charset=utf-8", message.body().getString(25));
-			assertEquals("", message.body().getString(26));
-			assertEquals("cookie1Value", message.body().getString(27));
-			assertEquals("cookie2Value", message.body().getString(28));
-			assertEquals("", message.body().getString(29));
+			assertEquals("header1val", message.body().getString(24));
+			assertEquals("", message.body().getString(25));
+			assertEquals("application/json; charset=utf-8", message.body().getString(26));
+			assertEquals("application/json; charset=utf-8", message.body().getString(27));
+			assertEquals("", message.body().getString(28));
+			assertEquals("cookie1Value", message.body().getString(29));
+			assertEquals("cookie2Value", message.body().getString(30));
+			assertEquals("", message.body().getString(31));
 			
 			testContext.completeNow();
 		});

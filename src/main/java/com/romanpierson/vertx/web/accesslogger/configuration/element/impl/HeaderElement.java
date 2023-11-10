@@ -39,7 +39,7 @@ public class HeaderElement implements AccessLogElement{
 		
 		HeaderElement element = new HeaderElement();
 		element.mode = mode;
-		element.identifier = identifier;
+		element.identifier = identifier.toLowerCase();
 		
 		return element;
 	}
