@@ -22,7 +22,7 @@ import com.romanpierson.vertx.web.accesslogger.configuration.element.impl.Status
 
 public class PatternResolverTest {
 
-    //@Test
+    @Test
     public void resolvePattern_off_the_shelf_pattern() {
         PatternResolver patternResolver = new PatternResolver();
         String logPattern = "server1 %{server1}static %{Accept-Encoding}i %t %D cs-uri %{foo}C";
@@ -36,7 +36,7 @@ public class PatternResolverTest {
         assertResolvedPatterns(expected, actual);
     }
 
-    //@Test
+    @Test
     public void resolvePattern_single_pattern_element() {
         PatternResolver patternResolver = new PatternResolver();
         String logPattern = "%m";
@@ -48,7 +48,7 @@ public class PatternResolverTest {
         assertResolvedPatterns(expected, actual);
     }
 
-    //@Test
+    @Test
     public void resolvePattern_two_pattern_elements() {
         PatternResolver patternResolver = new PatternResolver();
         String logPattern = "%D %m";
@@ -60,7 +60,7 @@ public class PatternResolverTest {
         assertResolvedPatterns(expected, actual);
     }
 
-    //@Test
+    @Test
     public void resolvePattern_two_pattern_elements_reversed_order() {
         PatternResolver patternResolver = new PatternResolver();
         String logPattern = "%m %D";
@@ -72,7 +72,7 @@ public class PatternResolverTest {
         assertResolvedPatterns(expected, actual);
     }
 
-    //@Test
+    @Test
     public void resolvePattern_duplicate_pattern_elements() {
         PatternResolver patternResolver = new PatternResolver();
         String logPattern = "%s %s %s";
@@ -84,7 +84,7 @@ public class PatternResolverTest {
         assertResolvedPatterns(expected, actual);
     }
     
-    //@Test
+    @Test
     public void resolvePattern_unresolvable_parts() {
         PatternResolver patternResolver = new PatternResolver();
         String logPattern = "xx %m yy";

@@ -29,53 +29,55 @@ public class SimpleJsonResponseVerticle extends AbstractVerticle {
 				.setConfig(new JsonObject().put("path", configFile));
 
     	ConfigRetriever retriever = ConfigRetriever.create(vertx,  new ConfigRetrieverOptions().addStore(store));
-
-    	retriever.getConfig(result -> {
-    		
-    		if(result.succeeded()) {
-    			router
-    	    		.route()
-    	    		.handler(BodyHandler.create())
-    	    		.handler(AccessLoggerHandler.create(result.result())
-    	    	);
+    	
+    	retriever
+    		.getConfig()
+    		.onComplete(result -> {
     			
-    			router
-    				.post("/posttest")
-    					.handler(ctx -> {
-    						
-    						//System.out.println(ctx.body());
+    			if(result.succeeded()) {
+        			router
+        	    		.route()
+        	    		.handler(BodyHandler.create())
+        	    		.handler(AccessLoggerHandler.create(result.result())
+        	    	);
+        			
+        			router
+        				.post("/posttest")
+        					.handler(ctx -> {
+        						
+        						//System.out.println(ctx.body());
 
-    						final JsonObject resultJson = new JsonObject();
+        						final JsonObject resultJson = new JsonObject();
+            					
+        						resultJson.put("uri", ctx.request().uri());
         					
-    						resultJson.put("uri", ctx.request().uri());
+        						ctx.response().putHeader("Content-Type", "application/json; charset=utf-8").end(resultJson.encodePrettily());
+        					});
+        			
+        			router
+    					.get("/empty")
+    						.handler(ctx -> {
     					
-    						ctx.response().putHeader("Content-Type", "application/json; charset=utf-8").end(resultJson.encodePrettily());
-    					});
+    							ctx.response().putHeader("Content-Type", "application/json; charset=utf-8").end();
+    						});
+        			
+        			router
+        				.get()
+        					.handler(ctx -> {
+        					
+        						final JsonObject resultJson = new JsonObject();
+        					
+        						resultJson.put("uri", ctx.request().uri());
+        					
+        						ctx.response().putHeader("Content-Type", "application/json; charset=utf-8").end(resultJson.encodePrettily());
+        					});
+        			
+        			vertx.createHttpServer().requestHandler(router).listen(8080);
+        			
+        			startPromise.complete();
+        		}
     			
-    			router
-					.get("/empty")
-						.handler(ctx -> {
-					
-							ctx.response().putHeader("Content-Type", "application/json; charset=utf-8").end();
-						});
-    			
-    			router
-    				.get()
-    					.handler(ctx -> {
-    					
-    						final JsonObject resultJson = new JsonObject();
-    					
-    						resultJson.put("uri", ctx.request().uri());
-    					
-    						ctx.response().putHeader("Content-Type", "application/json; charset=utf-8").end(resultJson.encodePrettily());
-    					});
-    			
-    			vertx.createHttpServer().requestHandler(router).listen(8080);
-    			
-    			startPromise.complete();
-    		}
-    		
-    	});
+    		});
     	
     }
 

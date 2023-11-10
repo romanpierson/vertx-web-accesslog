@@ -44,11 +44,13 @@ class LoggingAppenderTest {
 			testContext.completeNow();
 		});
 		
-		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-				
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-logging-appender-invalid-loggername.yaml"));
-				
-		}));
+		vertx
+			.deployVerticle(new AccessLoggerProducerVerticle())
+			.onComplete(testContext.succeeding(deploymentId -> {
+				vertx
+					.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-logging-appender-invalid-loggername.yaml"))
+					.onComplete(testContext.succeedingThenComplete());
+			}));
 	}
 	
 	@Test
@@ -68,11 +70,13 @@ class LoggingAppenderTest {
 			testContext.completeNow();
 		});
 		
-		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-				
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-logging-appender-invalid-logpattern.yaml"));
-				
-		}));
+		vertx
+			.deployVerticle(new AccessLoggerProducerVerticle())
+			.onComplete(testContext.succeeding(deploymentId -> {
+				vertx
+					.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-logging-appender-invalid-logpattern.yaml"))
+					.onComplete(testContext.succeedingThenComplete());
+			}));
 	}
 	
 	// TODO this test needs to be fixed - need to check how the message written by logback can be read and verified
@@ -87,40 +91,46 @@ class LoggingAppenderTest {
 			testContext.failNow(throwable);
 		});
 		
-		vertx.deployVerticle(new AccessLoggerProducerVerticle(),testContext.succeeding(id -> {
-			vertx.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-logging-appender-valid.yaml"), testContext.succeeding(id2 -> {
-					
-				// Just to fix github actions issue
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// we dont care
-				}
-				
-				System.setOut(new PrintStream(catchingStream));
-				
-				HttpClient client = vertx.createHttpClient();
-				
-				client
-					.request(HttpMethod.GET, 8080, "localhost", "/test")
-					.compose(req -> req.send().compose(HttpClientResponse::body))
-					.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
-					
-						// Ensure it got logged by slf4j/logback
-						Thread.sleep(1000);
-						
-						//assertEquals("/test\n", catchingStream.toString());
-						
-						System.setOut(originalStream);
-						
-						
-						//System.out.println(catchingStream);
-						//assertEquals("/test", catchingStream.toString());
-						
-						testContext.completeNow();
-						
-					})));
-			}));
-		}));
+		vertx
+			.deployVerticle(new AccessLoggerProducerVerticle())
+				.onComplete(testContext.succeeding(deploymentId -> {
+					vertx
+						.deployVerticle(new SimpleJsonResponseVerticle("accesslog-config-logging-appender-valid.yaml"))
+						.onComplete(testContext.succeeding(deploymentId2 -> {
+							
+							// Just to fix github actions issue
+							try {
+								Thread.sleep(1000);
+							} catch (InterruptedException e) {
+								// we dont care
+							}
+							
+							System.setOut(new PrintStream(catchingStream));
+							
+							HttpClient client = vertx.createHttpClient();
+							
+							client
+								.request(HttpMethod.GET, 8080, "localhost", "/test")
+								.compose(req -> req.send().compose(HttpClientResponse::body))
+								.onComplete(testContext.succeeding(buffer -> testContext.verify(() -> {
+								
+									// Ensure it got logged by slf4j/logback
+									Thread.sleep(1000);
+									
+									//assertEquals("/test\n", catchingStream.toString());
+									
+									System.setOut(originalStream);
+									
+									
+									//System.out.println(catchingStream);
+									//assertEquals("/test", catchingStream.toString());
+									
+									testContext.completeNow();
+									
+								})));
+							
+						}));
+				}));
+		
 	}
 }
