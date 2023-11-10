@@ -14,12 +14,9 @@ package com.romanpierson.vertx.web.accesslogger.configuration.element.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Objects;
 
-import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants;
 import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants.Request.Data;
-import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants.Request.Data.Type;
 import com.romanpierson.vertx.web.accesslogger.configuration.element.AccessLogElement;
 import com.romanpierson.vertx.web.accesslogger.configuration.pattern.ExtractedPosition;
 import com.romanpierson.vertx.web.accesslogger.util.FormatUtility;
