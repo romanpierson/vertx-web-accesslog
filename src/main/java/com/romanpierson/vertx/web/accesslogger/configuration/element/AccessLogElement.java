@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2023 Roman Pierson
+ * Copyright (c) 2016-2024 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -65,9 +65,7 @@ public interface AccessLogElement {
 		
 	}
 
-	String getFormattedValue(JsonObject values);
-	
-	
+	Object getNativeValue(JsonObject values);
 	
 	
 }

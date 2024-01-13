@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2023 Roman Pierson
+ * Copyright (c) 2016-2024 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -17,9 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ServiceLoader;
-
-import org.junit.jupiter.api.Test;
 
 import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants.Request.Data;
 import com.romanpierson.vertx.web.accesslogger.configuration.element.impl.DurationElement;
@@ -56,8 +53,8 @@ public class DurationElementCustomTest {
 		assertEquals("%r".length(), ep.getOffset());
 		
 		// Test if the output of the looked up element is correct
-		assertEquals(expectedOutputWithQuery, ep.getElementSupplier().get().getFormattedValue(new JsonObject(valuesWithQuery)));
-		assertEquals(expectedOutputWithoutQuery, ep.getElementSupplier().get().getFormattedValue(new JsonObject(valuesWithoutQuery)));
+		assertEquals(expectedOutputWithQuery, ep.getElementSupplier().get().getNativeValue(new JsonObject(valuesWithQuery)));
+		assertEquals(expectedOutputWithoutQuery, ep.getElementSupplier().get().getNativeValue(new JsonObject(valuesWithoutQuery)));
 	}
 	
 	/**

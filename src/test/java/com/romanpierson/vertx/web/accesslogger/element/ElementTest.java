@@ -17,6 +17,7 @@ import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpClientResponse;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.WebClient;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
@@ -33,6 +34,7 @@ class ElementTest {
 	 * @param vertx
 	 * @param testContext
 	 */
+	
 	@Test
 	void testWithEmptyResponse(Vertx vertx, VertxTestContext testContext) {
 			
@@ -44,7 +46,7 @@ class ElementTest {
 			
 			assertEquals(2, message.body().size());
 			assertEquals("-", message.body().getString(0));
-			assertEquals("0", message.body().getString(1));
+			assertEquals(0, message.body().getLong(1));
 			
 			testContext.completeNow();
 		});
@@ -98,12 +100,12 @@ class ElementTest {
 			
 			assertEquals(32, message.body().size());
 			
-			assertEquals("33", message.body().getString(0));
-			assertEquals("33", message.body().getString(1));
-			assertTrue(Long.parseLong(message.body().getString(2)) >= 0);
-			assertTrue(Long.parseLong(message.body().getString(3)) >= 0);
-			assertEquals("200", message.body().getString(4));
-			assertEquals("200", message.body().getString(5));
+			assertEquals(33, message.body().getLong(0));
+			assertEquals(33, message.body().getLong(1));
+			assertTrue(message.body().getLong(2) >= 0);
+			assertTrue(message.body().getLong(3) >= 0);
+			assertEquals(200, message.body().getInteger(4));
+			assertEquals(200, message.body().getInteger(5));
 			assertEquals("HTTP/1.1", message.body().getString(6));
 			assertNotNull(message.body().getString(7));
 			assertEquals("localhost", message.body().getString(8));
@@ -123,13 +125,13 @@ class ElementTest {
 			assertEquals("envVal1", message.body().getString(22));
 			assertEquals("header1val", message.body().getString(23));
 			assertEquals("header1val", message.body().getString(24));
-			assertEquals("", message.body().getString(25));
+			assertEquals(null, message.body().getString(25));
 			assertEquals("application/json; charset=utf-8", message.body().getString(26));
 			assertEquals("application/json; charset=utf-8", message.body().getString(27));
-			assertEquals("", message.body().getString(28));
+			assertEquals(null, message.body().getString(28));
 			assertEquals("cookie1Value", message.body().getString(29));
 			assertEquals("cookie2Value", message.body().getString(30));
-			assertEquals("", message.body().getString(31));
+			assertEquals(null, message.body().getString(31));
 			
 			testContext.completeNow();
 		});

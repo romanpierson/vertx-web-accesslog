@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2023 Roman Pierson
+ * Copyright (c) 2016-2024 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -12,7 +12,8 @@
  */
 package com.romanpierson.vertx.web.accesslogger.appender;
 
-import io.vertx.core.json.JsonArray;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -25,13 +26,16 @@ public interface Appender {
 
 	/**
 	 * 
-	 * Push the access events to the appender.
+	 * Push the access element values to the appender.
+	 * 
+	 * Those values can contain native data types and null values
 	 * 
 	 * Its the appenders responsibility to implement local storage 
 	 * 
-	 * @param accessEvent	List of access events the appender should handle - those are no copies
+	 * @param rawAccessElementValues	List of access events the appender should handle - those are no copies
+	 * @param internalValues			A list of internal values that are sent independent from the configured access log elements
 	 */
-	void push(JsonArray accessEvent);
+	void push(List<Object> rawAccessElementValues, Map<String, Object> internalValues);
 	
 	
 	/**

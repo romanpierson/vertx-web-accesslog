@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2023 Roman Pierson
+ * Copyright (c) 2016-2024 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -13,7 +13,10 @@
 package com.romanpierson.vertx.web.accesslogger.appender.elasticsearch.impl;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
+import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants;
 import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants.ElasticSearchAppenderConfig;
 import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants.ElasticSearchAppenderConfig.Field;
 import com.romanpierson.vertx.web.accesslogger.appender.Appender;
@@ -39,12 +42,10 @@ public class ElasticSearchAppender implements Appender {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 	
 	private static final String CONFIG_KEY_INSTANCE_IDENTIFER = "instanceIdentifier";
-	private static final String CONFIG_KEY_TIMESTAMP_POSITION = "timestampPosition";
 	private static final String CONFIG_KEY_FIELD_NAMES = "fieldNames";
 
 	private final EventBus vertxEventBus;
 	
-	private final int timestampPosition;
 	private final String instanceIdentifier;
 	private final Collection<String> fieldNames;
 	
@@ -59,54 +60,55 @@ public class ElasticSearchAppender implements Appender {
 		
 		this.vertxEventBus = Vertx.currentContext().owner().eventBus();
 		
-		this.timestampPosition = config.getInteger(CONFIG_KEY_TIMESTAMP_POSITION, 0);
 		this.instanceIdentifier = config.getString(CONFIG_KEY_INSTANCE_IDENTIFER);
 		this.fieldNames = config.getJsonArray(CONFIG_KEY_FIELD_NAMES).getList();
 		
-		logger.info("Created ElasticSearchAppender with " + CONFIG_KEY_INSTANCE_IDENTIFER + " [" + this.instanceIdentifier + "], " + CONFIG_KEY_TIMESTAMP_POSITION + " [" + this.timestampPosition + "], " + CONFIG_KEY_FIELD_NAMES + " " +this.fieldNames);
+		logger.info("Created ElasticSearchAppender with " + CONFIG_KEY_INSTANCE_IDENTIFER + " [" + this.instanceIdentifier + "], " + CONFIG_KEY_FIELD_NAMES + " " +this.fieldNames);
 	}
 	
-	private String[] getParameterValues(final JsonArray values){
+	private Object[] getParameterValuesCopy(List<Object> rawAccessElementValues){
 		
-		final String[] parameterValues = new String[values.size()];
+		final Object[] parameterValues = new Object[rawAccessElementValues.size()];
 
 		int i = 0;
-		for (final Object xValue : values.getList()) {
-			parameterValues[i] = (String) xValue;
+		for (final Object xValue : rawAccessElementValues) {
+			parameterValues[i] = xValue;
 			i++;
 		}
 		
 		return parameterValues;
 		
 	}
-
+	
 	@Override
-	public void push(final JsonArray accessEvent) {
+	public void push(final List<Object> rawAccessElementValues, Map<String, Object> internalValues) {
 		
-		final long metaTimestamp = this.timestampPosition < 0 ? System.currentTimeMillis() : Long.parseLong(accessEvent.getString(this.timestampPosition));
+		// Just send the accesslog event to the indexer
+		JsonObject jsonMeta = new JsonObject();
+		jsonMeta.put(Field.TIMESTAMP, (Long) internalValues.get(AccessLoggerConstants.InternalValues.TIMESTAMP));
+		jsonMeta.put(Field.INSTANCE_IDENTIFIER, this.instanceIdentifier);
 			
-			// Just send the accesslog event to the indexer
-			JsonObject jsonMeta = new JsonObject();
-			jsonMeta.put(Field.TIMESTAMP, metaTimestamp);
-			jsonMeta.put(Field.INSTANCE_IDENTIFIER, this.instanceIdentifier);
+		JsonObject jsonMessage = new JsonObject();
 			
-			JsonObject jsonMessage = new JsonObject();
+		// TODO do we really need a copy?
+		Object [] nativeParameterValues = getParameterValuesCopy(rawAccessElementValues);
 			
-			String [] parameterValues = getParameterValues(accessEvent);
-			
-			int i = 0;
-			for(String fieldName : fieldNames) {
-				if(this.timestampPosition != i) {
-					jsonMessage.put(fieldName, parameterValues[i]);
-				}
-				i++;
+		int i = 0;
+		for(String fieldName : fieldNames) {
+				
+			if(nativeParameterValues[i] != null){
+				// Values having no value we dont send either
+				jsonMessage.put(fieldName, nativeParameterValues[i]);
 			}
+				
+			i++;
+		}
 			
-			JsonObject json = new JsonObject()
+		JsonObject json = new JsonObject()
 					.put(Field.META, jsonMeta)
 					.put(Field.MESSAGE, jsonMessage);
 			
-			this.vertxEventBus.send(ElasticSearchAppenderConfig.ELASTICSEARCH_INDEXER_EVENTBUS_EVENT_NAME,  json);
+		this.vertxEventBus.send(ElasticSearchAppenderConfig.ELASTICSEARCH_INDEXER_EVENTBUS_EVENT_NAME,  json);
 			
 	}
 	
