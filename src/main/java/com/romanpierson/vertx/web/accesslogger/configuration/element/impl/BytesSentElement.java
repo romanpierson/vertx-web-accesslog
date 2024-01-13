@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2023 Roman Pierson
+ * Copyright (c) 2016-2024 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -56,14 +56,14 @@ public class BytesSentElement implements AccessLogElement{
 	}
 	
 	@Override
-	public String getFormattedValue(final JsonObject values) {
-	
+	public Object getNativeValue(final JsonObject values) {
+		
 		final long bytes = values.getLong(Data.Type.BYTES_SENT.getFieldName(), DEFAULT_VALUE);
 		
 		if(bytes > 0) {
-			return Long.toString(bytes);
+			return Long.valueOf(bytes);
 		} else {
-			return Mode.NO_BYTES_DASH.equals(this.mode) ? "-" : "0";
+			return Mode.NO_BYTES_DASH.equals(this.mode) ? "-" : Long.valueOf(0);
 		}
 		
 	}

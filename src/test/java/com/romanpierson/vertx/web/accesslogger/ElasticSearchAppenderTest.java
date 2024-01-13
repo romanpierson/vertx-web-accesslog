@@ -19,7 +19,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpClientResponse;
 import io.vertx.core.http.HttpMethod;
-import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 
@@ -72,11 +72,22 @@ class ElasticSearchAppenderTest {
 			testContext.failNow(throwable);
 		});
 		
-		vertx.eventBus().<JsonArray>consumer(ElasticSearchAppenderConfig.ELASTICSEARCH_INDEXER_EVENTBUS_EVENT_NAME, message -> {
-			//assertEquals(1, message.body().size());
-			//assertEquals("/test", message.body().getString(0));
-			System.out.println(message.body());
-			// TODO verify content
+		vertx.eventBus().<JsonObject>consumer(ElasticSearchAppenderConfig.ELASTICSEARCH_INDEXER_EVENTBUS_EVENT_NAME, message -> {
+			
+			// Verify the meta data
+			JsonObject logEntry = message.body();
+			
+			// Verify the meta section
+			JsonObject metaEntry = logEntry.getJsonObject("meta");
+			assertEquals("esInstance", metaEntry.getString("instance_identifier"));
+			assertTrue(metaEntry.getLong("timestamp").longValue() > 0);
+			
+			
+			// Verify the data section
+			JsonObject messageEntry = logEntry.getJsonObject("message");
+			assertEquals("/test", messageEntry.getString("uri"));
+			assertTrue(messageEntry.getLong("duration").longValue() >= 0);
+			
 			testContext.completeNow();
 		});
 		

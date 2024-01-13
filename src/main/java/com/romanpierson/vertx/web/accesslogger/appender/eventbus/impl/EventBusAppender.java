@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2023 Roman Pierson
+ * Copyright (c) 2016-2024 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -11,6 +11,9 @@
  * You may elect to redistribute this code under either of these licenses.
  */
 package com.romanpierson.vertx.web.accesslogger.appender.eventbus.impl;
+
+import java.util.List;
+import java.util.Map;
 
 import com.romanpierson.vertx.web.accesslogger.appender.Appender;
 
@@ -52,10 +55,21 @@ private static final String CONFIG_KEY_TARGET_ADDRESS = "targetAddress";
 	}
 	
 	@Override
-	public void push(final JsonArray accessEvent) {
+	public void push(final List<Object> rawAccessElementValues, Map<String, Object> internalValues) {
 		
-		vertxEventBus.send(this.eventBusTargetAddress,  accessEvent);
+		// TODO should we make a copy?
 		
+		vertxEventBus.send(this.eventBusTargetAddress,  convertToJsonArray(rawAccessElementValues));
+		
+	}
+	
+	private JsonArray convertToJsonArray(List<Object> rawAccessElementValues){
+		
+		JsonArray s = new JsonArray();
+		
+		rawAccessElementValues.forEach(x -> s.add(x));
+		
+		return s;
 	}
 	
 }

@@ -10,7 +10,7 @@ configurations:
   - identifier: accesslog-plain
     logPattern: "%{msec}t %D cs-uri"
     appenders:
-      - appenderClassName : com.mdac.vertx.web.accesslogger.appender.elasticsearch.impl.ElasticSearchAppender
+      - appenderClassName : com.romanpierson.vertx.web.accesslogger.appender.elasticsearch.impl.ElasticSearchAppender
         config:
           instanceIdentifier: accesslog
           fieldNames:

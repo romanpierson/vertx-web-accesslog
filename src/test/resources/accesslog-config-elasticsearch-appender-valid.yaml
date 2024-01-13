@@ -1,11 +1,11 @@
 isAutoDeployProducerVerticle: false
 configurations:
   - identifier: accesslog-formatted
-    logPattern: '"%{msec}t cs-uri"'
+    logPattern: 'cs-uri %D'
     appenders:
       - appenderClassName : com.romanpierson.vertx.web.accesslogger.appender.elasticsearch.impl.ElasticSearchAppender
         config:
           instanceIdentifier: esInstance
           fieldNames:
-            - timestamp
             - uri
+            - duration

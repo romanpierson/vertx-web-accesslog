@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2023 Roman Pierson
+ * Copyright (c) 2016-2024 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -12,9 +12,11 @@
  */
 package com.romanpierson.vertx.web.accesslogger.verticle;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -59,17 +61,18 @@ public class AccessLoggerProducerVerticle extends AbstractVerticle {
 
 		vertx.eventBus().<JsonObject>consumer(AccessLoggerConstants.EVENTBUS_RAW_EVENT_NAME, event -> {
 
-			JsonArray identifiers = event.body().getJsonArray(RawEvent.Request.IDENTIFIERS);
-
+			JsonObject eventBody = event.body();
+			JsonArray identifiers = eventBody.getJsonArray(RawEvent.Request.IDENTIFIERS);
+			
 			for (Object x : identifiers.getList()) {
 				String identifier = (String) x;
 				if (resolvedLoggerConfigurations.containsKey(identifier)) {
 
-					JsonArray formatted = getFormattedValues(
-							resolvedLoggerConfigurations.get(identifier).getResolvedLogElements(), event.body());
-
+					List<Object> nativeValues = getNativeValues(resolvedLoggerConfigurations.get(identifier).getResolvedLogElements(), event.body());
+					Map<String, Object> internalValues = getInternalValues(eventBody);
+					
 					for (Appender appender : resolvedLoggerConfigurations.get(identifier).getRawAppender()) {
-						appender.push(formatted);
+						appender.push(nativeValues, internalValues);
 					}
 				}
 			}
@@ -82,6 +85,12 @@ public class AccessLoggerProducerVerticle extends AbstractVerticle {
 
 		);
 
+	}
+	
+	private Map<String,Object> getInternalValues(final JsonObject eventBody){
+		
+		return Map.of(AccessLoggerConstants.InternalValues.TIMESTAMP, eventBody.getLong(Data.Type.START_TS_MILLIS.getFieldName()));
+		
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -170,16 +179,16 @@ public class AccessLoggerProducerVerticle extends AbstractVerticle {
 
 	}
 
-	private JsonArray getFormattedValues(final Collection<AccessLogElement> logElements, final JsonObject rawValue) {
-
-		JsonArray value = new JsonArray();
+	
+	private List<Object> getNativeValues(final Collection<AccessLogElement> logElements, final JsonObject rawValue) {
+		
+		List<Object> values = new ArrayList<>(logElements.size());
 
 		for (final AccessLogElement alElement : logElements) {
-			final String formattedValue = alElement.getFormattedValue(rawValue);
-			value.add(formattedValue != null ? formattedValue : "");
+			values.add(alElement.getNativeValue(rawValue));
 		}
-
-		return value;
+		
+		return values;
 
 	}
 
