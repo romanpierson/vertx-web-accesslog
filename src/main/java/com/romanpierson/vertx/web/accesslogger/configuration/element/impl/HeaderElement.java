@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2023 Roman Pierson
+ * Copyright (c) 2016-2024 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -61,7 +61,7 @@ public class HeaderElement implements AccessLogElement{
 	}
 	
 	@Override
-	public String getFormattedValue(final JsonObject values) {
+	public Object getNativeValue(final JsonObject values) {
 		
 		final JsonObject headers =  Mode.INCOMING.equals(this.mode) ? values.getJsonObject(Data.Type.REQUEST_HEADERS.getFieldName()) : values.getJsonObject(Data.Type.RESPONSE_HEADERS.getFieldName());
 		

@@ -62,3 +62,15 @@
 
 * Headers case insensitive
 * Upgrade to latest versions
+
+### 1.7.0
+
+(2024-01-13)
+
+* Native handling of values
+* All Log Elements return now native objects if possible
+* String based Appenders have to stringify themselves
+* Appenders that understand native objects benefit from this change
+* **BREAKING CHANGE**: `Appender.push` signature changed and simplified - only relevant if you have a custom Appender
+* Upgrade to Vert.x 4.5.1 -> Ready for Virtual Threads
+* Automatic injection of `timestamp` for `ElasticSearchAppender` - no need anymore to define it artifically in logPattern

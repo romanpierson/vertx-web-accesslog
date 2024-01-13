@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2023 Roman Pierson
+ * Copyright (c) 2016-2024 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -38,9 +38,9 @@ public class StatusElement implements AccessLogElement{
 	}
 	
 	@Override
-	public String getFormattedValue(final JsonObject values) {
+	public Object getNativeValue(final JsonObject values) {
 		
-		return Integer.toString(values.getInteger(Data.Type.STATUS.getFieldName()));
+		return values.getInteger(Data.Type.STATUS.getFieldName());
 		
 	}
 	

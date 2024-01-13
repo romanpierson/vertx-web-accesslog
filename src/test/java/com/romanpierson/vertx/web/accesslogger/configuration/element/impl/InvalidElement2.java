@@ -24,7 +24,7 @@ public class InvalidElement2 implements AccessLogElement {
 	}
 
 	@Override
-	public String getFormattedValue(JsonObject values) {
+	public Object getNativeValue(JsonObject values) {
 		
 		return null;
 		

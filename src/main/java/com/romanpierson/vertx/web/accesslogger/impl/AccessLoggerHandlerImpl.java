@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2023 Roman Pierson
+ * Copyright (c) 2016-2024 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -27,6 +27,7 @@ import com.romanpierson.vertx.web.accesslogger.verticle.AccessLoggerProducerVert
 
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.MultiMap;
+import io.vertx.core.ThreadingModel;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.Cookie;
@@ -79,7 +80,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 					
 					logger.info("Start creating singleton verticle");
 					
-					Vertx.currentContext().owner().deployVerticle(AccessLoggerProducerVerticle.class.getName(), new DeploymentOptions().setWorker(true));
+					Vertx.currentContext().owner().deployVerticle(AccessLoggerProducerVerticle.class.getName(), new DeploymentOptions().setThreadingModel(ThreadingModel.WORKER));
 					
 					isProducerVerticleCreated = true;
 						
@@ -166,7 +167,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 										.put(Data.Type.URI.getFieldName(), request.path())
 										.put(Data.Type.VERSION.getFieldName(), request.version())
 										.put(Data.Type.REMOTE_HOST.getFieldName(), request.remoteAddress().host())
-										.put(Data.Type.LOCAL_HOST.getFieldName(), request.host().contains(":") ? request.host().substring(0, request.host().indexOf(":")): request.host())
+										.put(Data.Type.LOCAL_HOST.getFieldName(), request.authority() == null ? null : request.authority().host())
 										.put(Data.Type.LOCAL_PORT.getFieldName(), request.localAddress().port());
 		
 		if(request.query() != null && !request.query().trim().isEmpty()){

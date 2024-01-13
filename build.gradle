@@ -2,7 +2,7 @@ plugins {
 	id 'java'
 	id 'maven-publish'
 	id 'jacoco'
-    id "org.sonarqube" version "4.0.0.2929"
+    id "org.sonarqube" version "4.4.1.3373"
 }
 
 repositories {
@@ -10,7 +10,7 @@ repositories {
 }
 
 ext{
-	vertxVersion = '4.5.0'
+	vertxVersion = '4.5.1'
 	jupiterVersion = '5.10.1'
 	jupiterLauncherVersion = '1.10.1'
 	slfApiVersion = '2.0.9'
@@ -39,10 +39,12 @@ test {
     finalizedBy jacocoTestReport
 }
 
-sourceCompatibility='1.8'
-targetCompatibility='1.8'
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
 
-jar.archiveFileName = "vertx-web-accesslog-1.6.1.jar"
+jar.archiveFileName = "vertx-web-accesslog-1.7.0.jar"
 
 java {
     withSourcesJar()
@@ -52,9 +54,9 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             
-            groupId 'com.mdac'
+            groupId 'com.romanpierson'
             artifactId 'vertx-web-accesslog'
-            version '1.6.1'
+            version '1.7.0'
             
             from components.java
 
@@ -79,6 +81,6 @@ jacocoTestReport {
 }
 
 wrapper() {
-  gradleVersion = '8.0.2'
+  gradleVersion = '8.5'
 }
 
