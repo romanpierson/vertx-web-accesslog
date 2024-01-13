@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2023 Roman Pierson
+ * Copyright (c) 2016-2024 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -32,6 +32,14 @@ public class AccessLoggerConstants {
 		public static final String CONFIG_KEY_APPENDERS = "appenders";
 		public static final String CONFIG_KEY_APPENDER_CLASS_NAME = "appenderClassName";
 		public static final String CONFIG_KEY_IS_AUTO_DEPLOY_PRODUCER_VERTICLE = "isAutoDeployProducerVerticle";
+	}
+	
+	public static class InternalValues {
+		
+		private InternalValues() {}
+		
+		public static final String TIMESTAMP = "timestamp";
+		
 	}
 	
 	public static class Messages {

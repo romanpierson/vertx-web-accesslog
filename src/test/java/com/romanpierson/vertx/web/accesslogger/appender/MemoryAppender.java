@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2023 Roman Pierson
+ * Copyright (c) 2016-2024 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -12,12 +12,16 @@
  */
 package com.romanpierson.vertx.web.accesslogger.appender;
 
+import java.util.List;
+import java.util.Map;
+
 import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants;
 
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+
+import static com.romanpierson.vertx.web.accesslogger.util.FormatUtility.getStringifiedParameterValues;
 
 /**
  * 
@@ -45,28 +49,13 @@ public class MemoryAppender implements Appender {
 	}
 	
 	@Override
-	public void push(JsonArray accessEvent) {
-		
-		Object [] parameterValues = getParameterValues(accessEvent);
+	public void push(List<Object> rawAccessElementValues, Map<String, Object> internalValues) {
 			
-		final String formattedString = String.format(this.resolvedPattern, parameterValues);
+		final String formattedString = String.format(this.resolvedPattern, getStringifiedParameterValues(rawAccessElementValues));
 			
 		System.out.println(formattedString);
 			
 	}
 	
-	private Object[] getParameterValues(final JsonArray values){
-		
-		final String[] parameterValues = new String[values.size()];
-
-		int i = 0;
-		for (final Object xValue : values.getList()) {
-			parameterValues[i] = (String) xValue;
-			i++;
-		}
-		
-		return parameterValues;
-		
-	}
 
 }

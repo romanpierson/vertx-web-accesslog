@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2023 Roman Pierson
+ * Copyright (c) 2016-2024 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -54,7 +54,7 @@ public class DurationElement implements AccessLogElement{
 	}
 	
 	@Override
-	public String getFormattedValue(final JsonObject values) {
+	public Object getNativeValue(final JsonObject values) {
 		
 		final Long startTS = values.getLong(Data.Type.START_TS_MILLIS.getFieldName());
 		final Long endTS = values.getLong(Data.Type.END_TS_MILLIS.getFieldName());
@@ -65,7 +65,8 @@ public class DurationElement implements AccessLogElement{
 			duration = duration / 1000;
 		}
 		
-		return duration > 0 ? Long.toString(duration) : "0";
+		return duration > 0 ? duration : Long.valueOf(0);
 	}
+	
 
 }

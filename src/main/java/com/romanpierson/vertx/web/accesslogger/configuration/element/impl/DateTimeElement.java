@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2023 Roman Pierson
+ * Copyright (c) 2016-2024 Roman Pierson
  * ------------------------------------------------------
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 
@@ -98,10 +98,10 @@ public class DateTimeElement implements AccessLogElement{
 	}
 
 	@Override
-	public String getFormattedValue(final JsonObject values) {
+	public Object getNativeValue(final JsonObject values) {
 		
 		if(this.dateFormat == null) {
-			return values.getLong(Data.Type.START_TS_MILLIS.getFieldName()).toString();
+			return values.getLong(Data.Type.START_TS_MILLIS.getFieldName());
 		} else {
 			return this.dateFormat.format(values.getLong(Data.Type.START_TS_MILLIS.getFieldName()));
 		}
