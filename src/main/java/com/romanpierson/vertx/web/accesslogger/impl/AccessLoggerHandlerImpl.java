@@ -167,7 +167,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 										.put(Data.Type.URI.getFieldName(), request.path())
 										.put(Data.Type.VERSION.getFieldName(), request.version())
 										.put(Data.Type.REMOTE_HOST.getFieldName(), request.remoteAddress().host())
-										.put(Data.Type.LOCAL_HOST.getFieldName(), request.host().contains(":") ? request.host().substring(0, request.host().indexOf(":")): request.host())
+										.put(Data.Type.LOCAL_HOST.getFieldName(), request.authority() == null ? null : request.authority().host())
 										.put(Data.Type.LOCAL_PORT.getFieldName(), request.localAddress().port());
 		
 		if(request.query() != null && !request.query().trim().isEmpty()){

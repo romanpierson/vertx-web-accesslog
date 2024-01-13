@@ -44,7 +44,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-jar.archiveFileName = "vertx-web-accesslog-1.7.0-RC1.jar"
+jar.archiveFileName = "vertx-web-accesslog-1.7.0.jar"
 
 java {
     withSourcesJar()
@@ -56,7 +56,7 @@ publishing {
             
             groupId 'com.romanpierson'
             artifactId 'vertx-web-accesslog'
-            version '1.7.0-RC1'
+            version '1.7.0'
             
             from components.java
 
