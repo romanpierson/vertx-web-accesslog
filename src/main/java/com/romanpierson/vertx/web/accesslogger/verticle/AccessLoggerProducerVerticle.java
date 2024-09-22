@@ -31,8 +31,8 @@ import com.romanpierson.vertx.web.accesslogger.configuration.pattern.ResolvedPat
 import com.romanpierson.vertx.web.accesslogger.exception.AccessLoggerException;
 
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.impl.logging.Logger;
-import io.vertx.core.impl.logging.LoggerFactory;
+import io.vertx.core.internal.logging.Logger;
+import io.vertx.core.internal.logging.LoggerFactory;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 

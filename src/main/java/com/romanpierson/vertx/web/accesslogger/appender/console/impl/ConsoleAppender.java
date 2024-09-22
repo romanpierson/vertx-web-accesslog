@@ -20,8 +20,8 @@ import java.util.Map;
 import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants;
 import com.romanpierson.vertx.web.accesslogger.appender.Appender;
 
-import io.vertx.core.impl.logging.Logger;
-import io.vertx.core.impl.logging.LoggerFactory;
+import io.vertx.core.internal.logging.Logger;
+import io.vertx.core.internal.logging.LoggerFactory;
 import io.vertx.core.json.JsonObject;
 
 /**

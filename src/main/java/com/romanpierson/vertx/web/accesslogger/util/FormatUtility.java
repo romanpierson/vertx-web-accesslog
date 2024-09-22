@@ -16,8 +16,8 @@ import io.vertx.core.json.JsonObject;
 
 import java.util.List;
 
-import io.vertx.core.impl.logging.Logger;
-import io.vertx.core.impl.logging.LoggerFactory;
+import io.vertx.core.internal.logging.Logger;
+import io.vertx.core.internal.logging.LoggerFactory;
 
 public class FormatUtility {
 
