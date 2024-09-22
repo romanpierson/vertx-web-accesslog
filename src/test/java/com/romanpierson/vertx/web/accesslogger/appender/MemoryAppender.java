@@ -17,8 +17,8 @@ import java.util.Map;
 
 import com.romanpierson.vertx.web.accesslogger.AccessLoggerConstants;
 
-import io.vertx.core.impl.logging.Logger;
-import io.vertx.core.impl.logging.LoggerFactory;
+import io.vertx.core.internal.logging.Logger;
+import io.vertx.core.internal.logging.LoggerFactory;
 import io.vertx.core.json.JsonObject;
 
 import static com.romanpierson.vertx.web.accesslogger.util.FormatUtility.getStringifiedParameterValues;
