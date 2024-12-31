@@ -40,7 +40,7 @@ dependencies {
 
 Accesslog version | Vertx version
 ----|------
-5.0.0-SNAPSHOT | 5.0.0-SNAPSHOT > 
+5.0.0-SNAPSHOT | 5.0.0.CR3 > 
 1.7.0 | 4.5.1 >
 1.6.0 | 4.3.0 >
 1.5.0 | 4.2.0 >
