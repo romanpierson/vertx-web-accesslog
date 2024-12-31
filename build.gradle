@@ -10,11 +10,11 @@ repositories {
 }
 
 ext{
-	vertxVersion = '4.5.10'
-	jupiterVersion = '5.11.0'
-	jupiterLauncherVersion = '1.11.0'
+	vertxVersion = '4.5.11'
+	jupiterVersion = '5.11.4'
+	jupiterLauncherVersion = '1.11.4'
 	slfApiVersion = '2.0.16'
-	logbackVersion = '1.5.8'
+	logbackVersion = '1.5.15'
 }
 
 dependencies {
@@ -51,9 +51,9 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             
-            groupId 'com.romanpierson'
-            artifactId 'vertx-web-accesslog'
-            version '1.7.0'
+            groupId = 'com.romanpierson'
+            artifactId = 'vertx-web-accesslog'
+            version = '1.7.0'
             
             from components.java
 
@@ -61,7 +61,7 @@ publishing {
     }
 }
 
-sonarqube {
+sonar {
     properties {
     	property "sonar.sources", "src/main"
     	property "sonar.tests", "src/test"
@@ -78,6 +78,6 @@ jacocoTestReport {
 }
 
 wrapper() {
-  gradleVersion = '8.10.1'
+  gradleVersion = '8.12'
 }
 
