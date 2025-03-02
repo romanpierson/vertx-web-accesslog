@@ -85,6 +85,7 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 							
 							if(ar.succeeded()) {
 								isProducerVerticleCreated = true;
+								registerHandlers(handlerConfiguration);
 							} else {
 								throw new AccessLoggerException("Unable to deploy AccessLoggerProducerVerticle", ar.cause());
 							}
@@ -94,6 +95,14 @@ public class AccessLoggerHandlerImpl implements AccessLoggerHandler {
 				}
 			}
 		} 
+		else {
+			registerHandlers(handlerConfiguration);
+		}
+		
+		
+	}
+	
+	private void registerHandlers (final JsonObject handlerConfiguration) {
 		
 		handlerConfiguration.getJsonArray(HandlerConfiguration.CONFIG_KEY_CONFIGURATIONS).forEach(xConfiguration -> {
 			
