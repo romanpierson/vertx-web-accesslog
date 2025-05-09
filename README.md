@@ -32,21 +32,26 @@ Just add it as a dependency to your project (gradle example)
 
 ```xml
 dependencies {
-	compile 'com.romanpierson:vertx-web-accesslog:1.7.0'
+	compile 'com.romanpierson:vertx-web-accesslog:2.7.0'
 }
 ```
 
-## Compatibility with Vertx core
+## Compatibility with Vert.x core
 
-Accesslog version | Vertx version
+Since introduction of `vert.x 5` due to some architectural changes the master contains `vert.5` compatible version and its `vert.x 4` compatible counterpart continues on branch `vert.x-4.x`. 
+
+Those two versions are functional equivalent and you should just be able to switch to `vert.5` without any code changes. The plan is also to keep the two versions with same functionality.
+
+Therefore minor version will stay identical but major version will identify if the library is targeted to be used with `vert.x 4` (1) or `vert.x 5` (2)
+
+Accesslog version 4.x / 5.x | Vertx version
 ----|------
-5.0.0-SNAPSHOT | 5.0.0.CR3 > 
-1.7.0 | 4.5.1 >
-1.6.0 | 4.3.0 >
-1.5.0 | 4.2.0 >
-1.4.0 | 4.0.0 - 4.1.x
-1.3.1 | 3.3.0 - 3.7.0
-1.2.0 | 3.3.0 - 3.7.0
+1.7.0 / 2.7.0  | 4.5.1 > / 5.0.0.CR3 >
+1.6.0 / - | 4.3.0 > / -
+1.5.0 / - | 4.2.0 > / -
+1.4.0 / - | 4.0.0 - 4.1.x / -
+1.3.1 / - | 3.3.0 - 3.7.0 / -
+1.2.0 / - | 3.3.0 - 3.7.0 / -
 
 Previous versions are listed for completeness only and not supported anymore.
 
