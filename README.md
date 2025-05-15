@@ -1,4 +1,5 @@
-[![Actions Status](https://github.com/romanpierson/vertx-web-accesslog/workflows/CI/badge.svg)](https://github.com/romanpierson/vertx-web-accesslog/actions)
+[![Build Status (5.x)](https://github.com/romanpierson/vertx-web-accesslog/actions/workflows/ci-vert.x-5.x.yml/badge.svg)](https://github.com/romanpierson/vertx-web-accesslog/actions/workflows/ci-vert.x-5.x.yml)
+[![Build Status (4.x)](https://github.com/romanpierson/vertx-web-accesslog/actions/workflows/ci-vert.x-4.x.yml/badge.svg)](https://github.com/romanpierson/vertx-web-accesslog/actions/workflows/ci-vert.x-4.x.yml)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=romanpierson_vertx-web-accesslog&metric=coverage)](https://sonarcloud.io/dashboard?id=romanpierson_vertx-web-accesslog)
 [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/vert-x3/vertx-awesome)
 
@@ -19,7 +20,7 @@ However you are free of course to use a traditional ELK setup style and just wri
 ## Key facts
 
 * Zero dependencies (apart of vertx-web obviously)
-* Easily extendable and customizable
+* Easily extensible and customizable
 * Small memory footprint
 
 
@@ -35,16 +36,22 @@ dependencies {
 }
 ```
 
-## Compatibility with Vertx core
+## Compatibility with Vert.x core
 
-Accesslog version | Vertx version
+Since introduction of `vert.x 5` due to some architectural changes the master contains `vert.5` compatible version and its `vert.x 4` compatible counterpart continues on branch `vert.x-4.x`. 
+
+Those two versions are functional equivalent and you should just be able to switch to `vert.5` without any code changes. The plan is also to keep the two versions with same functionality.
+
+Therefore minor version will stay identical but major version will identify if the library is targeted to be used with `vert.x 4` (1) or `vert.x 5` (2)
+
+Accesslog version 4.x / 5.x | Vertx version
 ----|------
-1.7.0 | 4.5.1 >
-1.6.0 | 4.3.0 >
-1.5.0 | 4.2.0 >
-1.4.0 | 4.0.0 - 4.1.x
-1.3.1 | 3.3.0 - 3.7.0
-1.2.0 | 3.3.0 - 3.7.0
+1.7.0 / 2.7.0  | 4.5.1 > / 5.0.0 >
+1.6.0 / - | 4.3.0 > / -
+1.5.0 / - | 4.2.0 > / -
+1.4.0 / - | 4.0.0 - 4.1.x / -
+1.3.1 / - | 3.3.0 - 3.7.0 / -
+1.2.0 / - | 3.3.0 - 3.7.0 / -
 
 Previous versions are listed for completeness only and not supported anymore.
 
