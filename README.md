@@ -20,7 +20,7 @@ However you are free of course to use a traditional ELK setup style and just wri
 ## Key facts
 
 * Zero dependencies (apart of vertx-web obviously)
-* Easily extendable and customizable
+* Easily extensible and customizable
 * Small memory footprint
 
 
@@ -46,7 +46,7 @@ Therefore minor version will stay identical but major version will identify if t
 
 Accesslog version 4.x / 5.x | Vertx version
 ----|------
-1.7.0 / 2.7.0  | 4.5.1 > / 5.0.0.CR3 >
+1.7.0 / 2.7.0  | 4.5.1 > / 5.0.0 >
 1.6.0 / - | 4.3.0 > / -
 1.5.0 / - | 4.2.0 > / -
 1.4.0 / - | 4.0.0 - 4.1.x / -

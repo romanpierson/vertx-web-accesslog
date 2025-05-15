@@ -10,7 +10,7 @@ repositories {
 }
 
 ext{
-	vertxVersion = '5.0.0.CR8'
+	vertxVersion = '5.0.0'
 	jupiterVersion = '5.12.2'
 	jupiterLauncherVersion = '1.12.1'
 	slfApiVersion = '2.0.17'
@@ -41,7 +41,7 @@ test {
 
 
 
-jar.archiveFileName = "vertx-web-accesslog-5.0.0-SNAPSHOT.jar"
+jar.archiveFileName = "vertx-web-accesslog-2.7.0.jar"
 
 java {
     withSourcesJar()
@@ -55,7 +55,7 @@ publishing {
             
             groupId = 'com.romanpierson'
             artifactId = 'vertx-web-accesslog'
-            version = '5.0.0-SNAPSHOT'
+            version = '2.7.0'
             
             from components.java
 
